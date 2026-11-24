@@ -33,6 +33,14 @@ the upstream malformed-JSON fixtures and explicit callback, datetime, integer,
 Unicode, recursion, and buffer cases. This bounded corpus is a regression check,
 not proof for every possible input; run the complete upstream test suite as well.
 
+The `.4` parser allocation changes intentionally accept dense valid documents
+that upstream can reject for insufficient scratch space. Allocation diagnostics
+on some deeply incomplete inputs can also differ: on the compared macOS ARM64
+builds, 700 opening brackets produce upstream's `failed to allocate memory` at
+position 622 and this implementation's `unexpected end of data` at position 700.
+Both raise `JSONDecodeError`; exact messages/positions for allocation exhaustion
+are outside the currently established parity corpus.
+
 | Consumer contract | Implemented verification | Release gate |
 | --- | --- | --- |
 | `import orjson` and `Requires-Dist: orjson` | Installed distribution identity, native function identity, no optional imports | Wheel install/upgrade/uninstall and dependency-resolution tests on each supported platform |

@@ -1,6 +1,7 @@
 # Pydantic orjson implementation plan
 
-Status: implemented alpha with all 45 declared wheel variants qualified,
+Status: `.3` is a qualified alpha with all 45 declared wheel variants;
+`.4` implements further native speedups and is undergoing qualification,
 November 24, 2026. See the [release evidence](compatibility/results/wheels-v3.json).
 Version `.2` introduced the native and integration changes; `.3` adds the
 free-threaded CPython port and replacement-wheel matrix. This document separates
@@ -108,6 +109,14 @@ The benchmark suite measures each operation separately. Compiler SIMD flags in
 the published upstream wheel can differ from a stable source build; both are
 necessary comparisons. A faster local source build alone does not establish an
 improvement over the wheel users currently install.
+
+The `.4` implementation adds direct scalar/string encoding, exact numeric runs,
+retained string-key snapshots, bounded x86 prefix scans, a per-call bump parser
+arena with an 8 KiB stack path through 610 bytes, checked root-integer decoding,
+float-tape specialization and fused ARM Unicode classification. Its primary
+comparison explicitly reports Pydantic ORJSON, published ORJSON and stdlib json
+at every declared size. The [initial complete runs](benchmarks/results/v4-initial/README.md)
+show real gains and remaining regressions; the all-cases speed gate remains open.
 
 ## Product contract
 
@@ -240,7 +249,8 @@ Thresholds are proposed acceptance criteria, not results. Reject cherry-picked
 single-fixture wins and compare against both upstream orjson and direct
 Pydantic where applicable. Prefer paired runs, multiple worker processes,
 pyperf stability checks and confidence intervals; retain full results and
-outliers. Do not enforce noisy microsecond timing thresholds on shared CI.
+outliers. Shared-CI instability prevents performance qualification; a failed
+speed gate must remain distinct from a source, build or compatibility failure.
 The original lightweight harness remains a smoke baseline. The new pyperf
 suite provides isolated workers, metadata checks and reversible run ordering;
 shared CI still does not substitute for dedicated production qualification.
