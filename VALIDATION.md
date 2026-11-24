@@ -25,7 +25,9 @@ are excluded from ASan and pass in the ordinary no-GIL suite above.
 The initial `.4` source, `c3346c8`, passed all
 [12 compatibility CI jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45451517929),
 including the source-archive rebuild, Python 3.10–3.15 and all three no-GIL
-versions. Later native changes require their own CI run. An intermediate
+versions. Final native source `5d09544` also passed all
+[12 compatibility jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45461977486).
+Its full wheel and speed matrices are separate qualification runs. An intermediate
 candidate and the latest refinement both matched the official wheel on 2,425
 differential cases and seven API contracts, with zero mismatches.
 
