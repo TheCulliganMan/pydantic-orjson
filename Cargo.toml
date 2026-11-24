@@ -2,8 +2,8 @@
 name = "orjson"
 version = "3.13.0"
 authors = ["ijl <ijl@mailbox.org>"]
-description = "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy"
-repository = "https://github.com/ijl/orjson"
+description = "orjson-compatible native JSON with optional Pydantic and Pydantic AI adapters"
+repository = "https://github.com/TheCulliganMan/pydantic-orjson"
 edition = "2024"
 resolver = "3"
 rust-version = "1.95"

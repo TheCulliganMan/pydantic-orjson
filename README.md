@@ -132,7 +132,12 @@ x86-64: 45 version/platform combinations. Its `regular`, `free-threaded` and
 `all` selectors allow separate runs. A configured job is not a passing build;
 see [validation](VALIDATION.md) for completed results and the
 [wheel workflow](.github/workflows/wheels.yml) for downloadable artifacts from
-successful jobs. Linux artifacts target `manylinux_2_39` (glibc 2.39+).
+successful jobs. Linux builds target `manylinux_2_17` through Python 3.14 and
+`manylinux_2_28` for Python 3.15, using pinned official manylinux images and a
+verified static UV binary. Maturin audits the wheel, and an installed-wheel
+thread/GIL smoke test runs inside the same minimum-glibc container before
+full tests on the host. Alpine/musl and additional CPU architectures are not
+part of this five-platform matrix.
 The 3.13t jobs qualify native orjson only; the current optional Pydantic/AI
 free-threaded matrix begins at 3.14t. Standard GIL-enabled Python support is
 unchanged.

@@ -58,6 +58,10 @@ Python 3.13t is experimental. PyO3 0.29 no longer officially supports that
 free-threaded ABI, so only the 3.13t build path bypasses its version check with
 `UNSAFE_PYO3_SKIP_VERSION_CHECK=1`. All other ABIs keep normal checks, and 3.13t
 must pass build, import and full concurrency/compatibility qualification.
+All mutable-input writers and external buffer operations on 3.13t need caller
+synchronization with decoding; its bytearray writes and export counters lack
+the internal locking introduced in later versions. The port serializes its
+own buffer-export acquisitions and releases.
 Callers must synchronize class/type renaming
 and metadata mutation with codec calls. Its type-name setter lacks the
 stop-the-world protection added in 3.14; exact type names in serialization
@@ -67,7 +71,12 @@ for source references and the limits of container snapshots.
 The manual wheel workflow contains 45 combinations across Linux x86-64/ARM64,
 macOS Intel/ARM64 and Windows x86-64, with separate regular/free-threaded/all
 selectors. Each successful job retains a wheel, digest, dependency snapshot and
-runtime/test evidence. Linux builds target glibc 2.39+. The release gate is
+runtime/test evidence. Linux builds use pinned official manylinux containers,
+targeting glibc 2.17 through Python 3.14 and 2.28 for Python 3.15. Static UV
+manages Python and builds inside each container; an installed-wheel smoke test
+checks that actual glibc and GIL state before the host's full test suite.
+Alpine/musl and additional CPU architectures remain outside this matrix.
+The release gate is
 completed build, install, native/property and concurrency checks in every cell,
 plus applicable integration checks on regular Python and 3.14t/3.15t. Current
 Pydantic-core/AI dependencies are not qualified on 3.13t; configuration alone

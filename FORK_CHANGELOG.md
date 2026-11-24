@@ -21,7 +21,11 @@
   shallow and do not promise atomic consistency across a nested object graph.
 - Copy mutable JSON inputs before parsing, preserving owned document data for
   decode errors. Concurrent memoryview-alias writes and external native buffer
-  writers still require caller synchronization.
+  writers still require caller synchronization. On 3.13t this also includes
+  direct bytearray writes and external buffer operations; the port serializes
+  its own export-counter access.
+- Anchor source-package include rules at the repository root, exclude rough
+  outputs and test the UV source-archive-to-wheel rebuild in CI.
 - Use CPython allocation and public C API paths for affected free-threaded
   object layouts, Fragment ownership, string caches and NumPy capsules.
 - Add concurrent native-call, callback, shared-container mutation, mutable-input,
@@ -29,6 +33,9 @@
 - Add a manual 45-cell replacement-wheel matrix for regular Python 3.10–3.15
   and free-threaded 3.13t–3.15t on Linux x86-64/ARM64, macOS Intel/ARM64 and
   Windows x86-64. Successful jobs retain wheels, hashes and runtime/test evidence.
+- Build Linux wheels in pinned official manylinux images, audited for glibc
+  2.17 through Python 3.14 and 2.28 for Python 3.15. Verify import, no-GIL state
+  and threaded calls on that baseline before the full host test suite.
 - Clean intermediate free-threaded environments and Cargo output with the
   existing cleanup command; retain final wheels and published evidence.
 

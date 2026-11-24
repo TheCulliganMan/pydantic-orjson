@@ -13,8 +13,15 @@ uses the native toolchain. The workflow follows official
 
 A fresh canonical UV build on CPython 3.13.12 passed all 1,997 tests with 43
 skips and four expected deprecation warnings, Ruff and dependency consistency.
+After two more no-GIL-only regression tests were added, a wheel rebuilt through
+UV from the source archive passed **1,997 tests; 45 skipped; 4 expected warnings**.
+The archive includes fixtures and build/test scripts and excludes environments,
+bytecode and rough build outputs. Cargo include patterns are anchored at the
+repository root so nested environment `src` directories cannot enter an archive.
 A separate one-package environment imports and uses the installed wheel
-without Pydantic. Historical sections below retain the tools and dependency
+without Pydantic. UV installation from upstream to replacement and back to
+upstream passed, including removal of the optional integration modules on rollback.
+Historical sections below retain the tools and dependency
 files used at their measured commits; those files are no longer current setup
 instructions.
 
@@ -37,6 +44,7 @@ Local release-wheel checks on macOS ARM64:
 | Interpreter | Result |
 | --- | --- |
 | CPython 3.13.12, regular GIL, debug allocator | **1,997 passed; 43 skipped; 4 expected warnings** |
+| CPython 3.13.18t, final native-only suite, `PYTHON_GIL=0`, debug allocator | **1,967 passed; 14 skipped** |
 | CPython 3.14.3t, `PYTHON_GIL=0`, debug allocator | **2,026 passed; 14 skipped; 4 expected warnings** |
 | Rust + C parser AddressSanitizer, CPython 3.14.3t | **2,014 passed; 14 skipped; 4 expected warnings; no ASan errors** |
 | Differential, regular candidate vs published/source baselines | **2,425 cases + 7 API contracts; zero mismatches** |
@@ -45,7 +53,8 @@ Local release-wheel checks on macOS ARM64:
 See [regular published](compatibility/results/v3-published.json),
 [regular source](compatibility/results/v3-source.json), and
 [free-threaded](compatibility/results/v3-freethreaded.json) reports. Normal
-builds skip the 31 no-GIL-only checks. Free-threaded builds skip the two
+builds now skip 33 no-GIL-only checks (31 before the buffer-export regressions).
+Free-threaded builds skip the two
 allocation-threshold GC reentry tests because that mechanism does not trigger
 in-call collection there; a separate concurrent collection test passes.
 The remaining 12 skips match the resource/version/known-upstream exclusions
@@ -79,6 +88,9 @@ baselines. Improvements and regressions are both retained. The local
 [3.14t thread diagnostic](benchmarks/results/threaded-314t.json) shows useful
 decode scaling on its larger fixture, but slower encode throughput with shared
 inputs; it is not a universal parallel-speedup claim.
+The [pre-UV `.3` performance evidence](benchmarks/results/v3/README.md) retains
+the complete measurements from source commit `655e430`, with all four jobs
+passing comparability checks. Some cases regress; see the full two-order tables.
 
 ---
 
@@ -138,9 +150,10 @@ in both run orders on a pinned CPU. Passing the workflow checks comparability,
 not a speed threshold. Laptop trial results were noisy, including substantial
 movement in unchanged Pydantic controls; they do not establish universal gains.
 
-Cross-platform qualification for this implementation is being run separately
-from the historical baseline results below. Current native/typed validation
-covers the stated environments, not every application consuming orjson.
+Cross-platform `.2` qualification completed: [all eight compatibility jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45417911960)
+and [all four comparison jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45417954459)
+passed at source commit `66c0d0357f7e39d3a656660060a09bc02cc28c8b`.
+These qualify the stated environments, not every application consuming orjson.
 
 ---
 

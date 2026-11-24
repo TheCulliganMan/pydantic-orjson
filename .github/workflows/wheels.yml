@@ -49,6 +49,7 @@ jobs:
       - name: Install the requested UV-managed interpreter
         run: uv python install "${UV_PYTHON%+gil}"
       - name: Install release toolchain
+        if: runner.os != 'Linux'
         run: |
           rustup toolchain install 1.99.0 --profile minimal
           rustup default 1.99.0
@@ -80,14 +81,15 @@ jobs:
           print('free-threaded ABI:', threaded)
           PY
           uv run --no-sync python script/check-version
+      - name: Build and smoke-test a portable Linux wheel through UV
+        if: runner.os == 'Linux'
+        env:
+          REQUESTED_PYTHON: ${{ matrix.python }}
+        run: bash scripts/build_linux.sh "$REQUESTED_PYTHON"
       - name: Build the replacement wheel through UV
+        if: runner.os != 'Linux'
         run: |
           build_args='--locked --strip'
-          if [[ "$RUNNER_OS" == Linux ]]; then
-            # Audit the Ubuntu 24.04 host's actual glibc compatibility;
-            # do not relabel a host-built wheel as manylinux2014.
-            build_args+=' --compatibility manylinux_2_39'
-          fi
           # This fork tests an experimental 3.13t compatibility port. Keep
           # PyO3's normal version guard enabled for every other interpreter.
           if [[ "$UV_PYTHON" == '3.13t' ]]; then
