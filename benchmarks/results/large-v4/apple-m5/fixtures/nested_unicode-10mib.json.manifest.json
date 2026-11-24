@@ -1,0 +1,15 @@
+{
+  "actual_bytes": 10486633,
+  "encoding": "utf-8",
+  "family": "nested_unicode",
+  "generator_version": 1,
+  "items": 6324,
+  "last_record_bytes": 1665,
+  "max_record_bytes": 1685,
+  "name": "nested_unicode-10mib",
+  "overshoot_bytes": 873,
+  "sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+  "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+  "size_policy": "at least target bytes, stopping at a complete array item",
+  "target_bytes": 10485760
+}

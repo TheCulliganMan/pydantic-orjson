@@ -42,11 +42,14 @@ inside its timed operation. Every decoder receives identical bytes. Encoders'
 input objects are prepared through the same stdlib parser for all three engines.
 Repeated latency measurements include the function call and release of its
 returned output. GC settings and runtime/build identities are recorded by pyperf.
+These are warmed, preloaded-input codec measurements rather than first-import
+or first-request costs. Fresh-input UTF-8 cache growth can appear in the separate
+memory probes, whose input objects have not undergone an encoding precheck.
 
 Each case uses two reversed/rotated engine-order rounds, four fresh workers per
-round, four timed values per worker and one warmup. Fixed loop counts process at
-least one document and approximately 16 MiB per value at smaller sizes. One loop
-is appropriate for 100 MiB. Raw values, warmups, fixture and binary hashes remain
+round, four timed values per worker and one warmup. Fixed loop counts are 16
+iterations per timed value at 1 MiB and one iteration at 10/100 MiB. Raw values,
+warmups, fixture and binary hashes remain
 available; unstable results and regressions are never removed. Throughput uses
 the same actual input byte count for every engine, even when equivalent float
 spellings produce different output sizes.

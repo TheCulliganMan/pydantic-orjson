@@ -1,0 +1,3622 @@
+{
+  "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+  "labels": {
+    "candidate": "Pydantic ORJSON",
+    "upstream": "ORJSON",
+    "stdlib": "json"
+  },
+  "complete_1_10_100_mib_matrix": true,
+  "fixture_files_unavailable": [],
+  "max_spread": 0.1,
+  "cases": {
+    "dumps.records-1mib": {
+      "fixture": {
+        "actual_bytes": 1048621,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 3860,
+        "last_record_bytes": 277,
+        "max_record_bytes": 279,
+        "name": "records-1mib",
+        "overshoot_bytes": 45,
+        "sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/records-1mib.json"
+      },
+      "actual_mib": 1.0000429153442383,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.0007996647364052478,
+          "worker_medians_seconds": [
+            0.000784027375630103,
+            0.0008027305048017297,
+            0.0008456692812615074,
+            0.000796598968008766,
+            0.0007349609368247911,
+            0.0008133411574817728,
+            0.00078614321682835,
+            0.0008214583103836048
+          ],
+          "round_medians_seconds": [
+            0.0007996647364052478,
+            0.0007997421871550614
+          ],
+          "worker_spread": 0.15063160351760074,
+          "round_drift": 9.68540268033724e-05,
+          "max_within_worker_spread": 0.24225491609241123,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1250.5777356642677,
+          "memory": {
+            "baseline_rss_bytes": 38715392,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 38715392,
+            "elapsed_seconds": 0.0009249580325558782,
+            "retained_result_rss_bytes": 39911424,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 44810240,
+            "peak_rss_bytes": 39911424,
+            "incremental_peak_rss_bytes": 1196032,
+            "samples": 4,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0010427080560475588,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.0008482115954393521,
+          "worker_medians_seconds": [
+            0.0008579739369452,
+            0.0008488828134431969,
+            0.0007250520648085512,
+            0.0007189713433035649,
+            0.0008475403774355073,
+            0.0008945286244852468,
+            0.0008726471569389105,
+            0.0007902291908976622
+          ],
+          "round_medians_seconds": [
+            0.0007869674391258741,
+            0.0008600937671872089
+          ],
+          "worker_spread": 0.2441784124176949,
+          "round_drift": 0.09292166921487888,
+          "max_within_worker_spread": 0.19614455403547493,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1179.0017027841284,
+          "memory": {
+            "baseline_rss_bytes": 38699008,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 38699008,
+            "elapsed_seconds": 0.0007120419759303331,
+            "retained_result_rss_bytes": 38731776,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 44711936,
+            "peak_rss_bytes": 38731776,
+            "incremental_peak_rss_bytes": 32768,
+            "samples": 4,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0007784159388393164,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.005251205077001941,
+          "worker_medians_seconds": [
+            0.005306838560500182,
+            0.005476175752846757,
+            0.005143079408298945,
+            0.005306513030518545,
+            0.005181638029171154,
+            0.005273666654829867,
+            0.005078026031696936,
+            0.005228743499174016
+          ],
+          "round_medians_seconds": [
+            0.0053066757955093635,
+            0.005205190764172585
+          ],
+          "worker_spread": 0.07840639623833723,
+          "round_drift": 0.019496889919059734,
+          "max_within_worker_spread": 0.10618546298667897,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 190.44065137048324,
+          "memory": {
+            "baseline_rss_bytes": 37093376,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 37093376,
+            "elapsed_seconds": 0.004775541019625962,
+            "retained_result_rss_bytes": 37093376,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 42074112,
+            "peak_rss_bytes": 37093376,
+            "incremental_peak_rss_bytes": 0,
+            "samples": 7,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015207499964162707,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.9841217241409791,
+            1.0754637944596086
+          ],
+          "observed_ratio_bounds": [
+            0.8501802764208914,
+            1.217110433582806
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            6.63612580862899,
+            6.5085859515415985
+          ],
+          "observed_ratio_bounds": [
+            6.004742213317609,
+            7.4509752538756135
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.records-1mib": {
+      "fixture": {
+        "actual_bytes": 1048621,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 3860,
+        "last_record_bytes": 277,
+        "max_record_bytes": 279,
+        "name": "records-1mib",
+        "overshoot_bytes": 45,
+        "sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/records-1mib.json"
+      },
+      "actual_mib": 1.0000429153442383,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.002790404967527138,
+          "worker_medians_seconds": [
+            0.002829902314260835,
+            0.0027718528399418574,
+            0.002800298185320571,
+            0.0027718216260836925,
+            0.0027441666534286924,
+            0.0032783099049993325,
+            0.002780511749733705,
+            0.002817759093886707
+          ],
+          "round_medians_seconds": [
+            0.0027860755126312142,
+            0.002799135421810206
+          ],
+          "worker_spread": 0.19464679774577687,
+          "round_drift": 0.004687564683649947,
+          "max_within_worker_spread": 0.09048922556760086,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 358.3863012652526,
+          "memory": {
+            "baseline_rss_bytes": 33275904,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 33275904,
+            "elapsed_seconds": 0.0031265829456970096,
+            "retained_result_rss_bytes": 42139648,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 49332224,
+            "peak_rss_bytes": 42139648,
+            "incremental_peak_rss_bytes": 8863744,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0024973329855129123,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.0028425058426364558,
+          "worker_medians_seconds": [
+            0.0025581718728062697,
+            0.002834225248079747,
+            0.0029485104059858713,
+            0.0028507864371931646,
+            0.002830292967701098,
+            0.002830274748703232,
+            0.002863615907699568,
+            0.0028762005276803393
+          ],
+          "round_medians_seconds": [
+            0.0028425058426364558,
+            0.002846954437700333
+          ],
+          "worker_spread": 0.15258495229697266,
+          "round_drift": 0.0015650258293755659,
+          "max_within_worker_spread": 0.14166334543564418,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 351.8173649263944,
+          "memory": {
+            "baseline_rss_bytes": 32899072,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 32899072,
+            "elapsed_seconds": 0.002841708017513156,
+            "retained_result_rss_bytes": 41762816,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 48300032,
+            "peak_rss_bytes": 41762816,
+            "incremental_peak_rss_bytes": 8863744,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015257500344887376,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.0051308789079484995,
+          "worker_medians_seconds": [
+            0.004397588530991925,
+            0.0044648710936598945,
+            0.0042993736860807985,
+            0.005088087251351681,
+            0.0051736705645453185,
+            0.005358907532354351,
+            0.005403730501711834,
+            0.0056390976897091605
+          ],
+          "round_medians_seconds": [
+            0.00443122981232591,
+            0.005381319017033093
+          ],
+          "worker_spread": 0.3116091090117874,
+          "round_drift": 0.21440756741264355,
+          "max_within_worker_spread": 0.45113204969847254,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 194.90674663847983,
+          "memory": {
+            "baseline_rss_bytes": 30982144,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f208607303ae02fb9a3d0feeb87b65f07ddf024a4b0d5f73a9887d46a734521c",
+            "fixture_bytes": 1048621,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 30982144,
+            "elapsed_seconds": 0.005518874968402088,
+            "retained_result_rss_bytes": 37044224,
+            "output_bytes": 1048621,
+            "validated": true,
+            "process_high_water_rss_bytes": 43106304,
+            "peak_rss_bytes": 37060608,
+            "incremental_peak_rss_bytes": 6078464,
+            "samples": 7,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015689999563619494,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.0202544151260091,
+            1.017083494966886
+          ],
+          "observed_ratio_bounds": [
+            0.780332533207165,
+            1.0744647750536076
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.5904916403866547,
+            1.9224932724237342
+          ],
+          "observed_ratio_bounds": [
+            1.3114604203600069,
+            2.054939951501635
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.records-10mib": {
+      "fixture": {
+        "actual_bytes": 10485793,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 38222,
+        "last_record_bytes": 280,
+        "max_record_bytes": 282,
+        "name": "records-10mib",
+        "overshoot_bytes": 33,
+        "sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/records-10mib.json"
+      },
+      "actual_mib": 10.000031471252441,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.008143197483150288,
+          "worker_medians_seconds": [
+            0.008188395528122783,
+            0.007689020538236946,
+            0.007952979009132832,
+            0.008097999438177794,
+            0.008311604033224285,
+            0.008762437442783266,
+            0.008403813058976084,
+            0.007662728952709585
+          ],
+          "round_medians_seconds": [
+            0.008025489223655313,
+            0.008357708546100184
+          ],
+          "worker_spread": 0.1435139487329533,
+          "round_drift": 0.04139552283811532,
+          "max_within_worker_spread": 0.269566354124841,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1228.022713675343,
+          "memory": {
+            "baseline_rss_bytes": 103186432,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 103186432,
+            "elapsed_seconds": 0.008732791990041733,
+            "retained_result_rss_bytes": 95027200,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 152911872,
+            "peak_rss_bytes": 103284736,
+            "incremental_peak_rss_bytes": 98304,
+            "samples": 9,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0016173749463632703,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.00871473949518986,
+          "worker_medians_seconds": [
+            0.008587728952988982,
+            0.00821316649671644,
+            0.008968562528025359,
+            0.00829779147170484,
+            0.009098937502130866,
+            0.008407312969211489,
+            0.008841750037390739,
+            0.009057770483195782
+          ],
+          "round_medians_seconds": [
+            0.008442760212346911,
+            0.00894976026029326
+          ],
+          "worker_spread": 0.10784768648834175,
+          "round_drift": 0.06005145653727073,
+          "max_within_worker_spread": 0.318383532603816,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1147.4848418328515,
+          "memory": {
+            "baseline_rss_bytes": 102825984,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 102825984,
+            "elapsed_seconds": 0.008823625044897199,
+            "retained_result_rss_bytes": 94617600,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 152502272,
+            "peak_rss_bytes": 102875136,
+            "incremental_peak_rss_bytes": 49152,
+            "samples": 10,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015423750737681985,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.053120666794711724,
+          "worker_medians_seconds": [
+            0.05345293751452118,
+            0.05115629197098315,
+            0.051512104051653296,
+            0.05837416654685512,
+            0.051593520562164485,
+            0.05385904147988185,
+            0.052788396074902266,
+            0.05363077099900693
+          ],
+          "round_medians_seconds": [
+            0.05248252078308724,
+            0.0532095835369546
+          ],
+          "worker_spread": 0.14109456134870157,
+          "round_drift": 0.013853426684140135,
+          "max_within_worker_spread": 0.1784110884453527,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 188.25124145934038,
+          "memory": {
+            "baseline_rss_bytes": 101220352,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 101220352,
+            "elapsed_seconds": 0.05687354097608477,
+            "retained_result_rss_bytes": 113262592,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 162988032,
+            "peak_rss_bytes": 113262592,
+            "incremental_peak_rss_bytes": 12042240,
+            "samples": 37,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.003650292055681348,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.0519932152499416,
+            1.0708389998200325
+          ],
+          "observed_ratio_bounds": [
+            0.9373152790358343,
+            1.1874278156365468
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            6.53947931652488,
+            6.366527768162349
+          ],
+          "observed_ratio_bounds": [
+            5.838134914516898,
+            7.617934407847439
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.records-10mib": {
+      "fixture": {
+        "actual_bytes": 10485793,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 38222,
+        "last_record_bytes": 280,
+        "max_record_bytes": 282,
+        "name": "records-10mib",
+        "overshoot_bytes": 33,
+        "sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/records-10mib.json"
+      },
+      "actual_mib": 10.000031471252441,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.029844854259863496,
+          "worker_medians_seconds": [
+            0.033690353971906006,
+            0.03458916652016342,
+            0.03380516648758203,
+            0.033902437426149845,
+            0.025833354506175965,
+            0.025999354547820985,
+            0.02520949998870492,
+            0.02497302053961903
+          ],
+          "round_medians_seconds": [
+            0.033853801956865937,
+            0.025521427247440442
+          ],
+          "worker_spread": 0.38506138916150046,
+          "round_drift": 0.3264854519553233,
+          "max_within_worker_spread": 0.1067486924345511,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 335.06719061787703,
+          "memory": {
+            "baseline_rss_bytes": 42614784,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42614784,
+            "elapsed_seconds": 0.023607708048075438,
+            "retained_result_rss_bytes": 130662400,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 201457664,
+            "peak_rss_bytes": 130662400,
+            "incremental_peak_rss_bytes": 88047616,
+            "samples": 19,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015293329488486052,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.027525895508006215,
+          "worker_medians_seconds": [
+            0.027317645493894815,
+            0.027641520486213267,
+            0.030130375002045184,
+            0.028040104487445205,
+            0.027410270529799163,
+            0.025724458508193493,
+            0.025033417041413486,
+            0.03268610459053889
+          ],
+          "round_medians_seconds": [
+            0.027840812486829236,
+            0.026567364518996328
+          ],
+          "worker_spread": 0.3056988798798561,
+          "round_drift": 0.047932792389789425,
+          "max_within_worker_spread": 0.7405531595486652,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 363.295409166391,
+          "memory": {
+            "baseline_rss_bytes": 42270720,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42270720,
+            "elapsed_seconds": 0.023264707997441292,
+            "retained_result_rss_bytes": 130301952,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 201097216,
+            "peak_rss_bytes": 130301952,
+            "incremental_peak_rss_bytes": 88031232,
+            "samples": 19,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015261250082403421,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.05441857274854556,
+          "worker_medians_seconds": [
+            0.054850770451594144,
+            0.05408362450543791,
+            0.05745281249983236,
+            0.05213339551119134,
+            0.05566735443426296,
+            0.054753520991653204,
+            0.05301833344856277,
+            0.05297295848140493
+          ],
+          "round_medians_seconds": [
+            0.05446719747851603,
+            0.05388592722010799
+          ],
+          "worker_spread": 0.10203473102953975,
+          "round_drift": 0.010787051246863077,
+          "max_within_worker_spread": 0.14608194551034437,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 183.76136980769513,
+          "memory": {
+            "baseline_rss_bytes": 40402944,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+            "fixture_bytes": 10485793,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 40402944,
+            "elapsed_seconds": 0.055022333981469274,
+            "retained_result_rss_bytes": 100663296,
+            "output_bytes": 10485793,
+            "validated": true,
+            "process_high_water_rss_bytes": 161218560,
+            "peak_rss_bytes": 100663296,
+            "incremental_peak_rss_bytes": 60260352,
+            "samples": 35,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0030980000738054514,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.822383628352939,
+            1.0409827107792642
+          ],
+          "observed_ratio_bounds": [
+            0.7237357693143748,
+            1.3088566734922298
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.6088945503939023,
+            2.111399440856594
+          ],
+          "observed_ratio_bounds": [
+            1.5072174543668373,
+            2.300595252732244
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.records-100mib": {
+      "fixture": {
+        "actual_bytes": 104857633,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 379427,
+        "last_record_bytes": 283,
+        "max_record_bytes": 284,
+        "name": "records-100mib",
+        "overshoot_bytes": 33,
+        "sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/records-100mib.json"
+      },
+      "actual_mib": 100.00003147125244,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.06824723971658386,
+          "worker_medians_seconds": [
+            0.06748479150701314,
+            0.06806047895224765,
+            0.070204833522439,
+            0.06843400048092008,
+            0.07029829197563231,
+            0.06496545800473541,
+            0.06052645854651928,
+            0.07989947899477556
+          ],
+          "round_medians_seconds": [
+            0.06824723971658386,
+            0.06763187499018386
+          ],
+          "worker_spread": 0.3200752350869267,
+          "round_drift": 0.0090987382279335,
+          "max_within_worker_spread": 0.13078557029374416,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1465.2611869217144,
+          "memory": {
+            "baseline_rss_bytes": 740605952,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 740605952,
+            "elapsed_seconds": 0.07862249994650483,
+            "retained_result_rss_bytes": 674299904,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1239580672,
+            "peak_rss_bytes": 740704256,
+            "incremental_peak_rss_bytes": 98304,
+            "samples": 49,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.003433958045206964,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.07497040627640672,
+          "worker_medians_seconds": [
+            0.08673487551277503,
+            0.09000970853958279,
+            0.06997189595131204,
+            0.07443164550932124,
+            0.07516104151727632,
+            0.07253206247696653,
+            0.088312916981522,
+            0.07477977103553712
+          ],
+          "round_medians_seconds": [
+            0.08058326051104814,
+            0.07497040627640672
+          ],
+          "worker_spread": 0.2863694389846674,
+          "round_drift": 0.07486759794188003,
+          "max_within_worker_spread": 0.11726376645371106,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1333.8600714335807,
+          "memory": {
+            "baseline_rss_bytes": 740802560,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 740802560,
+            "elapsed_seconds": 0.08432258397806436,
+            "retained_result_rss_bytes": 674430976,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1239351296,
+            "peak_rss_bytes": 740835328,
+            "incremental_peak_rss_bytes": 32768,
+            "samples": 55,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0034424999030306935,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.5226624997449107,
+          "worker_medians_seconds": [
+            0.5328841250156984,
+            0.521285479015205,
+            0.4472559794667177,
+            0.49305522948270664,
+            0.5072211250080727,
+            0.5240395204746164,
+            0.5275364579865709,
+            0.5291348544415087
+          ],
+          "round_medians_seconds": [
+            0.5071703542489558,
+            0.5257879892305937
+          ],
+          "worker_spread": 0.19145220965201792,
+          "round_drift": 0.03670883920099732,
+          "max_within_worker_spread": 0.1944352172332653,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 191.32811617450685,
+          "memory": {
+            "baseline_rss_bytes": 739213312,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 739213312,
+            "elapsed_seconds": 0.4340972499921918,
+            "retained_result_rss_bytes": 844136448,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1341030400,
+            "peak_rss_bytes": 844136448,
+            "incremental_peak_rss_bytes": 104923136,
+            "samples": 291,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015793329803273082,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.180754867826056,
+            1.1085069915226804
+          ],
+          "observed_ratio_bounds": [
+            0.875749089125942,
+            1.487113416199683
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            7.431368013638727,
+            7.774263086849314
+          ],
+          "observed_ratio_bounds": [
+            5.597733365645134,
+            8.804151734834042
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.records-100mib": {
+      "fixture": {
+        "actual_bytes": 104857633,
+        "encoding": "utf-8",
+        "family": "records",
+        "generator_version": 1,
+        "items": 379427,
+        "last_record_bytes": 283,
+        "max_record_bytes": 284,
+        "name": "records-100mib",
+        "overshoot_bytes": 33,
+        "sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+        "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/records-100mib.json"
+      },
+      "actual_mib": 100.00003147125244,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.3536288645409513,
+          "worker_medians_seconds": [
+            0.35483014554483816,
+            0.3524275835370645,
+            0.37797091697575524,
+            0.3398126459796913,
+            0.3590092500089668,
+            0.35207895847270265,
+            0.34566720796283334,
+            0.3620637499843724
+          ],
+          "round_medians_seconds": [
+            0.3536288645409513,
+            0.3555441042408347
+          ],
+          "worker_spread": 0.11229208638204846,
+          "round_drift": 0.005415959758741984,
+          "max_within_worker_spread": 0.28684215501575183,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 282.78243519816556,
+          "memory": {
+            "baseline_rss_bytes": 136953856,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136953856,
+            "elapsed_seconds": 0.3386037079617381,
+            "retained_result_rss_bytes": 1015087104,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1726398464,
+            "peak_rss_bytes": 1015087104,
+            "incremental_peak_rss_bytes": 878133248,
+            "samples": 215,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0026663750177249312,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.30333262449130416,
+          "worker_medians_seconds": [
+            0.36583004193380475,
+            0.2859125415561721,
+            0.2970836460008286,
+            0.30238858301891014,
+            0.3362839164910838,
+            0.28392822900786996,
+            0.3042766659636982,
+            0.32680399995297194
+          ],
+          "round_medians_seconds": [
+            0.29973611450986937,
+            0.31554033295833506
+          ],
+          "worker_spread": 0.2884595632217486,
+          "round_drift": 0.05272710789058199,
+          "max_within_worker_spread": 0.2155044434559441,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 329.6712038111786,
+          "memory": {
+            "baseline_rss_bytes": 136790016,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136790016,
+            "elapsed_seconds": 0.32847000006586313,
+            "retained_result_rss_bytes": 1014890496,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1723334656,
+            "peak_rss_bytes": 1014890496,
+            "incremental_peak_rss_bytes": 878100480,
+            "samples": 214,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0024382920237258077,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.6358077707700431,
+          "worker_medians_seconds": [
+            0.56944560399279,
+            0.6815543960547075,
+            0.5900145415216684,
+            0.6068445210112259,
+            0.6647710205288604,
+            0.7215588124818169,
+            0.7385351039702073,
+            0.5923343544709496
+          ],
+          "round_medians_seconds": [
+            0.5984295312664472,
+            0.6931649165053386
+          ],
+          "worker_spread": 0.2969370538499376,
+          "round_drift": 0.15830666818598416,
+          "max_within_worker_spread": 0.2738696403049321,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 157.28029141597284,
+          "memory": {
+            "baseline_rss_bytes": 134840320,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3262e49d1fa3b54d79e5083763246f093f279bfcf08f279908ab243e45c0a0f5",
+            "fixture_bytes": 104857633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 134840320,
+            "elapsed_seconds": 0.6953672498930246,
+            "retained_result_rss_bytes": 738754560,
+            "output_bytes": 104857633,
+            "validated": true,
+            "process_high_water_rss_bytes": 1342652416,
+            "peak_rss_bytes": 738754560,
+            "incremental_peak_rss_bytes": 603914240,
+            "samples": 441,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.003206999972462654,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.8476008170287779,
+            0.8874857695421035
+          ],
+          "observed_ratio_bounds": [
+            0.7511906769961415,
+            1.0765639426958478
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.6922530688869917,
+            1.949589117742225
+          ],
+          "observed_ratio_bounds": [
+            1.506585767362934,
+            2.1733596813061085
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.numeric-1mib": {
+      "fixture": {
+        "actual_bytes": 1048578,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 79019,
+        "last_record_bytes": 16,
+        "max_record_bytes": 22,
+        "name": "numeric-1mib",
+        "overshoot_bytes": 2,
+        "sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/numeric-1mib.json"
+      },
+      "actual_mib": 1.0000019073486328,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.0011217747178307036,
+          "worker_medians_seconds": [
+            0.0011170781253895257,
+            0.0011885429703397676,
+            0.0011406250014260877,
+            0.0011328827822580934,
+            0.0010049375014204998,
+            0.0010931262804660946,
+            0.0011173333114129491,
+            0.001126216124248458
+          ],
+          "round_medians_seconds": [
+            0.0011367538918420905,
+            0.0011052297959395219
+          ],
+          "worker_spread": 0.18270337076657772,
+          "round_drift": 0.02852266200059428,
+          "max_within_worker_spread": 0.16450721645185729,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 891.4462872567177,
+          "memory": {
+            "baseline_rss_bytes": 36962304,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 36962304,
+            "elapsed_seconds": 0.0011239589657634497,
+            "retained_result_rss_bytes": 38141952,
+            "output_bytes": 1039701,
+            "validated": true,
+            "process_high_water_rss_bytes": 40583168,
+            "peak_rss_bytes": 38141952,
+            "incremental_peak_rss_bytes": 1179648,
+            "samples": 4,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0012297909706830978,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.00157868098540348,
+          "worker_medians_seconds": [
+            0.0017108085958170705,
+            0.0017324400942015927,
+            0.001710730437480379,
+            0.0017675807503110263,
+            0.0013052525937382597,
+            0.0013392278742685448,
+            0.001291384094656678,
+            0.0014466315333265811
+          ],
+          "round_medians_seconds": [
+            0.0017216243450093316,
+            0.0013222402340034023
+          ],
+          "worker_spread": 0.36874904811410736,
+          "round_drift": 0.30205109535707986,
+          "max_within_worker_spread": 0.09371238626703593,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 633.441408742281,
+          "memory": {
+            "baseline_rss_bytes": 36995072,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 36995072,
+            "elapsed_seconds": 0.0017347909742966294,
+            "retained_result_rss_bytes": 38092800,
+            "output_bytes": 1039701,
+            "validated": true,
+            "process_high_water_rss_bytes": 40534016,
+            "peak_rss_bytes": 38092800,
+            "incremental_peak_rss_bytes": 1097728,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015335410134866834,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.012168944000222837,
+          "worker_medians_seconds": [
+            0.012277820311282994,
+            0.012273802061827155,
+            0.012064085938618518,
+            0.012592404935276136,
+            0.012373070316243684,
+            0.01177701953201904,
+            0.008982287748949602,
+            0.00940838150199852
+          ],
+          "round_medians_seconds": [
+            0.012275811186555075,
+            0.01059270051700878
+          ],
+          "worker_spread": 0.40191511196562413,
+          "round_drift": 0.1588934442962595,
+          "max_within_worker_spread": 0.2054743629458593,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 82.17655593865177,
+          "memory": {
+            "baseline_rss_bytes": 35127296,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 35127296,
+            "elapsed_seconds": 0.01185820798855275,
+            "retained_result_rss_bytes": 35635200,
+            "output_bytes": 1048578,
+            "validated": true,
+            "process_high_water_rss_bytes": 38158336,
+            "peak_rss_bytes": 35635200,
+            "incremental_peak_rss_bytes": 507904,
+            "samples": 12,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0017170000355690718,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.514509303521687,
+            1.1963487040081167
+          ],
+          "observed_ratio_bounds": [
+            1.0865270561379123,
+            1.758896197835701
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            10.799005197741025,
+            9.584161190663748
+          ],
+          "observed_ratio_bounds": [
+            7.557394198698465,
+            12.530535398944226
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.numeric-1mib": {
+      "fixture": {
+        "actual_bytes": 1048578,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 79019,
+        "last_record_bytes": 16,
+        "max_record_bytes": 22,
+        "name": "numeric-1mib",
+        "overshoot_bytes": 2,
+        "sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/numeric-1mib.json"
+      },
+      "actual_mib": 1.0000019073486328,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.001678255845035892,
+          "worker_medians_seconds": [
+            0.0014110494666965678,
+            0.0015731549356132746,
+            0.0016584765653533395,
+            0.0017326770939689595,
+            0.0017181992188852746,
+            0.0016611327810096554,
+            0.0016953789090621285,
+            0.001789985690265894
+          ],
+          "round_medians_seconds": [
+            0.001615815750483307,
+            0.0017067890639737016
+          ],
+          "worker_spread": 0.26854921284684674,
+          "round_drift": 0.056301786551581356,
+          "max_within_worker_spread": 0.21624472314357202,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 595.8578427160171,
+          "memory": {
+            "baseline_rss_bytes": 33275904,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 33275904,
+            "elapsed_seconds": 0.0017277910374104977,
+            "retained_result_rss_bytes": 38125568,
+            "output_bytes": 1048578,
+            "validated": true,
+            "process_high_water_rss_bytes": 43417600,
+            "peak_rss_bytes": 38125568,
+            "incremental_peak_rss_bytes": 4849664,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.001531417015939951,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.0016591080620855791,
+          "worker_medians_seconds": [
+            0.0016601523420831654,
+            0.0017580338426341768,
+            0.001756613277393626,
+            0.00157040624981164,
+            0.0016580637820879929,
+            0.0016137070597324055,
+            0.0015837734354136046,
+            0.0018953346552734729
+          ],
+          "round_medians_seconds": [
+            0.0017083828097383957,
+            0.0016358854209101992
+          ],
+          "worker_spread": 0.20690722894206903,
+          "round_drift": 0.044316911136636605,
+          "max_within_worker_spread": 0.1475282237608797,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 602.73464411449,
+          "memory": {
+            "baseline_rss_bytes": 33079296,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 33079296,
+            "elapsed_seconds": 0.0023177500115707517,
+            "retained_result_rss_bytes": 38469632,
+            "output_bytes": 1048578,
+            "validated": true,
+            "process_high_water_rss_bytes": 43450368,
+            "peak_rss_bytes": 38469632,
+            "incremental_peak_rss_bytes": 5390336,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015307500725612044,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.006874537095427513,
+          "worker_medians_seconds": [
+            0.006548707031470258,
+            0.006907834627781995,
+            0.006841239563073032,
+            0.0066284309978073,
+            0.006649195314821554,
+            0.0070860234372958075,
+            0.007009812499745749,
+            0.006982537779549602
+          ],
+          "round_medians_seconds": [
+            0.006734835280440166,
+            0.006996175139647676
+          ],
+          "worker_spread": 0.08204923555801757,
+          "round_drift": 0.03880419465736806,
+          "max_within_worker_spread": 0.14699264689896663,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 145.4646172487407,
+          "memory": {
+            "baseline_rss_bytes": 31162368,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+            "fixture_bytes": 1048578,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 31162368,
+            "elapsed_seconds": 0.007437833002768457,
+            "retained_result_rss_bytes": 35094528,
+            "output_bytes": 1048578,
+            "validated": true,
+            "process_high_water_rss_bytes": 39124992,
+            "peak_rss_bytes": 35094528,
+            "incremental_peak_rss_bytes": 3932160,
+            "samples": 8,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.001705082948319614,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.057288127824847,
+            0.9584578759261403
+          ],
+          "observed_ratio_bounds": [
+            0.8773289408689986,
+            1.3432092212264346
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            4.1680713153252205,
+            4.099027400233843
+          ],
+          "observed_ratio_bounds": [
+            3.6585247955236326,
+            5.0218107901525375
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.numeric-10mib": {
+      "fixture": {
+        "actual_bytes": 10485765,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 787409,
+        "last_record_bytes": 6,
+        "max_record_bytes": 22,
+        "name": "numeric-10mib",
+        "overshoot_bytes": 5,
+        "sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/numeric-10mib.json"
+      },
+      "actual_mib": 10.000004768371582,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.011173905746545643,
+          "worker_medians_seconds": [
+            0.010320520959794521,
+            0.011241479020100087,
+            0.013608624984044582,
+            0.011124062002636492,
+            0.010830770479515195,
+            0.011223749490454793,
+            0.009122124989517033,
+            0.011456333450041711
+          ],
+          "round_medians_seconds": [
+            0.01118277051136829,
+            0.011027259984984994
+          ],
+          "worker_spread": 0.49182619177914644,
+          "round_drift": 0.014102372356781467,
+          "max_within_worker_spread": 0.3076853390010861,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 894.9426454096441,
+          "memory": {
+            "baseline_rss_bytes": 86327296,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 86327296,
+            "elapsed_seconds": 0.013786082970909774,
+            "retained_result_rss_bytes": 96862208,
+            "output_bytes": 10397214,
+            "validated": true,
+            "process_high_water_rss_bytes": 130334720,
+            "peak_rss_bytes": 96862208,
+            "incremental_peak_rss_bytes": 10534912,
+            "samples": 12,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0019156669732183218,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.017502760485513136,
+          "worker_medians_seconds": [
+            0.018043291522189975,
+            0.01706268748966977,
+            0.01595002051908523,
+            0.01602662494406104,
+            0.017540229484438896,
+            0.01780366647290066,
+            0.017465291486587375,
+            0.017940958554390818
+          ],
+          "round_medians_seconds": [
+            0.016544656216865405,
+            0.017671947978669778
+          ],
+          "worker_spread": 0.13123939248855598,
+          "round_drift": 0.06813630619022626,
+          "max_within_worker_spread": 0.24184221710628218,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 571.3387197778595,
+          "memory": {
+            "baseline_rss_bytes": 86228992,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 86228992,
+            "elapsed_seconds": 0.018847333965823054,
+            "retained_result_rss_bytes": 96681984,
+            "output_bytes": 10397214,
+            "validated": true,
+            "process_high_water_rss_bytes": 128221184,
+            "peak_rss_bytes": 96681984,
+            "incremental_peak_rss_bytes": 10452992,
+            "samples": 16,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0016438750317320228,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.12551243777852505,
+          "worker_medians_seconds": [
+            0.12088104203576222,
+            0.12218700052471831,
+            0.12456125003518537,
+            0.12901908304775134,
+            0.13406260451301932,
+            0.1172391670406796,
+            0.12658785399980843,
+            0.12646362552186474
+          ],
+          "round_medians_seconds": [
+            0.12337412527995184,
+            0.1265257397608366
+          ],
+          "worker_spread": 0.1434967331907291,
+          "round_drift": 0.025545181971773356,
+          "max_within_worker_spread": 0.22681757905427258,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 79.67341679728385,
+          "memory": {
+            "baseline_rss_bytes": 84557824,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 84557824,
+            "elapsed_seconds": 0.12636533298064023,
+            "retained_result_rss_bytes": 96681984,
+            "output_bytes": 10485765,
+            "validated": true,
+            "process_high_water_rss_bytes": 128303104,
+            "peak_rss_bytes": 96681984,
+            "incremental_peak_rss_bytes": 12124160,
+            "samples": 77,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0033652500715106726,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.4794773978457554,
+            1.6025692694950844
+          ],
+          "observed_ratio_bounds": [
+            1.1720523225370538,
+            1.9779702144977154
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            11.032518744306786,
+            11.473905569753262
+          ],
+          "observed_ratio_bounds": [
+            8.615063401198618,
+            14.696422672028879
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.numeric-10mib": {
+      "fixture": {
+        "actual_bytes": 10485765,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 787409,
+        "last_record_bytes": 6,
+        "max_record_bytes": 22,
+        "name": "numeric-10mib",
+        "overshoot_bytes": 5,
+        "sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/numeric-10mib.json"
+      },
+      "actual_mib": 10.000004768371582,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.02021014576894231,
+          "worker_medians_seconds": [
+            0.020363957970403135,
+            0.020056333567481488,
+            0.020511833485215902,
+            0.019574645499233156,
+            0.018940978916361928,
+            0.022312728979159147,
+            0.019224395509809256,
+            0.021193375054281205
+          ],
+          "round_medians_seconds": [
+            0.02021014576894231,
+            0.02020888528204523
+          ],
+          "worker_spread": 0.17801350593788867,
+          "round_drift": 6.237290575361598e-05,
+          "max_within_worker_spread": 0.21404799416885423,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 494.80121928358204,
+          "memory": {
+            "baseline_rss_bytes": 42614784,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42614784,
+            "elapsed_seconds": 0.019103624974377453,
+            "retained_result_rss_bytes": 97320960,
+            "output_bytes": 10485765,
+            "validated": true,
+            "process_high_water_rss_bytes": 151977984,
+            "peak_rss_bytes": 97320960,
+            "incremental_peak_rss_bytes": 54706176,
+            "samples": 15,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.001994375023059547,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.019998957955976948,
+          "worker_medians_seconds": [
+            0.02044956252211705,
+            0.0159366664593108,
+            0.015042791434098035,
+            0.016373833001125604,
+            0.02016958297463134,
+            0.019828332937322557,
+            0.020900145987980068,
+            0.020591833454091102
+          ],
+          "round_medians_seconds": [
+            0.016155249730218202,
+            0.02038070821436122
+          ],
+          "worker_spread": 0.38937949645469105,
+          "round_drift": 0.2615532755423364,
+          "max_within_worker_spread": 0.20090870898563318,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 500.02629088896856,
+          "memory": {
+            "baseline_rss_bytes": 42565632,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42565632,
+            "elapsed_seconds": 0.015794624923728406,
+            "retained_result_rss_bytes": 97271808,
+            "output_bytes": 10485765,
+            "validated": true,
+            "process_high_water_rss_bytes": 151388160,
+            "peak_rss_bytes": 97271808,
+            "incremental_peak_rss_bytes": 54706176,
+            "samples": 14,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0019489589612931013,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.0719560727593489,
+          "worker_medians_seconds": [
+            0.05094604194164276,
+            0.060738166503142565,
+            0.0715833330177702,
+            0.07520079199457541,
+            0.07417770847678185,
+            0.0723288125009276,
+            0.058584937534760684,
+            0.07386316650081426
+          ],
+          "round_medians_seconds": [
+            0.06616074976045638,
+            0.07309598950087093
+          ],
+          "worker_spread": 0.4760870349990245,
+          "round_drift": 0.10482408022164935,
+          "max_within_worker_spread": 0.27054636147449984,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 138.97374307538664,
+          "memory": {
+            "baseline_rss_bytes": 40615936,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "1f7e5e4f4d7afd03fa3021da791627ff8d425bff6f10dae42c13f9fa211be0c4",
+            "fixture_bytes": 10485765,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 40615936,
+            "elapsed_seconds": 0.07021570799406618,
+            "retained_result_rss_bytes": 84803584,
+            "output_bytes": 10485765,
+            "validated": true,
+            "process_high_water_rss_bytes": 128860160,
+            "peak_rss_bytes": 84803584,
+            "incremental_peak_rss_bytes": 44187648,
+            "samples": 46,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0033250419655814767,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.7993633452681267,
+            1.008502345870044
+          ],
+          "observed_ratio_bounds": [
+            0.6741798122564263,
+            1.103435365208381
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            3.27364040402559,
+            3.617022338476716
+          ],
+          "observed_ratio_bounds": [
+            2.283272565593752,
+            3.970269558222999
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.numeric-100mib": {
+      "fixture": {
+        "actual_bytes": 104857601,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 7800669,
+        "last_record_bytes": 8,
+        "max_record_bytes": 22,
+        "name": "numeric-100mib",
+        "overshoot_bytes": 1,
+        "sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/numeric-100mib.json"
+      },
+      "actual_mib": 100.00000095367432,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.07431252073729411,
+          "worker_medians_seconds": [
+            0.07445774943334982,
+            0.07360437494935468,
+            0.07408345845760778,
+            0.07526183396112174,
+            0.07430756249232218,
+            0.07431747898226604,
+            0.07517100003315136,
+            0.07385112548945472
+          ],
+          "round_medians_seconds": [
+            0.0742706039454788,
+            0.07431252073729411
+          ],
+          "worker_spread": 0.022518484980105002,
+          "round_drift": 0.0005643793047123147,
+          "max_within_worker_spread": 0.025519315052890956,
+          "adequate_sampling": true,
+          "stable": true,
+          "throughput_mib_per_second": 1345.6682664175705,
+          "memory": {
+            "baseline_rss_bytes": 556515328,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 556515328,
+            "elapsed_seconds": 0.11749325005803257,
+            "retained_result_rss_bytes": 660635648,
+            "output_bytes": 103980101,
+            "validated": true,
+            "process_high_water_rss_bytes": 973619200,
+            "peak_rss_bytes": 660635648,
+            "incremental_peak_rss_bytes": 104120320,
+            "samples": 75,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0028867500368505716,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.17664352129213512,
+          "worker_medians_seconds": [
+            0.15239758347161114,
+            0.16955250006867573,
+            0.17978556302841753,
+            0.16642741701798514,
+            0.18730189598863944,
+            0.19464875006815419,
+            0.1735014795558527,
+            0.1851674789795652
+          ],
+          "round_medians_seconds": [
+            0.16798995854333043,
+            0.18623468748410232
+          ],
+          "worker_spread": 0.2772430220615254,
+          "round_drift": 0.10860606847561027,
+          "max_within_worker_spread": 0.7459523113661621,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 566.1119084480497,
+          "memory": {
+            "baseline_rss_bytes": 556187648,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 556187648,
+            "elapsed_seconds": 0.15438395901583135,
+            "retained_result_rss_bytes": 660242432,
+            "output_bytes": 103980101,
+            "validated": true,
+            "process_high_water_rss_bytes": 974995456,
+            "peak_rss_bytes": 660242432,
+            "incremental_peak_rss_bytes": 104054784,
+            "samples": 109,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0025837079156190157,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 1.1004674684954807,
+          "worker_medians_seconds": [
+            1.0282212914898992,
+            0.8125588335096836,
+            0.8430977079551667,
+            0.8660521874553524,
+            1.1727136455010623,
+            1.2258594995364547,
+            1.2712264790316112,
+            1.2720661664498039
+          ],
+          "round_medians_seconds": [
+            0.8545749477052595,
+            1.248542989284033
+          ],
+          "worker_spread": 0.565506538099366,
+          "round_drift": 0.4610105206531889,
+          "max_within_worker_spread": 0.12482931678391607,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 90.87047442700937,
+          "memory": {
+            "baseline_rss_bytes": 554844160,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 554844160,
+            "elapsed_seconds": 1.4297848329879344,
+            "retained_result_rss_bytes": 659734528,
+            "output_bytes": 104857601,
+            "validated": true,
+            "process_high_water_rss_bytes": 974831616,
+            "peak_rss_bytes": 659734528,
+            "incremental_peak_rss_bytes": 104890368,
+            "samples": 870,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.010100458050146699,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            2.2618633701518025,
+            2.5061010666354577
+          ],
+          "observed_ratio_bounds": [
+            2.0248986166127136,
+            2.644526907566121
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            11.506233991749863,
+            16.801246639147383
+          ],
+          "observed_ratio_bounds": [
+            10.796426166407663,
+            17.282480386866688
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.numeric-100mib": {
+      "fixture": {
+        "actual_bytes": 104857601,
+        "encoding": "utf-8",
+        "family": "numeric",
+        "generator_version": 1,
+        "items": 7800669,
+        "last_record_bytes": 8,
+        "max_record_bytes": 22,
+        "name": "numeric-100mib",
+        "overshoot_bytes": 1,
+        "sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+        "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/numeric-100mib.json"
+      },
+      "actual_mib": 100.00000095367432,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.21060838576522656,
+          "worker_medians_seconds": [
+            0.2069800414610654,
+            0.20774072950007394,
+            0.2056116660241969,
+            0.20430187502643093,
+            0.21347604203037918,
+            0.22145062504569069,
+            0.21734131302218884,
+            0.21677918755449355
+          ],
+          "round_medians_seconds": [
+            0.20629585374263115,
+            0.2170602502883412
+          ],
+          "worker_spread": 0.08393828993023766,
+          "round_drift": 0.05217941296648365,
+          "max_within_worker_spread": 0.09207433089983241,
+          "adequate_sampling": true,
+          "stable": true,
+          "throughput_mib_per_second": 474.814906302678,
+          "memory": {
+            "baseline_rss_bytes": 136986624,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136986624,
+            "elapsed_seconds": 0.1712101249722764,
+            "retained_result_rss_bytes": 679690240,
+            "output_bytes": 104857601,
+            "validated": true,
+            "process_high_water_rss_bytes": 1204191232,
+            "peak_rss_bytes": 679690240,
+            "incremental_peak_rss_bytes": 542703616,
+            "samples": 110,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0026832090225070715,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.2037837182288058,
+          "worker_medians_seconds": [
+            0.20916420803405344,
+            0.17585970793152228,
+            0.1982361664995551,
+            0.2122033124906011,
+            0.2038828119984828,
+            0.1808758539846167,
+            0.20368462445912883,
+            0.21520349947968498
+          ],
+          "round_medians_seconds": [
+            0.20370018726680428,
+            0.2037837182288058
+          ],
+          "worker_spread": 0.2237226025843435,
+          "round_drift": 0.0004100681649945592,
+          "max_within_worker_spread": 0.27980966821076203,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 490.7163429091797,
+          "memory": {
+            "baseline_rss_bytes": 136839168,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136839168,
+            "elapsed_seconds": 0.17219270800706,
+            "retained_result_rss_bytes": 679542784,
+            "output_bytes": 104857601,
+            "validated": true,
+            "process_high_water_rss_bytes": 1204125696,
+            "peak_rss_bytes": 679542784,
+            "incremental_peak_rss_bytes": 542703616,
+            "samples": 115,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.002341708051972091,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.7384867292712443,
+          "worker_medians_seconds": [
+            0.8284528534859419,
+            0.7400520835653879,
+            0.7369213749771006,
+            0.6222771455068141,
+            0.7424902920029126,
+            0.7333902295213193,
+            0.7571009375387803,
+            0.6299718124209903
+          ],
+          "round_medians_seconds": [
+            0.7384867292712443,
+            0.7379402607621159
+          ],
+          "worker_spread": 0.3313245705194714,
+          "round_drift": 0.0007405321788025443,
+          "max_within_worker_spread": 0.32293049876264623,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 135.4120487071672,
+          "memory": {
+            "baseline_rss_bytes": 135069696,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "f1cef1592b47f8c703ce890f06c8fe5962403e27cbfcaf5af17dddaadda40551",
+            "fixture_bytes": 104857601,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 135069696,
+            "elapsed_seconds": 0.712638583034277,
+            "retained_result_rss_bytes": 554778624,
+            "output_bytes": 104857601,
+            "validated": true,
+            "process_high_water_rss_bytes": 972734464,
+            "peak_rss_bytes": 554778624,
+            "incremental_peak_rss_bytes": 419708928,
+            "samples": 458,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.002495791995897889,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.9874177477213616,
+            0.9388348071933994
+          ],
+          "observed_ratio_bounds": [
+            0.7941260400382167,
+            1.0533603739654551
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            3.579745864367004,
+            3.3997024318448066
+          ],
+          "observed_ratio_bounds": [
+            2.810004015018802,
+            4.055042830021816
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.nested_unicode-1mib": {
+      "fixture": {
+        "actual_bytes": 1050157,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 637,
+        "last_record_bytes": 1650,
+        "max_record_bytes": 1671,
+        "name": "nested_unicode-1mib",
+        "overshoot_bytes": 1581,
+        "sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/nested_unicode-1mib.json"
+      },
+      "actual_mib": 1.0015077590942383,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.0005859980647073826,
+          "worker_medians_seconds": [
+            0.0006555182189913467,
+            0.000655024719890207,
+            0.0006612630349991377,
+            0.0006482383141701575,
+            0.0005130286554049235,
+            0.0005237578152446076,
+            0.000518772125360556,
+            0.0005075885310361627
+          ],
+          "round_medians_seconds": [
+            0.0006552714694407769,
+            0.0005159003903827397
+          ],
+          "worker_spread": 0.30275409030474454,
+          "round_drift": 0.27015114091043735,
+          "max_within_worker_spread": 0.1517018943895616,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1709.0632536377743,
+          "memory": {
+            "baseline_rss_bytes": 42352640,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42352640,
+            "elapsed_seconds": 0.0011804579989984632,
+            "retained_result_rss_bytes": 43089920,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 52494336,
+            "peak_rss_bytes": 43089920,
+            "incremental_peak_rss_bytes": 737280,
+            "samples": 4,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0012805829755961895,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.000586343734539696,
+          "worker_medians_seconds": [
+            0.0006732513465976808,
+            0.0006433307207771577,
+            0.0006555013096658513,
+            0.0006516055000247434,
+            0.0004875950289715547,
+            0.0005293567483022343,
+            0.0005101640927023254,
+            0.00048685547153581865
+          ],
+          "round_medians_seconds": [
+            0.0006535534048452973,
+            0.0004988795608369401
+          ],
+          "worker_spread": 0.3828566914814857,
+          "round_drift": 0.3100424554352763,
+          "max_within_worker_spread": 0.25211147519918486,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1708.0557019688513,
+          "memory": {
+            "baseline_rss_bytes": 42057728,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42057728,
+            "elapsed_seconds": 0.001192958909086883,
+            "retained_result_rss_bytes": 42729472,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 52101120,
+            "peak_rss_bytes": 42729472,
+            "incremental_peak_rss_bytes": 671744,
+            "samples": 4,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0012890829239040613,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.006083060547098285,
+          "worker_medians_seconds": [
+            0.0060547786561073735,
+            0.006111342438089196,
+            0.005824830750498222,
+            0.006136559870355995,
+            0.006044152345566545,
+            0.006151210935058771,
+            0.006138201842986746,
+            0.0046199531279853545
+          ],
+          "round_medians_seconds": [
+            0.006083060547098285,
+            0.006091177094276645
+          ],
+          "worker_spread": 0.33144444643774107,
+          "round_drift": 0.0013342867649464019,
+          "max_within_worker_spread": 0.1355770719193261,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 164.63879511637825,
+          "memory": {
+            "baseline_rss_bytes": 40632320,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 40632320,
+            "elapsed_seconds": 0.0056400420144200325,
+            "retained_result_rss_bytes": 43646976,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 52920320,
+            "peak_rss_bytes": 43646976,
+            "incremental_peak_rss_bytes": 3014656,
+            "samples": 7,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015345000429078937,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.9973780872880887,
+            0.9670075272996554
+          ],
+          "observed_ratio_bounds": [
+            0.7362508499155007,
+            1.32637225908817
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            9.283267822250377,
+            11.806885995487775
+          ],
+          "observed_ratio_bounds": [
+            6.986558878179814,
+            12.118498663675544
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.nested_unicode-1mib": {
+      "fixture": {
+        "actual_bytes": 1050157,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 637,
+        "last_record_bytes": 1650,
+        "max_record_bytes": 1671,
+        "name": "nested_unicode-1mib",
+        "overshoot_bytes": 1581,
+        "sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 1048576,
+        "path": "../fixtures/nested_unicode-1mib.json"
+      },
+      "actual_mib": 1.0015077590942383,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.002855796217772877,
+          "worker_medians_seconds": [
+            0.0029180768433434423,
+            0.002829292967362562,
+            0.00239871480880538,
+            0.0030040495003049728,
+            0.0028526041860459372,
+            0.0029573242500191554,
+            0.002832330748788081,
+            0.0028589882494998164
+          ],
+          "round_medians_seconds": [
+            0.0028736849053530023,
+            0.002855796217772877
+          ],
+          "worker_spread": 0.2523579248677188,
+          "round_drift": 0.0062639930219097195,
+          "max_within_worker_spread": 0.27346474611311966,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 350.6930056358415,
+          "memory": {
+            "baseline_rss_bytes": 33062912,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 33062912,
+            "elapsed_seconds": 0.0027595419669523835,
+            "retained_result_rss_bytes": 40321024,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 50429952,
+            "peak_rss_bytes": 40321024,
+            "incremental_peak_rss_bytes": 7258112,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015397920506075025,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.0026906601415248588,
+          "worker_medians_seconds": [
+            0.002563760404882487,
+            0.0024866757812560536,
+            0.0021789427191833965,
+            0.0020477265934459865,
+            0.002931226532382425,
+            0.0028175598781672306,
+            0.0029760078105027787,
+            0.002886919250158826
+          ],
+          "round_medians_seconds": [
+            0.002332809250219725,
+            0.0029090728912706254
+          ],
+          "worker_spread": 0.4533228312939219,
+          "round_drift": 0.24702561557342184,
+          "max_within_worker_spread": 0.1511074374947452,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 372.21637308926756,
+          "memory": {
+            "baseline_rss_bytes": 32833536,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 32833536,
+            "elapsed_seconds": 0.002778541063889861,
+            "retained_result_rss_bytes": 40058880,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 50561024,
+            "peak_rss_bytes": 40058880,
+            "incremental_peak_rss_bytes": 7225344,
+            "samples": 5,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0017516249790787697,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.006174718077090802,
+          "worker_medians_seconds": [
+            0.0059737786250479985,
+            0.006455924503825372,
+            0.006280546873313142,
+            0.006274546845816076,
+            0.006186751281347824,
+            0.006162684872833779,
+            0.006099251313571585,
+            0.006090345064876601
+          ],
+          "round_medians_seconds": [
+            0.006277546859564609,
+            0.006130968093202682
+          ],
+          "worker_spread": 0.08071036927209518,
+          "round_drift": 0.023907931689358675,
+          "max_within_worker_spread": 0.07762375165472912,
+          "adequate_sampling": true,
+          "stable": true,
+          "throughput_mib_per_second": 162.19489644555486,
+          "memory": {
+            "baseline_rss_bytes": 31145984,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "4d7057858f5f94d3e592109526b405bb1cf26f69b5c1c9932d95f548b11b1d28",
+            "fixture_bytes": 1050157,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 31145984,
+            "elapsed_seconds": 0.005784250097349286,
+            "retained_result_rss_bytes": 40615936,
+            "output_bytes": 1050157,
+            "validated": true,
+            "process_high_water_rss_bytes": 50708480,
+            "peak_rss_bytes": 40615936,
+            "incremental_peak_rss_bytes": 9469952,
+            "samples": 7,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015486669726669788,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.8117832424404804,
+            1.0186556285655763
+          ],
+          "observed_ratio_bounds": [
+            0.6816554098852566,
+            1.2406676273387018
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            2.1844938002322416,
+            2.146850694404233
+          ],
+          "observed_ratio_bounds": [
+            1.9885752962597778,
+            2.6914097833250064
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.nested_unicode-10mib": {
+      "fixture": {
+        "actual_bytes": 10486633,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 6324,
+        "last_record_bytes": 1665,
+        "max_record_bytes": 1685,
+        "name": "nested_unicode-10mib",
+        "overshoot_bytes": 873,
+        "sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/nested_unicode-10mib.json"
+      },
+      "actual_mib": 10.000832557678223,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.006880135711980984,
+          "worker_medians_seconds": [
+            0.005976458545774221,
+            0.005877749994397163,
+            0.0061255209730006754,
+            0.005503437481820583,
+            0.007634750450961292,
+            0.008298166561871767,
+            0.008147416985593736,
+            0.00799412454944104
+          ],
+          "round_medians_seconds": [
+            0.005927104270085692,
+            0.008070770767517388
+          ],
+          "worker_spread": 0.5078151772020609,
+          "round_drift": 0.3616718046029419,
+          "max_within_worker_spread": 0.2723041348501498,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1453.5807106628574,
+          "memory": {
+            "baseline_rss_bytes": 136019968,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136019968,
+            "elapsed_seconds": 0.013557750033214688,
+            "retained_result_rss_bytes": 155205632,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 248430592,
+            "peak_rss_bytes": 155205632,
+            "incremental_peak_rss_bytes": 19185664,
+            "samples": 12,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.001576332957483828,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.00867406275938265,
+          "worker_medians_seconds": [
+            0.00829302053898573,
+            0.008637249993626028,
+            0.00915979198180139,
+            0.00887737498851493,
+            0.009244707995094359,
+            0.008710875525139272,
+            0.007301416539121419,
+            0.00730541703524068
+          ],
+          "round_medians_seconds": [
+            0.00875731249107048,
+            0.008008146280189976
+          ],
+          "worker_spread": 0.2661526630566371,
+          "round_drift": 0.09355051527139824,
+          "max_within_worker_spread": 0.45964342507534384,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1152.9582889932885,
+          "memory": {
+            "baseline_rss_bytes": 135806976,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 135806976,
+            "elapsed_seconds": 0.013159750029444695,
+            "retained_result_rss_bytes": 155058176,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 248250368,
+            "peak_rss_bytes": 155058176,
+            "incremental_peak_rss_bytes": 19251200,
+            "samples": 12,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.002384625026024878,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.05705249970196746,
+          "worker_medians_seconds": [
+            0.058034875022713095,
+            0.056760896055493504,
+            0.056560313038062304,
+            0.04475218750303611,
+            0.063189416017849,
+            0.057115833449643105,
+            0.05698916595429182,
+            0.05816943751415238
+          ],
+          "round_medians_seconds": [
+            0.056660604546777904,
+            0.05764263548189774
+          ],
+          "worker_spread": 0.4119849675183376,
+          "round_drift": 0.017331811811310383,
+          "max_within_worker_spread": 0.10217228289587355,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 175.29175075449572,
+          "memory": {
+            "baseline_rss_bytes": 134135808,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 134135808,
+            "elapsed_seconds": 0.06097487499937415,
+            "retained_result_rss_bytes": 172228608,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 265420800,
+            "peak_rss_bytes": 174211072,
+            "incremental_peak_rss_bytes": 40075264,
+            "samples": 42,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0022209580056369305,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.4775026879936883,
+            0.992240581583675
+          ],
+          "observed_ratio_bounds": [
+            0.8798831024517882,
+            1.6798061258317651
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            9.559576137836144,
+            7.142147527457148
+          ],
+          "observed_ratio_bounds": [
+            5.393021117298667,
+            11.481808638070584
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "loads.nested_unicode-10mib": {
+      "fixture": {
+        "actual_bytes": 10486633,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 6324,
+        "last_record_bytes": 1665,
+        "max_record_bytes": 1685,
+        "name": "nested_unicode-10mib",
+        "overshoot_bytes": 873,
+        "sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 10485760,
+        "path": "../fixtures/nested_unicode-10mib.json"
+      },
+      "actual_mib": 10.000832557678223,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.03813259402522817,
+          "worker_medians_seconds": [
+            0.03740443754941225,
+            0.03803002048516646,
+            0.03692647849675268,
+            0.03817852103384212,
+            0.03914697957225144,
+            0.03888549952534959,
+            0.038728499959688634,
+            0.03808666701661423
+          ],
+          "round_medians_seconds": [
+            0.037717229017289355,
+            0.03880699974251911
+          ],
+          "worker_spread": 0.06013303098192879,
+          "round_drift": 0.028893181010996694,
+          "max_within_worker_spread": 0.13918499922278116,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 262.2646796874549,
+          "memory": {
+            "baseline_rss_bytes": 42811392,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42811392,
+            "elapsed_seconds": 0.033459958038292825,
+            "retained_result_rss_bytes": 114835456,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 218775552,
+            "peak_rss_bytes": 114835456,
+            "incremental_peak_rss_bytes": 72024064,
+            "samples": 23,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.002852250006981194,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.03357230196706951,
+          "worker_medians_seconds": [
+            0.0286012499127537,
+            0.02847804198972881,
+            0.028134333493653685,
+            0.02897093747742474,
+            0.04083000001264736,
+            0.03817366645671427,
+            0.03907481249189004,
+            0.03857785451691598
+          ],
+          "round_medians_seconds": [
+            0.028539645951241255,
+            0.03882633350440301
+          ],
+          "worker_spread": 0.45125172493805343,
+          "round_drift": 0.36043500927573224,
+          "max_within_worker_spread": 0.2217009249485944,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 297.8893901135486,
+          "memory": {
+            "baseline_rss_bytes": 42352640,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 42352640,
+            "elapsed_seconds": 0.03356670797802508,
+            "retained_result_rss_bytes": 114343936,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 218251264,
+            "peak_rss_bytes": 114343936,
+            "incremental_peak_rss_bytes": 71991296,
+            "samples": 25,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015682500088587403,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.07306803119718097,
+          "worker_medians_seconds": [
+            0.061184937483631074,
+            0.07468510395847261,
+            0.07599374995334074,
+            0.07323854154674336,
+            0.07313766644801944,
+            0.05216512503102422,
+            0.06917091703508049,
+            0.0729983959463425
+          ],
+          "round_medians_seconds": [
+            0.07396182275260799,
+            0.0710846564907115
+          ],
+          "worker_spread": 0.456792251684337,
+          "round_drift": 0.040475208067896506,
+          "max_within_worker_spread": 0.22112005096491205,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 136.87015229259472,
+          "memory": {
+            "baseline_rss_bytes": 40779776,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "861b1b0c0ac15ce4406cedd779ecc05082e3706a7c20d1eda507447656a4bf66",
+            "fixture_bytes": 10486633,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 40779776,
+            "elapsed_seconds": 0.07240791595540941,
+            "retained_result_rss_bytes": 134119424,
+            "output_bytes": 10486633,
+            "validated": true,
+            "process_high_water_rss_bytes": 237846528,
+            "peak_rss_bytes": 134119424,
+            "incremental_peak_rss_bytes": 93339648,
+            "samples": 47,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0035203329753130674,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.7566739841402148,
+            1.0004982029533893
+          ],
+          "observed_ratio_bounds": [
+            0.718684654629042,
+            1.1057106356956827
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.9609558994565672,
+            1.8317483176321716
+          ],
+          "observed_ratio_bounds": [
+            1.332545335579362,
+            2.0579744683756847
+          ],
+          "no_regression": false
+        }
+      }
+    },
+    "dumps.nested_unicode-100mib": {
+      "fixture": {
+        "actual_bytes": 104859161,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 62928,
+        "last_record_bytes": 1682,
+        "max_record_bytes": 1693,
+        "name": "nested_unicode-100mib",
+        "overshoot_bytes": 1561,
+        "sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/nested_unicode-100mib.json"
+      },
+      "actual_mib": 100.00148868560791,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.05933836428448558,
+          "worker_medians_seconds": [
+            0.05944699951214716,
+            0.05919237498892471,
+            0.05888785404385999,
+            0.05887583299772814,
+            0.059229729056824,
+            0.05974654096644372,
+            0.0610062915366143,
+            0.059876958024688065
+          ],
+          "round_medians_seconds": [
+            0.05904011451639235,
+            0.05981174949556589
+          ],
+          "worker_spread": 0.036185620320112744,
+          "round_drift": 0.013069672806262922,
+          "max_within_worker_spread": 0.059993248721791126,
+          "adequate_sampling": true,
+          "stable": true,
+          "throughput_mib_per_second": 1685.275451917942,
+          "memory": {
+            "baseline_rss_bytes": 1085472768,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 1085472768,
+            "elapsed_seconds": 0.09998391603585333,
+            "retained_result_rss_bytes": 1260355584,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 2208284672,
+            "peak_rss_bytes": 1260355584,
+            "incremental_peak_rss_bytes": 174882816,
+            "samples": 69,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0016012500273063779,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.07286472897976637,
+          "worker_medians_seconds": [
+            0.06825297902105376,
+            0.0881490419851616,
+            0.08611527102766559,
+            0.08766145852860063,
+            0.0588541665347293,
+            0.05959575000451878,
+            0.07015654147835448,
+            0.07557291648117825
+          ],
+          "round_medians_seconds": [
+            0.08688836477813311,
+            0.06487614574143663
+          ],
+          "worker_spread": 0.4977536370877951,
+          "round_drift": 0.33929603531667873,
+          "max_within_worker_spread": 0.2016451409136264,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 1372.4265510323532,
+          "memory": {
+            "baseline_rss_bytes": 1085374464,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 1085374464,
+            "elapsed_seconds": 0.12033225002232939,
+            "retained_result_rss_bytes": 1260191744,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 2208448512,
+            "peak_rss_bytes": 1260191744,
+            "incremental_peak_rss_bytes": 174817280,
+            "samples": 80,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0022327920887619257,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.3931237187352963,
+          "worker_medians_seconds": [
+            0.41391852096421644,
+            0.39803210453828797,
+            0.388699812523555,
+            0.4064414165331982,
+            0.3942420000093989,
+            0.39022339548682794,
+            0.39200543746119365,
+            0.39154260396026075
+          ],
+          "round_medians_seconds": [
+            0.4022367605357431,
+            0.3917740207107272
+          ],
+          "worker_spread": 0.06487965166984266,
+          "round_drift": 0.026706058268067823,
+          "max_within_worker_spread": 0.0709001783673564,
+          "adequate_sampling": true,
+          "stable": true,
+          "throughput_mib_per_second": 254.37663493650035,
+          "memory": {
+            "baseline_rss_bytes": 1083654144,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "dumps",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 1083654144,
+            "elapsed_seconds": 0.5150275840424001,
+            "retained_result_rss_bytes": 1464041472,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 2411888640,
+            "peak_rss_bytes": 1468121088,
+            "incremental_peak_rss_bytes": 384466944,
+            "samples": 332,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.002661250066012144,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            1.4716835407561542,
+            1.084672264038125
+          ],
+          "observed_ratio_bounds": [
+            0.9647229007422399,
+            1.4972024597692408
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "win",
+          "ratios_by_round": [
+            6.812940046450334,
+            6.55011806233441
+          ],
+          "observed_ratio_bounds": [
+            6.371470920999485,
+            7.030363731417413
+          ],
+          "no_regression": true
+        }
+      }
+    },
+    "loads.nested_unicode-100mib": {
+      "fixture": {
+        "actual_bytes": 104859161,
+        "encoding": "utf-8",
+        "family": "nested_unicode",
+        "generator_version": 1,
+        "items": 62928,
+        "last_record_bytes": 1682,
+        "max_record_bytes": 1693,
+        "name": "nested_unicode-100mib",
+        "overshoot_bytes": 1561,
+        "sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+        "shape": "array of nested document objects with lists, multilingual text, and escaped prose",
+        "size_policy": "at least target bytes, stopping at a complete array item",
+        "target_bytes": 104857600,
+        "path": "../fixtures/nested_unicode-100mib.json"
+      },
+      "actual_mib": 100.00148868560791,
+      "engines": {
+        "candidate": {
+          "median_seconds": 0.33742941726814024,
+          "worker_medians_seconds": [
+            0.35776335455011576,
+            0.3142906044377014,
+            0.3047866250271909,
+            0.3406235629809089,
+            0.344756625010632,
+            0.3380773340468295,
+            0.336781500489451,
+            0.2718591879820451
+          ],
+          "round_medians_seconds": [
+            0.32745708370930515,
+            0.33742941726814024
+          ],
+          "worker_spread": 0.3159877258727932,
+          "round_drift": 0.030453864200683745,
+          "max_within_worker_spread": 0.3867915142182474,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 296.36268673676767,
+          "memory": {
+            "baseline_rss_bytes": 136773632,
+            "engine": "candidate",
+            "engine_label": "Pydantic ORJSON",
+            "engine_version": "3.13.0+pydantic.4",
+            "native_sha256": "e068294d53c85c457cdda458e03c617e5d7b354d935de35c307cb7217cf1efe2",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136773632,
+            "elapsed_seconds": 0.2248731249710545,
+            "retained_result_rss_bytes": 855326720,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 1908801536,
+            "peak_rss_bytes": 855326720,
+            "incremental_peak_rss_bytes": 718553088,
+            "samples": 153,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.001522792037576437,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "upstream": {
+          "median_seconds": 0.3216082290164195,
+          "worker_medians_seconds": [
+            0.33899337495677173,
+            0.30087254202226177,
+            0.30875691649271175,
+            0.2957107500405982,
+            0.30844291602261364,
+            0.33445954154012725,
+            0.3344914995250292,
+            0.3390665624756366
+          ],
+          "round_medians_seconds": [
+            0.30481472925748676,
+            0.33447552053257823
+          ],
+          "worker_spread": 0.14661561146859237,
+          "round_drift": 0.09730760500761781,
+          "max_within_worker_spread": 0.19414008279128292,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 310.94194632843926,
+          "memory": {
+            "baseline_rss_bytes": 136609792,
+            "engine": "upstream",
+            "engine_label": "ORJSON",
+            "engine_version": "3.13.0",
+            "native_sha256": "28493f56a8efab6ab67f596eb0dbd82da3a2510bb5a23b160a5bacd873226722",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 136609792,
+            "elapsed_seconds": 0.23002733301836997,
+            "retained_result_rss_bytes": 855212032,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 1908637696,
+            "peak_rss_bytes": 855212032,
+            "incremental_peak_rss_bytes": 718602240,
+            "samples": 156,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015332920011132956,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        },
+        "stdlib": {
+          "median_seconds": 0.6591532187594566,
+          "worker_medians_seconds": [
+            0.7404731045826338,
+            0.6612797710113227,
+            0.7545271875569597,
+            0.7586616459884681,
+            0.6570266665075906,
+            0.5692268750281073,
+            0.5387919165659696,
+            0.5354041459504515
+          ],
+          "round_medians_seconds": [
+            0.7475001460697968,
+            0.5540093957970385
+          ],
+          "worker_spread": 0.4169887396775551,
+          "round_drift": 0.3492553587369911,
+          "max_within_worker_spread": 0.17313598393125784,
+          "adequate_sampling": true,
+          "stable": false,
+          "throughput_mib_per_second": 151.71205394978315,
+          "memory": {
+            "baseline_rss_bytes": 134856704,
+            "engine": "stdlib",
+            "engine_label": "json",
+            "engine_version": "3.13.12",
+            "native_sha256": "195bf4d1a94d361083124ab3cce00c2315c4d6af26583815fd1082b088a7cc4d",
+            "python_executable_sha256": "4848b5f5c0d691a8aad9580e1288063cfd3220bd217d8a5b8ef6b5f40a6ca38b",
+            "python_gil_disabled_build": "False",
+            "python_gil_enabled": "True",
+            "python_hash_seed": "0",
+            "operation": "loads",
+            "fixture_sha256": "2a8e48d672fefc6899074ba4406e7a9e3c5029ac51fa2dfd79a565f2b197711f",
+            "fixture_bytes": 104859161,
+            "source_commit": "5d095448697f3f8fe91e05131a823a8befb9ec0f",
+            "suite_sha256": "263a87c56041543fd4b5f2a923166e6344aae651af6e2583597293bdd581bc97",
+            "preparation_high_water_rss_bytes": 134856704,
+            "elapsed_seconds": 0.4850973749998957,
+            "retained_result_rss_bytes": 1083375616,
+            "output_bytes": 104859161,
+            "validated": true,
+            "process_high_water_rss_bytes": 2136637440,
+            "peak_rss_bytes": 1083375616,
+            "incremental_peak_rss_bytes": 948518912,
+            "samples": 326,
+            "requested_interval_seconds": 0.001,
+            "max_sample_gap_seconds": 0.0015306250425055623,
+            "method": "external psutil RSS samples from GO through retained result; validation excluded; observed peak, not exact allocation peak"
+          }
+        }
+      },
+      "comparisons": {
+        "upstream": {
+          "status": "unstable",
+          "ratios_by_round": [
+            0.9308539788013296,
+            0.9912458825923447
+          ],
+          "observed_ratio_bounds": [
+            0.8265540511057983,
+            1.2472139161175975
+          ],
+          "no_regression": false
+        },
+        "stdlib": {
+          "status": "unstable",
+          "ratios_by_round": [
+            2.282742329475389,
+            1.641852688133565
+          ],
+          "observed_ratio_bounds": [
+            1.496531545618241,
+            2.7906419187810334
+          ],
+          "no_regression": false
+        }
+      }
+    }
+  },
+  "case_status_counts": {
+    "upstream": {
+      "unstable": 18
+    },
+    "stdlib": {
+      "unstable": 17,
+      "win": 1
+    }
+  }
+}

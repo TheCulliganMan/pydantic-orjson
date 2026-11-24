@@ -1,0 +1,15 @@
+{
+  "actual_bytes": 10485793,
+  "encoding": "utf-8",
+  "family": "records",
+  "generator_version": 1,
+  "items": 38222,
+  "last_record_bytes": 280,
+  "max_record_bytes": 282,
+  "name": "records-10mib",
+  "overshoot_bytes": 33,
+  "sha256": "442b771824e641ca48cf9e7538b1b19d1e42abab5cb7c5714248dc28536d222d",
+  "shape": "array of varied event records with identifiers, amounts, flags, customer objects, and tags",
+  "size_policy": "at least target bytes, stopping at a complete array item",
+  "target_bytes": 10485760
+}

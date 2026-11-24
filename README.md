@@ -23,6 +23,7 @@ every case and scale visible and an all-cases speed gate.
 - [Drop-in compatibility contract](compatibility/README.md)
 - [Typed/AI API examples](integration_pydantic/README.md)
 - [Benchmark methodology and measurements](benchmarks/README.md)
+- [Large JSON report: 1, 10 and 100 MiB](benchmarks/results/large-v4/README.md)
 - [Upstream provenance](UPSTREAM.md) and [project changelog](FORK_CHANGELOG.md)
 
 ## Build and use

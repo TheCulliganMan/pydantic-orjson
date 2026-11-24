@@ -1,0 +1,15 @@
+{
+  "actual_bytes": 1048578,
+  "encoding": "utf-8",
+  "family": "numeric",
+  "generator_version": 1,
+  "items": 79019,
+  "last_record_bytes": 16,
+  "max_record_bytes": 22,
+  "name": "numeric-1mib",
+  "overshoot_bytes": 2,
+  "sha256": "3f65d92572eefc61c4076d8fb843e708e913553f128174a113b67fd2b7c9c3e2",
+  "shape": "array of finite integer and floating-point scalars with varied signs and magnitudes",
+  "size_policy": "at least target bytes, stopping at a complete array item",
+  "target_bytes": 1048576
+}

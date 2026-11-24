@@ -1,5 +1,10 @@
 # Performance evidence
 
+**[Large JSON report: real 1, 10 and 100 MiB documents](results/large-v4/README.md)**
+includes structured records, mixed numbers and nested Unicode, both encoding and
+decoding, throughput and separate observed RSS measurements for all three engines.
+See [large-suite methodology](LARGE_JSON.md) for reproduction instructions.
+
 The primary comparison is **Pydantic ORJSON**, the published **ORJSON** wheel,
 and Python's standard-library **json**. The unchanged distribution/module name
 `orjson` is retained for drop-in compatibility; it is not used as an ambiguous
