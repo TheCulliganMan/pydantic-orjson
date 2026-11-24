@@ -51,18 +51,10 @@ const fn buffer_capacity_to_allocate(len: usize) -> Option<usize> {
     let Some(capacity) = len.checked_mul(13) else {
         return None;
     };
-    let Some(capacity) = capacity.checked_add(256) else {
+    let Some(capacity) = capacity.checked_add(256 + MINIMUM_BUFFER_CAPACITY - 1) else {
         return None;
     };
-    if capacity <= MINIMUM_BUFFER_CAPACITY {
-        return Some(MINIMUM_BUFFER_CAPACITY);
-    }
-    // The stack threshold is independent of heap allocation granularity.
-    // Preserve yyjson's bound without rounding medium inputs up by 8 KiB.
-    let Some(capacity) = capacity.checked_add(ARENA_ALIGNMENT - 1) else {
-        return None;
-    };
-    Some(capacity & !(ARENA_ALIGNMENT - 1))
+    Some(capacity & !(MINIMUM_BUFFER_CAPACITY - 1))
 }
 
 const ARENA_ALIGNMENT: usize = 16;
