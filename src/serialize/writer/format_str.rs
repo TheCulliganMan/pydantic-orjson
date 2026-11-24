@@ -87,7 +87,22 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
     }
 }
 
-#[cfg(all(not(target_arch = "x86_64"), not(feature = "generic_simd")))]
+#[cfg(all(target_arch = "aarch64", not(feature = "generic_simd")))]
+#[inline(always)]
+pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+    unsafe {
+        crate::serialize::writer::str::format_escaped_str_impl_neon_128(
+            writer.as_mut_buffer_ptr(),
+            value.as_bytes().as_ptr(),
+            value.len(),
+        )
+    }
+}
+
+#[cfg(all(
+    not(any(target_arch = "x86_64", target_arch = "aarch64")),
+    not(feature = "generic_simd")
+))]
 #[inline(always)]
 pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
     unsafe {

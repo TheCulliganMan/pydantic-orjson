@@ -25,13 +25,51 @@ use crate::opt::{
 use core::ptr::NonNull;
 
 use crate::ffi::{
-    BorrowedPyRef, Py_DECREF, Py_REFCNT, PyBoolRef, PyDateRef, PyDateTimeRef, PyDictIterator,
-    PyDictRef, PyErr_Clear, PyFloatRef, PyFragmentRef, PyIntRef, PyListIterator, PyListRef,
-    PyObject, PyObject_GetAttr, PyObject_Type, PyObject_Vectorcall, PyStrRef, PyStrSubclassRef,
-    PyTimeRef, PyTupleIterator, PyTupleRef, PyTypeRef, PyUuidRef, PyVectorcall_NARGS,
+    BorrowedPyRef, Py_DECREF, Py_INCREF, Py_REFCNT, PyBoolRef, PyDateRef, PyDateTimeRef,
+    PyDictIterator, PyDictRef, PyErr_Clear, PyFloatRef, PyFragmentRef, PyIntRef, PyListIterator,
+    PyListRef, PyObject, PyObject_GetAttr, PyObject_Type, PyObject_Vectorcall, PyStrRef,
+    PyStrSubclassRef, PyTimeRef, PyTupleIterator, PyTupleRef, PyTypeRef, PyUuidRef,
+    PyVectorcall_NARGS,
 };
 
 const PER_ITEM_RESERVE: usize = 128;
+
+trait SnapshotValue {
+    fn as_ptr(&self) -> *mut PyObject;
+}
+
+impl SnapshotValue for *mut PyObject {
+    #[inline(always)]
+    fn as_ptr(&self) -> *mut PyObject {
+        *self
+    }
+}
+
+// A default callback may mutate the source mapping. Retain snapshot values
+// until serialization finishes, including error paths.
+#[repr(transparent)]
+struct OwnedSnapshotValue(*mut PyObject);
+
+impl OwnedSnapshotValue {
+    #[inline(always)]
+    fn new(ptr: *mut PyObject) -> Self {
+        unsafe { Py_INCREF(ptr) };
+        Self(ptr)
+    }
+}
+
+impl SnapshotValue for OwnedSnapshotValue {
+    #[inline(always)]
+    fn as_ptr(&self) -> *mut PyObject {
+        self.0
+    }
+}
+
+impl Drop for OwnedSnapshotValue {
+    fn drop(&mut self) {
+        unsafe { Py_DECREF(self.0) };
+    }
+}
 
 #[cold]
 #[inline(never)]
@@ -222,9 +260,9 @@ where
     }
 
     #[inline(never)]
-    fn serialize_str_value_items(
+    fn serialize_str_value_items<S: AsRef<str>, V: SnapshotValue>(
         &mut self,
-        items: &Vec<(&str, *mut PyObject)>,
+        items: &Vec<(S, V)>,
     ) -> Result<(), SerializeError> {
         F::map_open(&mut self.writer);
         F::reserve_map(&mut self.writer, items.len(), PER_ITEM_RESERVE);
@@ -235,7 +273,7 @@ where
             } else {
                 repeating = true;
             }
-            self.serialize_pair(key, *val)?;
+            self.serialize_pair(key.as_ref(), val.as_ptr())?;
         }
 
         F::map_close(&mut self.writer);
@@ -247,12 +285,13 @@ where
         let opts = self.state.opts() & NOT_PASSTHROUGH;
 
         let map_iter = PyDictIterator::from_dict(dict).fuse();
-        let mut items: Vec<(String, *mut PyObject)> = Vec::with_capacity(map_iter.len());
+        let mut items: Vec<(String, OwnedSnapshotValue)> = Vec::with_capacity(map_iter.len());
         for (key, value) in map_iter {
+            let value = OwnedSnapshotValue::new(value.as_ptr());
             if let Ok(ob) = PyStrRef::from_ptr(key.as_ptr()) {
                 match ob.as_str() {
                     Some(uni) => {
-                        items.push((String::from(uni), value.as_ptr()));
+                        items.push((String::from(uni), value));
                     }
                     None => {
                         cold_path!();
@@ -261,7 +300,7 @@ where
                 }
             } else {
                 match pyobject_to_string(key.as_ptr(), opts) {
-                    Ok(key_as_str) => items.push((key_as_str, value.as_ptr())),
+                    Ok(key_as_str) => items.push((key_as_str, value)),
                     Err(err) => {
                         return Err(err);
                     }
@@ -269,11 +308,18 @@ where
             }
         }
 
+        // Keep the original owned-key snapshot and upfront conversion order.
+        // Without sorting, a second vector of borrowed views adds only an
+        // allocation and a full copy of those views before serialization.
+        if opt_disabled!(opts, SORT_KEYS) {
+            return self.serialize_str_value_items(&items);
+        }
+
         let mut items_as_str: Vec<(&str, *mut PyObject)> = Vec::with_capacity(items.len());
         items
             .iter()
             .fuse()
-            .for_each(|(key, val)| items_as_str.push(((*key).as_str(), *val)));
+            .for_each(|(key, val)| items_as_str.push(((*key).as_str(), val.as_ptr())));
 
         if opt_enabled!(opts, SORT_KEYS) {
             sort_dict_items(&mut items_as_str);

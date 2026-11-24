@@ -1,8 +1,35 @@
 # Pydantic orjson implementation plan
 
-Status: buildable integration baseline, November 24, 2026. This document describes
-work required to earn a production compatibility and speed claim. The initial
-fork has no native performance changes and does not claim to beat upstream.
+Status: native and integration implementation, November 24, 2026. Version `.2`
+implements the first encoding, decoding and integration changes below. This
+document separates implemented work from the remaining qualification needed for
+a production compatibility and speed claim. See [validation](VALIDATION.md) for
+actual build, test and measurement results.
+
+## Implemented in this iteration
+
+- Stable ARM64 builds scan unescaped string prefixes in bounded 64-byte NEON
+  blocks, then 16-byte blocks; escaped blocks and tails retain scalar handling.
+  Nightly generic-SIMD builds retain their existing path.
+- Decoding documents up to 321 UTF-8 bytes uses a 4 KiB aligned stack arena.
+  Larger inputs use the existing heap arena, in a separate call frame.
+- Unsorted `OPT_NON_STR_KEYS` encoding avoids a second vector allocation.
+  Converted keys and retained value references survive default callbacks;
+  sorted duplicate-key ordering keeps the existing sorting representation.
+- Escape and boolean/null token writes explicitly permit unaligned addresses.
+- Reusable Pydantic codecs preserve JSON validation semantics, options and
+  extension hooks. AI helpers now persist both message histories and full
+  conversations with the official adapters.
+- Added differential/property tests, vector and parser boundary coverage,
+  callback/reference tests, offline AI agent persistence/resume and streaming
+  checks, an AddressSanitizer launcher, and process-isolated benchmark tooling.
+- CI covers native and integration checks across additional Python versions,
+  with separate matched-source and published-wheel performance comparisons.
+
+The benchmark suite measures each operation separately. Compiler SIMD flags in
+the published upstream wheel can differ from a stable source build; both are
+necessary comparisons. A faster local source build alone does not establish an
+improvement over the wheel users currently install.
 
 ## Product contract
 
@@ -17,26 +44,32 @@ The GitHub project is named `pydantic-orjson`; its replacement wheel is named
 package would not satisfy dependencies on `orjson` and would create overlapping
 file ownership. Install exactly one provider using an explicit wheel/direct
 source requirement. Retain upstream's engine version in `orjson.__version__`;
-identify this build with distribution version `3.13.0+pydantic.1`, source SHA,
+identify this build with distribution version `3.13.0+pydantic.2`, source SHA,
 and artifact digest. Local versions must be pinned in lockfiles; an ordinary
 upgrade from PyPI can replace this build. Publishing on GitHub does not grant
 ownership of the upstream PyPI name. Public PyPI publication is not part of
-this bootstrap.
+this implementation.
 
 ## Architecture
 
-1. **Compatibility engine:** retain upstream Rust encode/decode paths. No
-   additional type checks, imports, dispatch, or flags on the normal hot path.
+1. **Compatibility engine:** keep the existing native API and specialize only
+   bounded internal encode/decode paths. No Pydantic imports, model detection or
+   new option flags are added to ordinary `dumps` and `loads`.
 2. **Typed API:** `orjson.pydantic.Codec(type_or_adapter)` holds one reusable
-   `TypeAdapter`. `dumps` delegates to `dump_json`; `loads` delegates to
-   `validate_json`. Callers can supply an adapter with their own namespace and
-   configuration. Each codec owns its adapter; there is no global type cache.
+   `TypeAdapter`. `dumps` delegates to public `dump_json`; `loads` delegates to
+   public `validate_json`. Direct-core forwarding experiments were rejected
+   because custom callbacks and mutable models can change warning origins and
+   filtering even without replacing the adapter's compiled schema. Callers can
+   supply an adapter with their own namespace and configuration. Each codec owns its adapter; there is no global type cache.
 3. **AI boundary:** `orjson.pydantic_ai.dump_messages` and `load_messages`
-   use Pydantic AI's `ModelMessagesTypeAdapter`. They support persistence at
-   an explicit application boundary. They do not replace provider transports,
+   use Pydantic AI's `ModelMessagesTypeAdapter`; `dump_conversation` and
+   `load_conversation` use `ConversationTypeAdapter`. They support persistence
+   at an explicit application boundary. They do not replace provider transports,
    output validation, retry logic, or every internal JSON operation.
-4. **Future optimizations:** measured, guarded native specializations behind
-   the typed API, with the Pydantic implementation as semantic fallback.
+4. **Typed optimization boundary:** retain Pydantic's engine and observable
+   extension behavior. Removing public forwarding frames can change warning
+   origins and instrumentation, even when returned values match. Any future
+   shortcut must qualify these effects as well as bytes and validation errors.
 
 Pydantic already implements validation and serialization in Rust. Replacing
 `validate_json` with `orjson.loads` followed by `validate_python` allocates an
@@ -52,15 +85,15 @@ required before treating a streamed output as complete.
 
 ## Ecosystem compatibility
 
-| Consumer | Contract | Bootstrap evidence / remaining work |
+| Consumer | Contract | Implementation evidence / remaining work |
 | --- | --- | --- |
 | Existing Python imports | Existing API and native symbols unchanged | Full upstream tests, installed-wheel smoke test, differential corpus |
 | FastAPI `ORJSONResponse` | Non-string keys and NumPy option combination; status, headers and response filtering | Real TestClient tests; current FastAPI deprecates this response class |
 | FastAPI default typed responses | Pydantic validation/serialization behavior unchanged | Test separately; replacing orjson cannot accelerate a path that does not call it |
-| Pydantic v2 | Aliases, defaults/exclusions, serializers, validators, strict JSON semantics, context and errors | Optional Codec baseline; broaden version and schema matrix before stable release |
-| Pydantic AI | Official message schema, discriminator tags, tools, timestamps and validation | Offline synthetic message round trips; add streaming, multimodal, retry and full conversation persistence cases |
+| Pydantic v2 | Aliases, defaults/exclusions, serializers, validators, strict JSON semantics, context and errors | Reusable Codec with callback, warning, rebuild and plugin checks; broaden version/schema qualification before stable release |
+| Pydantic AI | Official message schema, discriminator tags, tools, timestamps and validation | Offline agent persistence/resume, streaming completion, binary/retry messages and full conversation state tested; qualify provider-specific applications |
 | Other frameworks | Same module/distribution identity, signatures, options, error contract | Add real Litestar, Django integrations, HTTPX serializers and task/cache clients selected from downstream usage |
-| Packaging | Single file owner, same dependency identity, reproducible wheels | Local macOS ARM64 wheel built; cross-platform CI configured, results must be checked |
+| Packaging | Single file owner, same dependency identity, reproducible wheels | Local wheel and expanded cross-platform CI; see validation for completed jobs and remaining platform coverage |
 
 “Anywhere orjson is used” is the release goal, not a claim established by a
 few framework tests. Maintain a published supported-version matrix and allow
@@ -116,7 +149,7 @@ incremental parsing would be a separate feature and API.
 
 | Milestone | Deliverable | Exit condition |
 | --- | --- | --- |
-| M0: baseline (this commit) | Upstream clone/history, release wheel, typed/AI helpers, tests, benchmark harness, public plan | Local verification recorded; no native speed claim |
+| M0: baseline (completed in `.1`) | Upstream clone/history, release wheel, typed/AI helpers, tests, benchmark harness, public plan | Local verification recorded; no native speed claim |
 | M1: compatibility qualification | Differential/property tests, downstream matrix, wheel/install/upgrade/rollback tests | Full upstream suite passes; zero unexplained output/error diffs; all declared OS/Python versions green |
 | M2: benchmark qualification | pyperf runs, CPU/allocation profiles, reference datasets and raw artifacts | Independent-process repeatability on ARM64 and x86-64; noise quantified; benchmark inputs audited |
 | M3: first encoding win | One profiled native or typed specialization with fallback | Target >=10% median gain on declared representative encode suite; no statistically credible >3% regression on protected cases |
@@ -128,7 +161,9 @@ single-fixture wins and compare against both upstream orjson and direct
 Pydantic where applicable. Prefer paired runs, multiple worker processes,
 pyperf stability checks and confidence intervals; retain full results and
 outliers. Do not enforce noisy microsecond timing thresholds on shared CI.
-The included lightweight harness is a smoke baseline, not release evidence.
+The original lightweight harness remains a smoke baseline. The new pyperf
+suite provides isolated workers, metadata checks and reversible run ordering;
+shared CI still does not substitute for dedicated production qualification.
 
 ## Correctness and maintenance measures
 
@@ -136,15 +171,17 @@ The included lightweight harness is a smoke baseline, not release evidence.
   bytes/values and exception type/message/position, every option and meaningful
   combination, defaults and recursive callbacks, integer bounds, floats,
   UTF-8, cycles/depth, temporal types, NumPy and `Fragment`.
-- Add Hypothesis-generated valid/invalid inputs, JSONTestSuite, native fuzzing,
-  sanitizer/debug allocator runs, and reference-count/leak checks before
-  shipping native changes. Never relax malformed-input handling for speed.
+- Maintain the added Hypothesis valid/invalid inputs, sanitizer/debug allocator
+  checks and callback reference tests. Extend native fuzzing and leak checks;
+  the sanitizer run does not establish leak freedom or exhaustive input
+  coverage. Never relax malformed-input handling for speed.
 - Typed coverage must include `RootModel`, unions/discriminators, recursive
   models, dataclasses, generics, extras, computed fields, custom types,
   aliases, exclusions, serialization failures, context and strict errors.
 - AI coverage must include tool calls/results, retries, usage metadata,
   binary/multimodal payloads, unknown tags, streaming completion and state
-  beyond message history. Version-gate `ConversationTypeAdapter` if adopted.
+  beyond message history. Full conversation helpers require a Pydantic AI
+  version exposing `ConversationTypeAdapter`; retain official schema ownership.
 - Rebase/merge upstream regularly, record its SHA, rerun the differential
   suite, and keep native changes small. Preserve upstream attribution and
   per-file licenses, including MPL source distribution obligations.

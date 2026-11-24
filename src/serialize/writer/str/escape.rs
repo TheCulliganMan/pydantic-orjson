@@ -12,7 +12,7 @@ macro_rules! write_escape {
         );
         #[allow(clippy::cast_ptr_alignment)]
         let _dst = $dst.cast::<u64>(); // stmt_expr_attributes
-        core::ptr::write(_dst, escape);
+        core::ptr::write_unaligned(_dst, escape);
         $dst = $dst.add((escape as usize) >> 56);
     };
 }

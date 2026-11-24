@@ -1,3 +1,69 @@
+# Implementation validation — 3.13.0+pydantic.2
+
+Validated locally on November 24, 2026, with CPython 3.13.12, Apple M5 /
+macOS 27.2.1 ARM64, Rust 1.99.0 and maturin 1.16.0. Development dependencies
+are pinned in `requirements-fork.txt`; installed dependency consistency passes.
+
+## Current implementation
+
+The native changes are bounded NEON string scans on stable ARM64, a stack
+parser arena for documents up to 321 UTF-8 bytes, removal of a redundant
+unsorted non-string-key vector, retained snapshot value references during
+value callbacks, and explicitly unaligned escape/boolean/null stores.
+
+The original import, distribution name, native functions, flags, signatures
+and exception contracts are preserved. Typed encoding/decoding retain public
+Pydantic TypeAdapter methods: direct-core shortcuts were rejected after
+callback, dynamic model hook and warning-filter differences were demonstrated.
+Pydantic AI helpers now persist full conversations with the official adapter.
+
+| Check | Result |
+| --- | --- |
+| Installed release wheel, complete upstream + compatibility + typed/AI suites, `PYTHONMALLOC=debug` | **1,984 passed; 12 skipped; 4 expected deprecation warnings** |
+| Differential against matched upstream source build | **2,418 cases + 7 API contracts; zero mismatches** ([report](compatibility/results/v2-source.json)) |
+| Differential against official PyPI orjson 3.13.0 wheel | **2,418 cases + 7 API contracts; zero mismatches** ([report](compatibility/results/v2-published.json)) |
+| Rust + C parser AddressSanitizer build | **1,972 passed; 12 skipped; 4 expected warnings; no ASan errors** |
+| Property coverage | Four deterministic Hypothesis properties, 1,000 examples each; recursive JSON, escaping, arbitrary bytes, invalid controls |
+| Native edge coverage | 16/64-byte vector boundaries, UTF-8/escape lanes, arena threshold, output growth, buffer lifetime, GC reentry, callback snapshot references and release on errors |
+| Pydantic and AI integration | 45 tests, including actual offline agent resume, conversation/deferred-tool state, binary/retry history, streamed final validation, custom callbacks and warning filters |
+| Quality/dependencies | Rust formatting, Ruff lint/format, diff whitespace and 43-package dependency check passed |
+
+The 12 skips are the opt-in huge-buffer resource test, eight Python 3.15-only
+cases, one upstream NumPy skip, and two opposite-support bytearray/memoryview
+cases. The native memory tests run in the normal allocator suite.
+
+ASan uses Rust nightly-2026-10-01 with `-Zsanitizer=address
+-Zexternal-clangrt`, Homebrew LLVM 21 C instrumentation, and the matching Rust
+ASan runtime through `scripts/check_asan.py`. The Python interpreter itself is
+not instrumented. The 12 upstream RSS-growth checks are excluded from ASan
+because allocator quarantine intentionally retains memory; leak detection is
+disabled. They pass in the normal release/debug-allocator suite. These checks
+are not a native fuzzing or ThreadSanitizer certification.
+
+## Artifact and measurement status
+
+Release wheel: `orjson-3.13.0+pydantic.2-cp313-cp313-macosx_11_0_arm64.whl`.
+The final artifact digest and additional CI/benchmark results are recorded
+when qualification completes. This is an alpha, not a PyPI publication.
+
+The process-isolated pyperf suite measures 26 native cases and 12 typed/control
+cases. It records raw worker samples, fixture and native hashes, Python and
+Pydantic versions. The manual performance workflow compares both matched
+source and official published-wheel baselines on Linux ARM64 and x86-64,
+in both run orders on a pinned CPU. Passing the workflow checks comparability,
+not a speed threshold. Laptop trial results were noisy, including substantial
+movement in unchanged Pydantic controls; they do not establish universal gains.
+
+Cross-platform qualification for this implementation is being run separately
+from the historical baseline results below. Current native/typed validation
+covers the stated environments, not every application consuming orjson.
+
+---
+
+# Historical .1 baseline evidence
+
+The following records describe the original, unoptimized baseline only.
+
 # Initial build validation
 
 Validated locally on November 24, 2026, on Apple M5 / macOS 27.2.1 ARM64,

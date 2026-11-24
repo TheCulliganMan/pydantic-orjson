@@ -8,7 +8,8 @@ uv venv --python 3.13 --allow-existing .venv
 uv pip install --python .venv/bin/python -r requirements-fork.txt
 .venv/bin/python script/check-version
 .venv/bin/maturin build --release --strip --locked --out dist -i .venv/bin/python
-uv pip install --python .venv/bin/python --reinstall dist/orjson-3.13.0+pydantic.1-*.whl
+distribution_version=$(.venv/bin/python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')
+uv pip install --python .venv/bin/python --reinstall "dist/orjson-${distribution_version}-"*.whl
 .venv/bin/python -m pytest -q test compatibility integration_pydantic
 .venv/bin/ruff check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts
 .venv/bin/ruff format --check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts

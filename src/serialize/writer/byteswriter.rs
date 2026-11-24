@@ -149,7 +149,7 @@ impl BytesWriter {
             const FALSE: (u64, usize) = (u64::from_ne_bytes(*b"false000"), 5);
             let (pattern, len) = core::hint::select_unpredictable(val, TRUE, FALSE);
             #[allow(clippy::cast_ptr_alignment)]
-            core::ptr::write(self.buffer_ptr().cast::<u64>(), pattern);
+            core::ptr::write_unaligned(self.buffer_ptr().cast::<u64>(), pattern);
             self.advance_mut(len);
         }
     }
@@ -249,7 +249,7 @@ unsafe impl JsonWriter for BytesWriter {
         unsafe {
             const VAL: u32 = u32::from_ne_bytes(*b"null");
             #[allow(clippy::cast_ptr_alignment)]
-            core::ptr::write(self.buffer_ptr().cast::<u32>(), VAL);
+            core::ptr::write_unaligned(self.buffer_ptr().cast::<u32>(), VAL);
             self.advance_mut(4);
         }
     }

@@ -14,9 +14,15 @@ from typing import TYPE_CHECKING, Any
 from .pydantic import Codec
 
 if TYPE_CHECKING:
+    from pydantic_ai import Conversation
     from pydantic_ai.messages import ModelMessage
 
-__all__ = ("dump_messages", "load_messages")
+__all__ = (
+    "dump_conversation",
+    "dump_messages",
+    "load_conversation",
+    "load_messages",
+)
 
 
 @lru_cache(maxsize=1)
@@ -34,3 +40,20 @@ def dump_messages(messages: list[ModelMessage], **kwargs: Any) -> bytes:
 def load_messages(data: str | bytes | bytearray, **kwargs: Any) -> list[ModelMessage]:
     """Decode history with the official adapter and Pydantic validation options."""
     return _messages_codec().loads(data, **kwargs)
+
+
+@lru_cache(maxsize=1)
+def _conversation_codec() -> Codec[Conversation]:
+    from pydantic_ai import ConversationTypeAdapter  # noqa: PLC0415
+
+    return Codec(ConversationTypeAdapter)
+
+
+def dump_conversation(conversation: Conversation, **kwargs: Any) -> bytes:
+    """Encode resumable messages, usage, IDs and deferred tools with the AI schema."""
+    return _conversation_codec().dumps(conversation, **kwargs)
+
+
+def load_conversation(data: str | bytes | bytearray, **kwargs: Any) -> Conversation:
+    """Decode resumable agent state with the official conversation adapter."""
+    return _conversation_codec().loads(data, **kwargs)

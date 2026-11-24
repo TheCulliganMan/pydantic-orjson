@@ -1,9 +1,10 @@
 # Pydantic orjson
 
 An independent orjson fork with optional Pydantic v2 and Pydantic AI integration.
-The existing native `orjson` API is preserved. This is a built, tested alpha
-baseline and a performance development plan; it does **not** yet contain a
-faster native encoder or decoder.
+The existing native `orjson` API is preserved. This alpha implements native
+encoding and decoding optimizations, reusable typed codecs, and resumable
+Pydantic AI persistence. Performance depends on the workload, architecture and
+build flags; see the validation report for measured results and limitations.
 
 - [Implementation plan and release gates](PLAN.md)
 - [Local build and test evidence](VALIDATION.md)
@@ -71,12 +72,20 @@ assert items.dumps(parsed) == b'[{"id":1,"name":"example"}]'
 `Codec` accepts an existing `TypeAdapter`, preserves validators and serializers,
 and forwards Pydantic keyword options. `orjson.pydantic_ai.dump_messages` and
 `load_messages` persist histories with Pydantic AI's official message adapter.
+`dump_conversation` and `load_conversation` retain full conversation state,
+including usage, IDs and deferred tools, through its official conversation adapter.
 Native `dumps` still rejects unsupported models unless a caller supplies its
 usual `default` callback. Current FastAPI response-model paths can serialize
 through Pydantic directly; replacing orjson does not intercept those paths.
 
-Universal downstream compatibility and higher encode/decode speeds are release
-targets. The local validation report states the exact tested scope. There is no
+Native changes include bounded NEON string encoding on stable ARM64 builds,
+a stack arena for small decoded documents, and one fewer allocation when
+encoding unsorted non-string dictionary keys. Existing options and errors remain
+part of the compatibility contract. Reusable codecs preserve Pydantic's JSON
+validation mode and custom serialization behavior.
+
+Universal downstream compatibility and broad performance acceptance remain
+release targets. The validation report states the exact tested scope. There is no
 PyPI publication or official affiliation with upstream projects.
 
 ---

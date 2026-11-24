@@ -27,9 +27,10 @@ class Codec(Generic[T]):
     In particular, they are Pydantic keyword arguments, not orjson option flags.
 
     Encoding returns bytes. Decoding preserves Pydantic's JSON validation mode
-    and raises its ValidationError on invalid input. This initial implementation
-    uses Pydantic's native engine directly and makes no performance claim over
-    calling that engine yourself.
+    and raises its ValidationError on invalid input. Public adapter methods are
+    retained so instrumentation, rebuilt schemas, dynamic model hooks and
+    warning filters keep their Pydantic behavior. No typed-core speedup is
+    claimed; reuse avoids rebuilding the adapter on each operation.
     """
 
     __slots__ = ("_adapter",)

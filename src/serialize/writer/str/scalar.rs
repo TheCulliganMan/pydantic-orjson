@@ -15,7 +15,10 @@ macro_rules! impl_format_scalar {
     };
 }
 
-#[cfg(all(not(target_arch = "x86_64"), not(feature = "generic_simd")))]
+#[cfg(all(
+    not(any(target_arch = "x86_64", target_arch = "aarch64")),
+    not(feature = "generic_simd")
+))]
 pub(crate) unsafe fn format_escaped_str_scalar(
     odst: *mut u8,
     value_ptr: *const u8,

@@ -15,6 +15,9 @@ def main() -> None:
         ".artifacts",
         ".venv-baseline",
         ".venv-install-check",
+        ".venv-asan",
+        ".venv-published",
+        ".hypothesis",
         ".pytest_cache",
         ".ruff_cache",
     ):

@@ -46,6 +46,26 @@ def outcome(call):
         return result
 
 
+def edge_cases(encode, decode):
+    # Exercise vector lanes/tails and the small-parser arena boundary against
+    # the installed reference, including exact error positions and UTF-8 sizes.
+    for length in (0, 1, 7, 8, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 128):
+        for special in [*(chr(i) for i in range(32)), '"', "\\", "雪", "🌊"]:
+            for position in sorted({0, length // 2, length}):
+                value = "x" * position + special + "x" * (length - position)
+                encode(f"vector/{length}/{ord(special)}/{position}", value)
+    for length in range(310, 335):
+        valid = b'{"message":"' + b"x" * (length - 14) + b'"}'
+        invalid = b'{"items":' + b" " * (length - 11) + b"]}"
+        for kind, factory in (
+            ("bytes", bytes),
+            ("bytearray", bytearray),
+            ("memoryview", memoryview),
+        ):
+            decode(f"arena/{length}/{kind}", factory(valid))
+            decode(f"arena-invalid/{length}/{kind}", factory(invalid))
+
+
 def snapshot():
     import orjson  # noqa: PLC0415 -- only child interpreters import the wheel
 
@@ -194,6 +214,8 @@ def snapshot():
         (b"\xff", b"\xef\xbb\xbf{}", '"\ud800"', None, 1, {}, memoryview(b"{ } ")[::2])
     ):
         decode(f"invalid_{index}", invalid)
+
+    edge_cases(encode, decode)
 
     rng = random.Random(20261124)
 

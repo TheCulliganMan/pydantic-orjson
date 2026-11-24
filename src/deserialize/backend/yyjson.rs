@@ -12,6 +12,7 @@ use crate::ffi::{
     PyStrRef,
 };
 use core::ffi::c_char;
+use core::mem::MaybeUninit;
 use core::ptr::{NonNull, null, null_mut};
 use std::borrow::Cow;
 
@@ -63,6 +64,9 @@ pub(crate) fn deserialize(
 ) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
     assume!(!data.is_empty());
     let buffer_capacity = buffer_capacity_to_allocate(data.len());
+    if buffer_capacity == MINIMUM_BUFFER_CAPACITY {
+        return deserialize_small(data);
+    }
     let buffer_ptr = unsafe { PyMem_Malloc(buffer_capacity) };
     if buffer_ptr.is_null() {
         return Err(DeserializeError::from_yyjson(
@@ -71,6 +75,31 @@ pub(crate) fn deserialize(
             data,
         ));
     }
+    let result = deserialize_with_buffer(data, buffer_ptr, buffer_capacity);
+    unsafe {
+        PyMem_Free(buffer_ptr);
+    }
+    result
+}
+
+// yyjson's arena needs pointer alignment, but not initialized contents. Keep the
+// small-message arena in a separate frame so larger documents do not reserve it.
+#[repr(C, align(16))]
+struct SmallBuffer([MaybeUninit<u8>; MINIMUM_BUFFER_CAPACITY]);
+
+#[inline(never)]
+fn deserialize_small(
+    data: &'static str,
+) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
+    let mut buffer = SmallBuffer([MaybeUninit::uninit(); MINIMUM_BUFFER_CAPACITY]);
+    deserialize_with_buffer(data, buffer.0.as_mut_ptr().cast(), MINIMUM_BUFFER_CAPACITY)
+}
+
+fn deserialize_with_buffer(
+    data: &'static str,
+    buffer_ptr: *mut core::ffi::c_void,
+    buffer_capacity: usize,
+) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
     let mut alloc = yyjson_alc {
         malloc: None,
         realloc: None,
@@ -96,19 +125,12 @@ pub(crate) fn deserialize(
         )
     };
     if doc.is_null() {
-        unsafe {
-            PyMem_Free(buffer_ptr);
-        }
         let msg: Cow<str> = unsafe { core::ffi::CStr::from_ptr(err.msg).to_string_lossy() };
         #[allow(clippy::cast_possible_wrap)]
         let pos = err.pos as i64;
         return Err(DeserializeError::from_yyjson(msg, pos, data));
     }
-    let pyval = deserialize_tape(yyjson_doc_get_root(doc));
-    unsafe {
-        PyMem_Free(buffer_ptr);
-    }
-    Ok(pyval)
+    Ok(deserialize_tape(yyjson_doc_get_root(doc)))
 }
 
 enum ElementType {

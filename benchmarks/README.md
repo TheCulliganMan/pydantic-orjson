@@ -1,15 +1,72 @@
 # Performance evidence
 
-The initial fork retains upstream's native encoder and decoder. Its optional
-`Codec` delegates to Pydantic's existing `TypeAdapter`; it is not a new faster
-JSON engine. No performance improvement is claimed by this scaffold.
+Version `.2` adds native string encoding, small-document parsing and dictionary
+snapshot changes. Their performance must be measured against both a matched
+upstream source build and the published upstream wheel. The published wheel
+can use different compiler/SIMD settings; it is the relevant baseline for users
+replacing a downloaded wheel. A matched source build isolates our code changes.
 
-## Local reproducible check
+The optional `Codec` reuses Pydantic's public `TypeAdapter`. It preserves custom
+callbacks, instrumentation, warning filters and rebuild behavior. Typed cases
+measure wrapper overhead and provide unchanged-engine controls; they are not a
+new typed encoder or validator. See [validation](../VALIDATION.md) for measured
+results and limitations rather than inferring gains from these design changes.
 
-Build upstream and the candidate with the same release compiler, flags, Python,
-and dependency versions in separate environments. Do not compare an upstream
-debug build with a release candidate, or a downloaded wheel with a locally
-tuned build. From the repository root, run the environments sequentially:
+## Process-isolated suite
+
+Build baseline and candidate release wheels in separate environments with the
+same Python, dependencies, compiler and flags. Install the published
+`orjson==3.13.0` wheel in a third environment with the same Python dependencies.
+From the repository root:
+
+```sh
+.venv-baseline/bin/python benchmarks/pyperf_suite.py -p 4 -n 4 -w 2 --min-time 0.07 -o /tmp/source-baseline.json
+.venv/bin/python benchmarks/pyperf_suite.py -p 4 -n 4 -w 2 --min-time 0.07 -o /tmp/candidate.json
+.venv/bin/python benchmarks/compare_pyperf.py /tmp/source-baseline.json /tmp/candidate.json
+.venv-published/bin/python benchmarks/pyperf_suite.py --group dumps.,loads. -p 4 -n 4 -w 2 --min-time 0.07 -o /tmp/published.json
+.venv/bin/python benchmarks/compare_pyperf.py /tmp/published.json /tmp/candidate.json --native-only
+```
+
+Run each pair again in reverse order, using new output paths. Use the same
+selected workload set for a pair when generating final comparison evidence.
+The command above reuses the full candidate report for a convenient native-only
+comparison; the comparator filters both sides explicitly. Published upstream
+has no `Codec`, so its native comparison must exclude typed cases on both sides.
+
+`pyperf_suite.py` uses separate worker processes, calibration, warmups and
+`timeit` expressions around prepared inputs. It checks outputs before and after
+timing and records the suite hash, fixture hash and byte size, native extension
+hash, distribution and Pydantic versions, plus pyperf's environment metadata.
+Cases include compact records, FastAPI option combinations, sorted and pretty
+output, ASCII/Unicode/escaped strings, dense escapes, integer/float arrays,
+datetimes, and parser sizes around the stack-arena boundary. Typed cases compare
+small and batch schemas with direct Pydantic calls, including explicit warning
+options. Adapter/schema construction is outside the timed warm operations.
+
+`compare_pyperf.py` rejects different selected cases, fixture/suite hashes and
+recorded Python/dependency/platform metadata. It prints per-case medians and
+runs pyperf's statistical comparison while retaining each measurement run.
+A ratio above 1 means baseline latency divided by candidate latency favored the
+candidate. Passing metadata validation does not establish benchmark stability,
+representative coverage or a release gate. Inspect pyperf warnings, unchanged
+Pydantic controls, both run orders and all regressions before making a claim.
+
+The manual [performance workflow](../.github/workflows/performance.yml) builds
+and compares both baselines on Linux x86-64 and ARM64, and retains complete
+reports as workflow artifacts. Shared runners and heterogeneous laptop cores
+can still produce noise. Do not combine typed validation and raw JSON into one
+"faster JSON" number, or present a favorable individual fixture as a universal
+speedup. Preserve raw results when preparing a compact report; remove local
+usernames, hostnames and checkout paths from metadata before public publication.
+
+See the official [runner options](https://pyperf.readthedocs.io/en/latest/runner.html)
+and [comparison commands](https://pyperf.readthedocs.io/en/latest/cli.html#pyperf-compare-to)
+for process counts, calibration, metadata and significance reporting.
+
+## Historical lightweight diagnostic
+
+The original single-process harness and `.1` reports remain available for
+provenance. From the repository root, run matched environments sequentially:
 
 ```sh
 .venv-baseline/bin/python benchmarks/run.py --label upstream-matched --output benchmarks/results/upstream-matched.json
@@ -63,25 +120,10 @@ small differences. Do not aggregate raw JSON and typed validation into one
 
 ## Release evidence still required
 
-Use `pyperf` process isolation and calibration on dedicated x86-64 and ARM64
-runners. For example, after installing `pyperf` into both measurement environments:
-
-```sh
-.venv-baseline/bin/python -m pyperf timeit --rigorous -s 'import orjson; data={"items": list(range(1000))}' 'orjson.dumps(data)' -o upstream-dumps.json
-.venv/bin/python -m pyperf timeit --rigorous -s 'import orjson; data={"items": list(range(1000))}' 'orjson.dumps(data)' -o candidate-dumps.json
-.venv/bin/python -m pyperf compare_to upstream-dumps.json candidate-dumps.json --table
-```
-
-See the official [runner options](https://pyperf.readthedocs.io/en/latest/runner.html)
-and [comparison commands](https://pyperf.readthedocs.io/en/latest/cli.html#pyperf-compare-to)
-for process counts, calibration, metadata, and significance reporting.
-
-That command is an example of the process-isolation mechanism, not a sufficient
-workload. Port every checked fixture and include upstream `bench/` data, deep
-nesting, numeric and Unicode distributions, options, NumPy, custom callbacks,
-Pydantic serializers/validators, AI histories, concurrent server requests, and
-large inputs. Measure allocations, peak RSS, import/startup time, latency tails,
-and FastAPI throughput with response validation enabled. Report cold schema
+Extend the process-isolated suite with upstream `bench/` datasets, deep nesting,
+NumPy, custom callbacks, AI histories, concurrent server requests and large
+inputs. Measure allocations, peak RSS, import/startup time, latency tails and
+FastAPI throughput with response validation enabled. Report cold schema
 construction separately from warm reuse. Keep complete JSON artifacts, build
 logs, exact source/dependency locks, hardware and power settings, and significance
 analysis. A suggested optimization gate is a repeatable >=10% gain in its named

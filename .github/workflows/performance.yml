@@ -1,0 +1,142 @@
+name: Performance comparison
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    name: ${{ matrix.runner }} / ${{ matrix.baseline }} baseline
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-26.04, ubuntu-26.04-arm]
+        baseline: [source, published]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      PERF_BASELINE_KIND: ${{ matrix.baseline }}
+      PERF_SOURCE_BASE: e56965ebcfdc1905318da14d37b8b07990130109
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: rustup toolchain install 1.99.0 --profile minimal
+      - run: rustup default 1.99.0
+      - name: Build candidate and prepare the selected baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/perf results
+          git rev-parse HEAD > results/candidate-commit.txt
+          rustc --version --verbose > results/rustc.txt
+          python -m venv .artifacts/perf/baseline
+          python -m venv .artifacts/perf/candidate
+          for variant in baseline candidate; do
+            .artifacts/perf/$variant/bin/python -m pip install -r requirements-fork.txt
+          done
+
+          if [[ "$PERF_BASELINE_KIND" == source ]]; then
+            mkdir -p .artifacts/perf/source
+            git archive "$PERF_SOURCE_BASE" | tar -x -C .artifacts/perf/source
+            printf '%s\n' "$PERF_SOURCE_BASE" > results/baseline-source-commit.txt
+            .artifacts/perf/candidate/bin/maturin build --manifest-path .artifacts/perf/source/Cargo.toml --release --strip --locked -i .artifacts/perf/baseline/bin/python --out .artifacts/perf/baseline-wheels 2>&1 | tee results/build-baseline.txt
+            .artifacts/perf/baseline/bin/python -m pip install .artifacts/perf/baseline-wheels/*.whl
+          else
+            # Fail if the official platform wheel is unavailable; do not silently
+            # substitute another locally compiled source build for this control.
+            .artifacts/perf/baseline/bin/python -m pip install --index-url https://pypi.org/simple --only-binary=:all: --no-deps --report results/baseline-install.json 'orjson==3.13.0'
+          fi
+
+          .artifacts/perf/candidate/bin/maturin build --release --strip --locked -i .artifacts/perf/candidate/bin/python --out .artifacts/perf/candidate-wheels 2>&1 | tee results/build-candidate.txt
+          .artifacts/perf/candidate/bin/python -m pip install .artifacts/perf/candidate-wheels/*.whl
+          for variant in baseline candidate; do
+            .artifacts/perf/$variant/bin/python -m pip check
+            .artifacts/perf/$variant/bin/python -m pip freeze > results/dependencies-$variant.txt
+          done
+          .artifacts/perf/candidate/bin/python compatibility/differential.py --baseline .artifacts/perf/baseline/bin/python --candidate .artifacts/perf/candidate/bin/python --output results/compatibility.json
+
+      - name: Select one permitted physical-core representative
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          allowed = sorted(os.sched_getaffinity(0))
+          cores = {}
+          for cpu in allowed:
+              topology = Path(f"/sys/devices/system/cpu/cpu{cpu}/topology")
+              try:
+                  key = (
+                      (topology / "physical_package_id").read_text().strip(),
+                      (topology / "core_id").read_text().strip(),
+                  )
+              except OSError:
+                  key = ("logical-cpu", str(cpu))
+              cores.setdefault(key, cpu)
+          # Prefer a core away from CPU 0 when the runner exposes several.
+          # Workers remain serial and pinned to this same logical CPU in all runs.
+          representatives = list(cores.values())
+          selected = representatives[-1]
+          Path("results/cpu-selection.json").write_text(json.dumps({
+              "allowed_logical_cpus": allowed,
+              "physical_core_representatives": representatives,
+              "selected_logical_cpu": selected,
+          }, indent=2) + "\n")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as output:
+              output.write(f"PERF_CPU={selected}\n")
+          PY
+
+      - name: Measure forward and reverse orders on the same CPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          group=()
+          if [[ "$PERF_BASELINE_KIND" == published ]]; then
+            group=(--group dumps.,loads.)
+          fi
+          measure() {
+            local variant="$1" report="$2"
+            .artifacts/perf/$variant/bin/python benchmarks/pyperf_suite.py "${group[@]}" --affinity "$PERF_CPU" -p 4 -n 4 -w 2 --min-time 0.07 -o "results/$report.json" 2>&1 | tee "results/$report.log"
+          }
+          measure baseline baseline
+          measure candidate candidate
+          measure candidate candidate-reverse
+          measure baseline baseline-reverse
+
+      - name: Validate metadata and compare both orders
+        shell: bash
+        run: |
+          set -euo pipefail
+          selection=()
+          if [[ "$PERF_BASELINE_KIND" == published ]]; then
+            selection=(--native-only)
+          fi
+          .artifacts/perf/candidate/bin/python benchmarks/compare_pyperf.py results/baseline.json results/candidate.json "${selection[@]}" 2>&1 | tee results/comparison.txt
+          .artifacts/perf/candidate/bin/python benchmarks/compare_pyperf.py results/baseline-reverse.json results/candidate-reverse.json "${selection[@]}" 2>&1 | tee results/comparison-reverse.txt
+          {
+            printf '### %s baseline on %s\n\n' "$PERF_BASELINE_KIND" "$RUNNER_ARCH"
+            printf 'Both run orders and raw worker samples are retained in the artifact. '
+            printf 'A successful job validates comparability, not a speed acceptance gate. '
+            printf 'Shared-runner scheduling and frequency variation still require review.\n'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-${{ matrix.runner }}-${{ matrix.baseline }}
+          path: results/
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Remove temporary environments and build products
+        if: always()
+        shell: bash
+        run: rm -rf .artifacts/perf target

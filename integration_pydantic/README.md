@@ -24,11 +24,22 @@ assert codec.dumps(event) == b'{"when":"2026-11-24","coordinates":[1,2]}'
 `Codec` also accepts an existing `pydantic.TypeAdapter`, which is retained by
 identity and exposed through the read-only `.adapter` property. Supply an
 existing adapter for explicit configuration or locally scoped forward references.
-`dumps` delegates to `TypeAdapter.dump_json` and returns bytes; `loads` delegates
-to `TypeAdapter.validate_json` and returns the schema's type. Keyword arguments,
+`dumps` returns bytes; `loads` returns the schema's type. Keyword arguments,
 validation/serialization context, and exceptions pass through unchanged.
 Options are those of the installed Pydantic version; native orjson option bits
 are not accepted by these typed APIs.
+
+Both operations use public TypeAdapter methods. This preserves custom adapter
+methods, instrumentation, model hooks, rebuilt schemas and warning filters,
+including callbacks installed after codec construction. The codec does not
+cache native serializer/validator objects or replace Pydantic's schema engine.
+Reusing a codec avoids adapter construction on each operation; direct native
+Pydantic calls remain the performance reference.
+
+A direct-core shortcut was evaluated and rejected because it changes warning
+origins and module-based warning filters. Even a previously plain model can
+gain dynamic Python hooks without replacing its core schema. These semantics
+are retained rather than trading them for forwarding-layer benchmark gains.
 
 JSON validation is intentionally direct. Parsing first with `orjson.loads` and
 then calling `validate_python` would change strict-mode behavior for dates,
@@ -50,12 +61,32 @@ state, and values typed `Any` can be normalized by a JSON round trip. Follow the
 installed Pydantic AI version's persistence contract. Pydantic AI is imported
 lazily on the first history-helper call.
 
+For full resumable conversation state in Pydantic AI 2.73+, use the official
+conversation schema through these helpers:
+
+```python
+from orjson.pydantic_ai import dump_conversation, load_conversation
+
+stored = dump_conversation(result.conversation)
+conversation = load_conversation(stored)
+resumed = agent.run_sync("Continue", conversation=conversation)
+```
+
+`ConversationTypeAdapter` preserves message history, cumulative usage,
+conversation ID, deferred tool requests, revision and message-position state
+according to the installed AI version. These functions forward the same
+Pydantic options as the message helpers. They perform no implicit permission
+grants, provider calls, storage operations or conversions outside the official
+schema. Applications remain responsible for their storage access policy.
+
 Partial validation is available only when explicitly requested through the
 Pydantic `experimental_allow_partial` keyword. It is experimental and may omit
 an invalid final item; always validate the complete final input again with
 partial mode disabled before accepting it as complete.
 
-Tests are synthetic and make no network or model calls:
+Tests include offline `TestModel` agent runs, conversation/history replay,
+deferred-tool state, binary/retry messages and a streamed structured output.
+External model requests are disabled in those agent tests:
 
 ```sh
 python -m pytest integration_pydantic
