@@ -2,6 +2,11 @@
 
 ## 3.13.0+pydantic.4 development candidate
 
+The final local build receipt is
+[local-v4.json](compatibility/results/local-v4.json), including source and
+wheel/native hashes. Final local wheels, the source archive and raw validation
+evidence are retained in `dist/development/` with checksums.
+
 The native optimization candidate built through UV on macOS ARM64,
 CPython 3.13.12, Rust 1.99.0. Its installed wheel passed **3,136 tests,
 45 skips and four expected warnings** with `PYTHONMALLOC=debug`, including
