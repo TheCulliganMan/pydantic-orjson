@@ -3,15 +3,15 @@
 ## 3.13.0+pydantic.4 development candidate
 
 The native optimization candidate built through UV on macOS ARM64,
-CPython 3.13.12, Rust 1.99.0. Its installed wheel passed **3,025 tests,
+CPython 3.13.12, Rust 1.99.0. Its installed wheel passed **3,136 tests,
 45 skips and four expected warnings** with `PYTHONMALLOC=debug`, including
 the nine benchmark-contract tests. Added checks cover numeric mixed suffixes,
 scalar options/errors, every escape position around vector boundaries, Unicode
 code-point boundaries, decoder allocation growth and reentrant collection.
-The CPython 3.14.3 free-threaded wheel passed **3,047 tests, 14 skips and four
+The CPython 3.14.3 free-threaded wheel passed **3,158 tests, 14 skips and four
 expected warnings** with the GIL disabled. These counts cover the later exact
 string, retained-key, float-prefix and fused Unicode paths.
-The matching Rust/C AddressSanitizer build on 3.14t passed **3,035 tests,
+The matching Rust/C AddressSanitizer build on 3.14t passed **3,146 tests,
 14 skips and four expected warnings**, with no sanitizer errors. It uses
 nightly-2026-10-01 and LLVM 21 C instrumentation; CPython is not instrumented
 and mimalloc limits heap-shadow coverage. The 12 normal-allocator RSS checks
@@ -21,14 +21,17 @@ The initial `.4` source, `c3346c8`, passed all
 [12 compatibility CI jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45451517929),
 including the source-archive rebuild, Python 3.10–3.15 and all three no-GIL
 versions. Later native changes require their own CI run. An intermediate
-candidate also matched the official wheel on 2,425 differential cases and seven
-API contracts, with zero mismatches.
+candidate and the latest refinement both matched the official wheel on 2,425
+differential cases and seven API contracts, with zero mismatches.
 
 This is local correctness evidence. Performance acceptance and cross-platform
 qualification of `.4` remain in progress. The new primary workflow compares
 the actual portable candidate wheel with published ORJSON 3.13.0 and Python
 stdlib json across 89 cases, retaining both orders and all process samples.
 Its all-wins gate rejects any regression, tie, unstable or incomplete result.
+The four [initial `.4` comparisons](benchmarks/results/v4-initial/README.md)
+completed all cases and failed that speed gate. They establish substantial
+workload-specific gains alongside regressions; they do not qualify later source.
 See [methodology](benchmarks/README.md) and [the historical timing audit](benchmarks/FORENSICS.md).
 
 All qualification and release claims in the following sections refer to the

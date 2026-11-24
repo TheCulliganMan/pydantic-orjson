@@ -1,0 +1,207 @@
+Unable to find image 'quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f' locally
+quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f: Pulling from pypa/manylinux2014_aarch64
+da1fe1b5bba0: Pulling fs layer
+73782041ce83: Pulling fs layer
+759deaed72a3: Pulling fs layer
+cc327e64cfec: Pulling fs layer
+6ee7215375b7: Pulling fs layer
+90e97aeb4a75: Pulling fs layer
+e8858612224e: Pulling fs layer
+3c8dacb733fd: Pulling fs layer
+44a4e6826858: Pulling fs layer
+599e7b9ef3b9: Pulling fs layer
+b90ad99752b3: Pulling fs layer
+4fd1c117ad06: Pulling fs layer
+0833a0a0cb22: Pulling fs layer
+cd6e4567b36f: Pulling fs layer
+a62221187e95: Pulling fs layer
+80bb44d8e911: Pulling fs layer
+d0e283e751a1: Pulling fs layer
+cde3976b8e46: Pulling fs layer
+eb3a5f18ed5c: Pulling fs layer
+f1eef02b33af: Pulling fs layer
+bcabd410d2ca: Pulling fs layer
+e35ab81e06d1: Pulling fs layer
+51923f1f4236: Pulling fs layer
+f0881f1d8e1a: Pulling fs layer
+07e5c5f3eb2f: Pulling fs layer
+44a4e6826858: Download complete
+cc327e64cfec: Download complete
+f1eef02b33af: Download complete
+759deaed72a3: Download complete
+4fd1c117ad06: Download complete
+0833a0a0cb22: Download complete
+a62221187e95: Download complete
+b90ad99752b3: Download complete
+cd6e4567b36f: Download complete
+cde3976b8e46: Download complete
+bcabd410d2ca: Download complete
+f0881f1d8e1a: Download complete
+da1fe1b5bba0: Download complete
+6ee7215375b7: Download complete
+d0e283e751a1: Download complete
+90e97aeb4a75: Download complete
+3c8dacb733fd: Download complete
+80bb44d8e911: Download complete
+e8858612224e: Download complete
+599e7b9ef3b9: Download complete
+e35ab81e06d1: Download complete
+eb3a5f18ed5c: Download complete
+51923f1f4236: Download complete
+73782041ce83: Download complete
+07e5c5f3eb2f: Download complete
+73782041ce83: Pull complete
+cc327e64cfec: Pull complete
+759deaed72a3: Pull complete
+6ee7215375b7: Pull complete
+90e97aeb4a75: Pull complete
+e8858612224e: Pull complete
+44a4e6826858: Pull complete
+4fd1c117ad06: Pull complete
+0833a0a0cb22: Pull complete
+b90ad99752b3: Pull complete
+3c8dacb733fd: Pull complete
+599e7b9ef3b9: Pull complete
+a62221187e95: Pull complete
+cd6e4567b36f: Pull complete
+cde3976b8e46: Pull complete
+d0e283e751a1: Pull complete
+80bb44d8e911: Pull complete
+f1eef02b33af: Pull complete
+bcabd410d2ca: Pull complete
+e35ab81e06d1: Pull complete
+eb3a5f18ed5c: Pull complete
+f0881f1d8e1a: Pull complete
+51923f1f4236: Pull complete
+da1fe1b5bba0: Pull complete
+07e5c5f3eb2f: Pull complete
+Digest: sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f
+Status: Downloaded newer image for quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f
+/tmp/orjson-uv.tar.gz: OK
+/tmp/orjson-tools/rustup-init: OK
+info: profile set to minimal
+info: default host tuple is aarch64-unknown-linux-gnu
+info: syncing channel updates for 1.99.0-aarch64-unknown-linux-gnu
+info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+info: downloading 3 components
+info: default toolchain set to 1.99.0-aarch64-unknown-linux-gnu
+
+  1.99.0-aarch64-unknown-linux-gnu installed - rustc 1.99.0 (b940084d7 2026-09-28)
+
+
+Rust is installed now. Great!
+
+To get started you need Cargo's bin directory (/tmp/orjson-cargo/bin) in your 
+PATH
+environment variable. This has not been done automatically.
+
+To configure your current shell, you need to source
+the corresponding env file under /tmp/orjson-cargo.
+
+Consider running the right command for your shell (note the leading DOT):
+. "/tmp/orjson-cargo/env" # For sh/ash/dash/pdksh/bash
+cargo:rerun-if-env-changed=CC_aarch64-unknown-linux-gnu
+CC_aarch64-unknown-linux-gnu = None
+cargo:rerun-if-env-changed=CC_aarch64_unknown_linux_gnu
+CC_aarch64_unknown_linux_gnu = None
+cargo:rerun-if-env-changed=HOST_CC
+HOST_CC = None
+cargo:rerun-if-env-changed=CC
+CC = None
+cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+cargo:rerun-if-env-changed=CPATH
+cargo:rerun-if-env-changed=C_INCLUDE_PATH
+cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
+cargo:rerun-if-env-changed=OBJC_INCLUDE_PATH
+cargo:rerun-if-env-changed=OBJCPLUS_INCLUDE_PATH
+cargo:rerun-if-env-changed=COMPILER_PATH
+cargo:rerun-if-env-changed=SOURCE_DATE_EPOCH
+cargo:rerun-if-env-changed=GCC_EXEC_PREFIX
+cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+CRATE_CC_NO_DEFAULTS = None
+cargo:rerun-if-env-changed=CFLAGS
+CFLAGS = None
+cargo:rerun-if-env-changed=HOST_CFLAGS
+HOST_CFLAGS = None
+cargo:rerun-if-env-changed=CFLAGS_aarch64_unknown_linux_gnu
+CFLAGS_aarch64_unknown_linux_gnu = None
+cargo:rerun-if-env-changed=CFLAGS_aarch64-unknown-linux-gnu
+CFLAGS_aarch64-unknown-linux-gnu = None
+uv 0.13.9 (aarch64-unknown-linux-musl)
+rustc 1.99.0 (b940084d7 2026-09-28)
+Downloading cpython-3.13.18-linux-aarch64-gnu (download) (28.3MiB)
+ Downloaded cpython-3.13.18-linux-aarch64-gnu (download)
+Installed Python 3.13.18 in 859ms
+ + cpython-3.13.18-linux-aarch64-gnu (python3.13)
+warning: `/root/.local/bin` is not on your PATH. To use installed Python executables, run `export PATH="/root/.local/bin:$PATH"` or `uv python update-shell`.
+Building wheel...
+Running `maturin pep517 build-wheel -i /tmp/orjson-uv-cache/builds-v0/.tmpEKpl1G/bin/python --locked --strip --compatibility manylinux_2_17 --auditwheel check`
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded find-msvc-tools v0.1.14
+  Downloaded associative-cache v3.0.1
+  Downloaded bytecount v0.6.9
+  Downloaded xxhash-rust v0.8.19
+  Downloaded once_cell v1.21.4
+  Downloaded shlex v2.0.1
+  Downloaded simdutf8 v0.1.5
+  Downloaded zmij v1.0.23
+  Downloaded pyo3-build-config v0.29.3
+  Downloaded target-lexicon v0.13.5
+  Downloaded cc v1.6.0
+  Downloaded itoap v1.0.1
+  Downloaded pyo3-ffi v0.29.3
+  Downloaded jiff-core v0.1.1
+  Downloaded libc v0.2.190
+📦 Including license file `LICENSE-APACHE`
+📦 Including license file `LICENSE-MIT`
+📦 Including license file `LICENSE-MPL-2.0`
+🍹 Building a mixed python/rust project
+🐍 Found CPython 3.13 at /tmp/orjson-uv-cache/builds-v0/.tmpEKpl1G/bin/python
+🔗 Found pyo3-ffi bindings
+   Compiling target-lexicon v0.13.5
+   Compiling shlex v2.0.1
+   Compiling libc v0.2.190
+   Compiling find-msvc-tools v0.1.14
+   Compiling cc v1.6.0
+   Compiling zmij v1.0.23
+   Compiling pyo3-build-config v0.29.3
+   Compiling jiff-core v0.1.1
+   Compiling bytecount v0.6.9
+   Compiling pyo3-ffi v0.29.3
+   Compiling once_cell v1.21.4
+   Compiling xxhash-rust v0.8.19
+   Compiling orjson v3.13.0 (/io)
+   Compiling itoap v1.0.1
+   Compiling simdutf8 v0.1.5
+   Compiling associative-cache v3.0.1
+    Finished `release` profile [optimized] target(s) in 10.06s
+📦 Built wheel for CPython 3.13 to /tmp/orjson-target/wheels/orjson-3.13.0+pydantic.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl
+/tmp/orjson-target/wheels/orjson-3.13.0+pydantic.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl
+Successfully built /dist/orjson-3.13.0+pydantic.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl
+Using CPython 3.13.18
+Creating virtual environment at: /tmp/orjson-smoke
+Activate with: source /tmp/orjson-smoke/bin/activate
+Using Python 3.13.18 environment at: /tmp/orjson-smoke
+Resolved 1 package in 1ms
+Prepared 1 package in 3ms
+Installed 1 package in 0.82ms
+ + orjson==3.13.0+pydantic.4 (from file:///dist/orjson-3.13.0+pydantic.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl)
+{
+  "python": "3.13.18 (main, Nov 11 2026, 00:20:35) [Clang 23.1.3 ]",
+  "architecture": "aarch64",
+  "libc": [
+    "glibc",
+    "2.17"
+  ],
+  "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+  "compatibility": "manylinux_2_17",
+  "uv": "0.13.9",
+  "rustup": "1.29.3",
+  "rust": "1.99.0",
+  "wheel": "orjson-3.13.0+pydantic.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+  "wheel_sha256": "ee63118f9402e2d33abde61648331d14feb1b7e6bda1199a339825881d427c37",
+  "gil_before_import": true,
+  "gil_after_import": true,
+  "threaded_roundtrips": 256
+}

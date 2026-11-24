@@ -260,7 +260,7 @@ where
         // few kilobytes of integers, crossing allocator size classes before
         // finish() shrinks the result. Keep small and mixed arrays on the
         // ordinary path, and verify every element before using this shortcut.
-        if len >= 16 {
+        if len >= 4 {
             let first_type = PyTypeRef::from_pyobject(first);
             if first_type.as_ptr() == unsafe { crate::typeref::INT_TYPE } {
                 self.serialize_numeric_array_inner::<T, false>(first, array_iter, len)?;
@@ -973,26 +973,32 @@ where
 
     #[inline(always)]
     pub fn serialize(&mut self, ptr: *mut PyObject) -> Result<(), SerializeError> {
-        // A preceding fragment or nested value may consume the parent's
-        // speculative reservation. Fixed-size writers need their own guard:
-        // datetime's final integer scratch extends up to 52 bytes from entry.
-        self.writer.reserve(64);
         match pyobject_to_obtype_likely(PyTypeRef::from_pyobject(ptr)) {
             Some(ObType::Str) => {
                 self.serialize_str(unsafe { PyStrRef::from_ptr_unchecked(ptr) })?
             }
-            Some(ObType::Int) => serialize_int(
-                &mut self.writer,
-                unsafe { PyIntRef::from_ptr_unchecked(ptr) },
-                self.state.is_enabled(STRICT_INTEGER),
-            )?,
+            Some(ObType::Int) => {
+                self.writer.reserve(64);
+                serialize_int(
+                    &mut self.writer,
+                    unsafe { PyIntRef::from_ptr_unchecked(ptr) },
+                    self.state.is_enabled(STRICT_INTEGER),
+                )?;
+            }
             Some(ObType::Bool) => {
+                self.writer.reserve(64);
                 self.serialize_bool(unsafe { PyBoolRef::from_ptr_unchecked(ptr) })
             }
-            Some(ObType::None) => self.serialize_none(),
-            Some(ObType::Float) => serialize_float(&mut self.writer, unsafe {
-                PyFloatRef::from_ptr_unchecked(ptr)
-            }),
+            Some(ObType::None) => {
+                self.writer.reserve(64);
+                self.serialize_none();
+            }
+            Some(ObType::Float) => {
+                self.writer.reserve(64);
+                serialize_float(&mut self.writer, unsafe {
+                    PyFloatRef::from_ptr_unchecked(ptr)
+                });
+            }
             Some(ObType::List) => {
                 self.serialize_list(unsafe { PyListRef::from_ptr_unchecked(ptr) })?
             }
@@ -1000,6 +1006,7 @@ where
                 self.serialize_map(unsafe { PyDictRef::from_ptr_unchecked(ptr) })?
             }
             Some(ObType::Datetime) => {
+                self.writer.reserve(64);
                 self.serialize_datetime(unsafe { PyDateTimeRef::from_ptr_unchecked(ptr) })?;
             }
             Some(_) => unreachable_unchecked!(),
@@ -1014,6 +1021,10 @@ where
     #[cold]
     #[inline(never)]
     pub fn serialize_unlikely(&mut self, ptr: *mut PyObject) -> Result<(), SerializeError> {
+        // Unbounded values can consume a parent's speculative reservation.
+        // Rare fixed-size writers need up to 52 bytes of scratch; strings and
+        // containers have their own reservations on the common dispatch path.
+        self.writer.reserve(64);
         match pyobject_to_obtype_unlikely(PyTypeRef::from_pyobject(ptr), self.state.opts()) {
             ObType::List => self.serialize_list(unsafe { PyListRef::from_ptr_unchecked(ptr) })?,
             ObType::Dict => self.serialize_map(unsafe { PyDictRef::from_ptr_unchecked(ptr) })?,

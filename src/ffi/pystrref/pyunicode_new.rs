@@ -11,48 +11,50 @@ macro_rules! validate_str {
     };
 }
 
-// ASCII spans in an otherwise wide string can be widened a lane at a time.
-// The fixed-size loop is vectorizable on baseline NEON/SSE2. Keep short strings
-// and strings beginning with non-ASCII on the original scalar path.
-#[inline(always)]
-unsafe fn write_unicode<T>(buf: &str, mut data_ptr: *mut T, convert: impl Fn(char) -> T) -> *mut T {
+// Only attempt block widening when a bounded prefix contains a complete
+// ASCII block. Dense Unicode stays in the original scalar constructor loop.
+#[inline]
+fn has_ascii_block(buf: &str) -> bool {
+    let bytes = buf.as_bytes();
+    bytes.len() >= 64
+        && bytes[0].is_ascii()
+        && bytes[..bytes.len().min(128)]
+            .chunks_exact(16)
+            .any(|chunk| chunk.is_ascii())
+}
+
+// Keep the block/tail iterator control flow out of the scalar constructors so
+// it cannot change optimization of their dense-Unicode conversion loops.
+#[inline(never)]
+unsafe fn write_unicode_ascii_runs<T>(
+    buf: &str,
+    mut data_ptr: *mut T,
+    convert: impl Fn(char) -> T,
+) -> *mut T {
     unsafe {
         let mut chars = buf.chars();
-        let bytes = buf.as_bytes();
-        // A bounded probe avoids repeated failed windows for dense Unicode.
-        // Byte slices may end inside a code point; no str slicing occurs here.
-        let has_ascii_block = bytes.len() >= 64
-            && bytes[0].is_ascii()
-            && bytes[..bytes.len().min(128)]
-                .chunks_exact(16)
-                .any(|chunk| chunk.is_ascii());
-        if has_ascii_block {
-            const WIDTH: usize = 16;
-            const HIGH_BITS: u64 = 0x8080_8080_8080_8080;
-            while chars.as_str().len() >= WIDTH {
-                let remaining = chars.as_str();
-                let src = remaining.as_ptr();
-                // Both reads stay within the remaining, validated UTF-8 slice.
-                let ascii = *src < 128
-                    && (src.cast::<u64>().read_unaligned()
-                        | src.add(8).cast::<u64>().read_unaligned())
-                        & HIGH_BITS
-                        == 0;
-                if ascii {
-                    for lane in 0..WIDTH {
-                        core::ptr::write(data_ptr.add(lane), convert(*src.add(lane) as char));
-                    }
-                    data_ptr = data_ptr.add(WIDTH);
-                    // Every consumed byte is ASCII, so this is a char boundary.
-                    chars = remaining.get_unchecked(WIDTH..).chars();
-                } else {
-                    // Consume a whole failed window before checking again. This
-                    // avoids rescanning each byte of a short ASCII prefix.
-                    let stop = remaining.len() - WIDTH;
-                    while chars.as_str().len() > stop {
-                        core::ptr::write(data_ptr, convert(chars.next().unwrap_unchecked()));
-                        data_ptr = data_ptr.add(1);
-                    }
+        const WIDTH: usize = 16;
+        const HIGH_BITS: u64 = 0x8080_8080_8080_8080;
+        while chars.as_str().len() >= WIDTH {
+            let remaining = chars.as_str();
+            let src = remaining.as_ptr();
+            // Both reads stay within the remaining, validated UTF-8 slice.
+            let ascii = *src < 128
+                && (src.cast::<u64>().read_unaligned() | src.add(8).cast::<u64>().read_unaligned())
+                    & HIGH_BITS
+                    == 0;
+            if ascii {
+                for lane in 0..WIDTH {
+                    core::ptr::write(data_ptr.add(lane), convert(*src.add(lane) as char));
+                }
+                data_ptr = data_ptr.add(WIDTH);
+                // Every consumed byte is ASCII, so this is a char boundary.
+                chars = remaining.get_unchecked(WIDTH..).chars();
+            } else {
+                let stop = remaining.len() - WIDTH;
+                while chars.as_str().len() > stop {
+                    core::ptr::write(data_ptr, convert(chars.next().unwrap_unchecked()));
+                    data_ptr = data_ptr.add(1);
                 }
             }
         }
@@ -96,8 +98,15 @@ pub(crate) fn pyunicode_onebyte(buf: &str, num_chars: usize) -> *mut PyObject {
 pub(crate) fn pyunicode_twobyte(buf: &str, num_chars: usize) -> *mut PyObject {
     unsafe {
         let ptr = PyUnicode_New(usize_to_isize(num_chars), 65535);
-        let data_ptr = ptr.cast::<PyCompactUnicodeObject>().add(1).cast::<u16>();
-        let data_ptr = write_unicode(buf, data_ptr, |each| each as u16);
+        let mut data_ptr = ptr.cast::<PyCompactUnicodeObject>().add(1).cast::<u16>();
+        if has_ascii_block(buf) {
+            data_ptr = write_unicode_ascii_runs(buf, data_ptr, |each| each as u16);
+        } else {
+            for each in buf.chars().fuse() {
+                core::ptr::write(data_ptr, each as u16);
+                data_ptr = data_ptr.add(1);
+            }
+        }
         core::ptr::write(data_ptr, 0);
         validate_str!(ptr);
         ptr.cast::<PyObject>()
@@ -108,8 +117,15 @@ pub(crate) fn pyunicode_twobyte(buf: &str, num_chars: usize) -> *mut PyObject {
 pub(crate) fn pyunicode_fourbyte(buf: &str, num_chars: usize) -> *mut PyObject {
     unsafe {
         let ptr = PyUnicode_New(usize_to_isize(num_chars), 1114111);
-        let data_ptr = ptr.cast::<PyCompactUnicodeObject>().add(1).cast::<u32>();
-        let data_ptr = write_unicode(buf, data_ptr, |each| each as u32);
+        let mut data_ptr = ptr.cast::<PyCompactUnicodeObject>().add(1).cast::<u32>();
+        if has_ascii_block(buf) {
+            data_ptr = write_unicode_ascii_runs(buf, data_ptr, |each| each as u32);
+        } else {
+            for each in buf.chars().fuse() {
+                core::ptr::write(data_ptr, each as u32);
+                data_ptr = data_ptr.add(1);
+            }
+        }
         core::ptr::write(data_ptr, 0);
         validate_str!(ptr);
         ptr.cast::<PyObject>()

@@ -94,6 +94,10 @@ results and limitations rather than inferring gains from these design changes.
 
 ## Recorded results
 
+- [Initial `.4` portable and LTO experiments](results/v4-initial/README.md):
+  complete 89-case three-engine runs at `c3346c8` and `546eb56`, including every
+  regression and failed speed gate. These are intermediate builds; later
+  string, Unicode and allocation refinements require their own measurements.
 - [Version `.2`, commit `66c0d035`](results/v2/README.md): regular CPython CI
   comparisons against matched source and the published wheel, with complete
   forward/reverse results and regressions.

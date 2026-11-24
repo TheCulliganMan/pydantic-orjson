@@ -1,0 +1,25 @@
+DEBUG Found workspace root: <checkout>
+DEBUG Adding root workspace member: <checkout>
+DEBUG Found workspace configuration at `<checkout>/pyproject.toml`
+DEBUG Searching for user configuration in: <runner-home>/.config/uv/uv.toml
+DEBUG uv 0.13.9 (x86_64-unknown-linux-gnu)
+DEBUG Checking for Python interpreter in directory `.artifacts/perf/upstream`
+Using Python 3.13.18 environment at: .artifacts/perf/upstream
+DEBUG Using request connect timeout of 10s and read timeout of 30s
+DEBUG Solving with installed Python version: 3.13.18
+DEBUG Solving with target Python version: >=3.13.18
+DEBUG Adding direct dependency: orjson>=3.13.0, <3.13.0+
+DEBUG No cache entry for: https://pypi.org/simple/orjson/
+DEBUG Sending fresh GET request for: https://pypi.org/simple/orjson/
+DEBUG Searching for a compatible version of orjson (>=3.13.0, <3.13.0+)
+DEBUG Selecting: orjson==3.13.0 [compatible] (orjson-3.13.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl)
+DEBUG Tried 1 versions: orjson 1
+DEBUG marker environment resolution took 0.104s
+Resolved 1 package in 104ms
+DEBUG Must revalidate requirement: orjson
+DEBUG No cache entry for: https://files.pythonhosted.org/packages/45/46/f8d83189ff5b7b2ff225a58c5908618cc4e86afe09e65d17a30ac68c9da4/orjson-3.13.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+DEBUG Sending fresh GET request for: https://files.pythonhosted.org/packages/45/46/f8d83189ff5b7b2ff225a58c5908618cc4e86afe09e65d17a30ac68c9da4/orjson-3.13.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+Prepared 1 package in 47ms
+DEBUG Failed to reflink `<runner-home>/work/_temp/setup-uv-cache/archive-v0/vi4wjW4JW0Do8fWg/orjson-3.13.0.dist-info/sboms/orjson.cyclonedx.json` to `<checkout>/.artifacts/perf/upstream/lib/python3.13/site-packages/orjson-3.13.0.dist-info/sboms/orjson.cyclonedx.json`: Operation not supported (os error 95), falling back
+Installed 1 package in 0.71ms
+ + orjson==3.13.0

@@ -3,7 +3,7 @@
 
 use super::DeserializeError;
 use super::input::Utf8Buffer;
-use crate::ffi::{PyBoolRef, PyDictRef, PyListRef, PyNoneRef, PyStrRef};
+use crate::ffi::{PyBoolRef, PyDictRef, PyIntRef, PyListRef, PyNoneRef, PyStrRef};
 use core::ptr::NonNull;
 
 #[repr(transparent)]
@@ -38,6 +38,34 @@ impl Deserializer {
             },
             5 if bytes == b"false" => return Ok(PyBoolRef::pyfalse().as_non_null_ptr()),
             _ => {}
+        }
+        // Restrict the shortcut to complete JSON integer tokens. Rust's
+        // checked parser handles the full u64/i64 range; out-of-range values
+        // must keep yyjson's conversion to float and its existing errors.
+        if bytes.len() <= 20 && matches!(bytes[0], b'0'..=b'9' | b'-') {
+            let negative = bytes[0] == b'-';
+            let digits = if negative { &bytes[1..] } else { bytes };
+            if !digits.is_empty()
+                && (digits.len() == 1 || digits[0] != b'0')
+                && digits.iter().all(u8::is_ascii_digit)
+            {
+                let parsed = if negative {
+                    self.buffer
+                        .as_str()
+                        .parse::<i64>()
+                        .ok()
+                        .map(PyIntRef::from_i64)
+                } else {
+                    self.buffer
+                        .as_str()
+                        .parse::<u64>()
+                        .ok()
+                        .map(PyIntRef::from_u64)
+                };
+                if let Some(value) = parsed {
+                    return Ok(value.as_non_null_ptr());
+                }
+            }
         }
         // UTF-8 has already been validated by Utf8Buffer. Small unescaped
         // strings can construct their Python value without an input copy and

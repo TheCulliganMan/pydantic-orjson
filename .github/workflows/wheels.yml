@@ -155,7 +155,7 @@ jobs:
           PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
           PYTHONMALLOC: debug
         run: |
-          uv run --no-sync python -m pytest -q test compatibility --ignore=compatibility/test_drop_in.py --junitxml=dist/native-tests.xml
+          uv run --no-sync python -m pytest -q -o faulthandler_timeout=120 test compatibility --ignore=compatibility/test_drop_in.py --junitxml=dist/native-tests.xml
       - name: Test Pydantic AI and FastAPI integration
         if: matrix.python != '3.10' && matrix.python != '3.13t'
         env:

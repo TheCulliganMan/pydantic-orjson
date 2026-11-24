@@ -1,0 +1,299 @@
+{
+  "format": 1,
+  "status": "historical intermediate builds; all four performance gates failed",
+  "verified_raw_reports": 2136,
+  "verified_timed_values": 34176,
+  "verification": "Original file digests, retained digests, sanitized metadata, all numeric samples and warmups, four extracted 89-case report manifests, and four JUnit XML receipts checked.",
+  "files": [
+    {
+      "file": "README.md",
+      "sha256": "816f734274f568609bf23c83c5dadb94ca78bfe6ed9a816e7d37c1fb27352b22",
+      "bytes": 7409
+    },
+    {
+      "file": "clang-lto/arm64/comparison.md",
+      "sha256": "cd52cd546e17b722c2492d799110a3a6e056c4990c4437525758f9c29ad2aef6",
+      "bytes": 11810
+    },
+    {
+      "file": "clang-lto/arm64/measurements.tar.gz",
+      "sha256": "595bb540e584edf1ad91d4d7d8ffcfdab75724b2da01d294260927451bfba492",
+      "bytes": 589090
+    },
+    {
+      "file": "clang-lto/arm64/provenance/build.txt.gz",
+      "sha256": "48af6b631584ddbabf84e6500333ef3174d164f125539a66021eb59aee9a188d",
+      "bytes": 3607
+    },
+    {
+      "file": "clang-lto/arm64/provenance/candidate-dependencies.txt",
+      "sha256": "02ac138193d134990809deafa8f23f7210b251f7418d5daadfbcb7695c207dc3",
+      "bytes": 864
+    },
+    {
+      "file": "clang-lto/arm64/provenance/cpu-selection.json",
+      "sha256": "6750b0915b4ea6e17d6684250d8b7ddf0299ad0bb77ebd2538f67b1d72444358",
+      "bytes": 35
+    },
+    {
+      "file": "clang-lto/arm64/provenance/cpu.txt",
+      "sha256": "e5f7302f9882c8b4eca9892fce7bab78f37c49da0f8babcb23d2c2db5ed004bc",
+      "bytes": 2355
+    },
+    {
+      "file": "clang-lto/arm64/provenance/differential.json",
+      "sha256": "1f91df708b9e68fce723d7439c47d89c0cd2f44d4ec7b11815cbc2c574df1f6b",
+      "bytes": 209
+    },
+    {
+      "file": "clang-lto/arm64/provenance/linux-build.json",
+      "sha256": "1fe9c0f71aa1797036d0cdeddaa93e2aca2cee956a92ee51d4b442e803a0e091",
+      "bytes": 1650
+    },
+    {
+      "file": "clang-lto/arm64/provenance/source-commit.txt",
+      "sha256": "374265b4598d0c906d9f926abf680a2a57bf0c38dcc64d66545fc4d20c75d17e",
+      "bytes": 41
+    },
+    {
+      "file": "clang-lto/arm64/provenance/tests.xml.gz",
+      "sha256": "651e51eb9644f08a3898a10bb35eeb387769f227a8930d49f4485abef2eba930",
+      "bytes": 18978
+    },
+    {
+      "file": "clang-lto/arm64/provenance/upstream-dependencies.txt",
+      "sha256": "d01a156224faca8cfab315691d4bfe2e87dc1dfaf25aedb2b9f628c29f43defb",
+      "bytes": 761
+    },
+    {
+      "file": "clang-lto/arm64/provenance/upstream-install.txt",
+      "sha256": "23b731c34d9af99b4a9289d5fa33e241fdb62b0bfa737643cf21ae6c53e52c31",
+      "bytes": 1933
+    },
+    {
+      "file": "clang-lto/arm64/provenance/uv.txt",
+      "sha256": "df24cf4bccea38d849178fcf659f1257efcb8c4405d919e6a79dc240ddcba49f",
+      "bytes": 38
+    },
+    {
+      "file": "clang-lto/arm64/retention.json.gz",
+      "sha256": "4c0b97a80e5c2ab6d3ac39cfa84057707902e0e546974d26d972a2d8e146c647",
+      "bytes": 88096
+    },
+    {
+      "file": "clang-lto/x86_64/comparison.md",
+      "sha256": "c4fb9d0052a094e9d90c045dc999094f83c86e8c35f8d140ada1825566bf21e8",
+      "bytes": 11972
+    },
+    {
+      "file": "clang-lto/x86_64/measurements.tar.gz",
+      "sha256": "e3b5d0ab7790f2c910019506f99639a44748311c94afeb93d615891bf983e105",
+      "bytes": 603421
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/build.txt.gz",
+      "sha256": "ad85530acfecdc9055f57b4b58f53dd4851f934b8cd7668f7c3f559aa2bbbf8f",
+      "bytes": 3612
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/candidate-dependencies.txt",
+      "sha256": "e2c7ebc8a7b8468e969d7db85e51f01a2899f244b44d973adbcf952f9b33fcdc",
+      "bytes": 862
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/cpu-selection.json",
+      "sha256": "6750b0915b4ea6e17d6684250d8b7ddf0299ad0bb77ebd2538f67b1d72444358",
+      "bytes": 35
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/cpu.txt",
+      "sha256": "3d9601a374bc3faf0c92865c7dfdd07f45e654ae6742304cea818ce3e5a7bdb4",
+      "bytes": 3427
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/differential.json",
+      "sha256": "1f91df708b9e68fce723d7439c47d89c0cd2f44d4ec7b11815cbc2c574df1f6b",
+      "bytes": 209
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/linux-build.json",
+      "sha256": "a4c2be5d857894a53c9c76064ab35fe6555fad9ff55e52482209b7c8a1befdea",
+      "bytes": 1643
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/source-commit.txt",
+      "sha256": "374265b4598d0c906d9f926abf680a2a57bf0c38dcc64d66545fc4d20c75d17e",
+      "bytes": 41
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/tests.xml.gz",
+      "sha256": "9c677290afab3cccc6bb827b674cf20d9dd1da7db5b74ebe769bc3900087698f",
+      "bytes": 18896
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/upstream-dependencies.txt",
+      "sha256": "d01a156224faca8cfab315691d4bfe2e87dc1dfaf25aedb2b9f628c29f43defb",
+      "bytes": 761
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/upstream-install.txt",
+      "sha256": "bcde9545a9e61fdb44113e935aae8a8f79456f25a532bf3371c9a39fbffea23b",
+      "bytes": 1930
+    },
+    {
+      "file": "clang-lto/x86_64/provenance/uv.txt",
+      "sha256": "fea701785388813775be3363dbaa846469bab06238f2f9a27c9005950463c72d",
+      "bytes": 37
+    },
+    {
+      "file": "clang-lto/x86_64/retention.json.gz",
+      "sha256": "2c976c27d6002d52ec1efb55f57d69f03600137ddb2890c62b56826e67469309",
+      "bytes": 89795
+    },
+    {
+      "file": "portable/arm64/comparison.md",
+      "sha256": "8e6657b54f9cb8b2e89e00c2a0c411c83e22f2c7aa1a3ead4555560b47ef5935",
+      "bytes": 11760
+    },
+    {
+      "file": "portable/arm64/measurements.tar.gz",
+      "sha256": "a1ad95e0ffba75deb1691a754f2c91857b278385f0e36f33469ab6e88dd89d85",
+      "bytes": 589985
+    },
+    {
+      "file": "portable/arm64/provenance/build.txt",
+      "sha256": "5e306f37c8440f8d4309be62dfcbafe1e89c4f5c9ad92621165a1f85e97f17e2",
+      "bytes": 8088
+    },
+    {
+      "file": "portable/arm64/provenance/candidate-dependencies.txt",
+      "sha256": "02ac138193d134990809deafa8f23f7210b251f7418d5daadfbcb7695c207dc3",
+      "bytes": 864
+    },
+    {
+      "file": "portable/arm64/provenance/cpu-selection.json",
+      "sha256": "6750b0915b4ea6e17d6684250d8b7ddf0299ad0bb77ebd2538f67b1d72444358",
+      "bytes": 35
+    },
+    {
+      "file": "portable/arm64/provenance/cpu.txt",
+      "sha256": "e5f7302f9882c8b4eca9892fce7bab78f37c49da0f8babcb23d2c2db5ed004bc",
+      "bytes": 2355
+    },
+    {
+      "file": "portable/arm64/provenance/differential.json",
+      "sha256": "1f91df708b9e68fce723d7439c47d89c0cd2f44d4ec7b11815cbc2c574df1f6b",
+      "bytes": 209
+    },
+    {
+      "file": "portable/arm64/provenance/linux-build.json",
+      "sha256": "4fc755c52386f2ab6f1699b0c505a6c4c393fcbd0d89f69242b97e2222bd4935",
+      "bytes": 567
+    },
+    {
+      "file": "portable/arm64/provenance/source-commit.txt",
+      "sha256": "389d6444ed55050feb6e355fbafa9196ced96154fd3efd87c83b13272b1d5311",
+      "bytes": 41
+    },
+    {
+      "file": "portable/arm64/provenance/tests.xml.gz",
+      "sha256": "a67dc01aa1ee96f202a6076760928f5e14f8f7634ae85a4fa426068d88e0d262",
+      "bytes": 18985
+    },
+    {
+      "file": "portable/arm64/provenance/upstream-dependencies.txt",
+      "sha256": "d01a156224faca8cfab315691d4bfe2e87dc1dfaf25aedb2b9f628c29f43defb",
+      "bytes": 761
+    },
+    {
+      "file": "portable/arm64/provenance/upstream-install.txt",
+      "sha256": "95486870371901f7612df117efe3a84590458cb49c0fc5c7879b2e30c6dcf32d",
+      "bytes": 1933
+    },
+    {
+      "file": "portable/arm64/provenance/uv.txt",
+      "sha256": "df24cf4bccea38d849178fcf659f1257efcb8c4405d919e6a79dc240ddcba49f",
+      "bytes": 38
+    },
+    {
+      "file": "portable/arm64/retention.json.gz",
+      "sha256": "8b76f2010b89b22696b1b6ed022412a9c3d8be07cc51c38c5626ea19b081e31a",
+      "bytes": 87894
+    },
+    {
+      "file": "portable/x86_64/comparison.md",
+      "sha256": "fec6742e4e0bb8394abfd9b1d93d036e6e73bde3effea36dbe3ee3c138272cd6",
+      "bytes": 12007
+    },
+    {
+      "file": "portable/x86_64/measurements.tar.gz",
+      "sha256": "83beb8e1271e85a8a9370043c7f6fdefb7884e31c6e124249a948d8cef7572be",
+      "bytes": 597237
+    },
+    {
+      "file": "portable/x86_64/provenance/build.txt",
+      "sha256": "2ebe2ebd7de88ed1cff816a6903a3969a012d8610733c1d5381ece54f1b0c3f0",
+      "bytes": 8053
+    },
+    {
+      "file": "portable/x86_64/provenance/candidate-dependencies.txt",
+      "sha256": "e2c7ebc8a7b8468e969d7db85e51f01a2899f244b44d973adbcf952f9b33fcdc",
+      "bytes": 862
+    },
+    {
+      "file": "portable/x86_64/provenance/cpu-selection.json",
+      "sha256": "6750b0915b4ea6e17d6684250d8b7ddf0299ad0bb77ebd2538f67b1d72444358",
+      "bytes": 35
+    },
+    {
+      "file": "portable/x86_64/provenance/cpu.txt",
+      "sha256": "4476e601951bb5e5dc85ca4b9d2e3bc795bb83c0d4e62b8d9f2bdec6659b0e7a",
+      "bytes": 3189
+    },
+    {
+      "file": "portable/x86_64/provenance/differential.json",
+      "sha256": "1f91df708b9e68fce723d7439c47d89c0cd2f44d4ec7b11815cbc2c574df1f6b",
+      "bytes": 209
+    },
+    {
+      "file": "portable/x86_64/provenance/linux-build.json",
+      "sha256": "ba8c75732bf64b1ceddbd10f7d58f43829fda8257c3996f4c4dc678a9a4eb0bb",
+      "bytes": 563
+    },
+    {
+      "file": "portable/x86_64/provenance/source-commit.txt",
+      "sha256": "389d6444ed55050feb6e355fbafa9196ced96154fd3efd87c83b13272b1d5311",
+      "bytes": 41
+    },
+    {
+      "file": "portable/x86_64/provenance/tests.xml.gz",
+      "sha256": "2914076c697ce6abeacc6f05ad293f9279ad16df8e9b6b75e112c24643a724b0",
+      "bytes": 19027
+    },
+    {
+      "file": "portable/x86_64/provenance/upstream-dependencies.txt",
+      "sha256": "d01a156224faca8cfab315691d4bfe2e87dc1dfaf25aedb2b9f628c29f43defb",
+      "bytes": 761
+    },
+    {
+      "file": "portable/x86_64/provenance/upstream-install.txt",
+      "sha256": "6911415f368ef55d0e43dfe62ad19e4d98db7aa6143fdea305196b818153f703",
+      "bytes": 1861
+    },
+    {
+      "file": "portable/x86_64/provenance/uv.txt",
+      "sha256": "fea701785388813775be3363dbaa846469bab06238f2f9a27c9005950463c72d",
+      "bytes": 37
+    },
+    {
+      "file": "portable/x86_64/retention.json.gz",
+      "sha256": "bf18b54a0cafab66f2152cb0a4742d841814a2ad1112de2c86eeee6b44d19458",
+      "bytes": 90742
+    },
+    {
+      "file": "retain.py",
+      "sha256": "379d8d5a7b7bd8cf4007d1dc9d38f2438a28d43c5b7ac04c119edeebd6f46008",
+      "bytes": 6958
+    }
+  ]
+}

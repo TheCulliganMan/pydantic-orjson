@@ -9,7 +9,7 @@ import orjson
 
 
 @pytest.mark.parametrize("container", [list, tuple])
-@pytest.mark.parametrize("size", [15, 16, 17, 255, 2048, 16384])
+@pytest.mark.parametrize("size", [3, 4, 5, 7, 8, 9, 15, 16, 17, 255, 2048, 16384])
 @pytest.mark.parametrize("pretty", [False, True])
 def test_numeric_array_sizes_and_integer_limits(container, size, pretty):
     limits = [-(2**63), 2**64 - 1, -(2**31), 2**32 - 1, 0]
@@ -39,7 +39,7 @@ def test_numeric_array_float_limits_and_nonfinite_values(container):
 
 
 @pytest.mark.parametrize("container", [list, tuple])
-@pytest.mark.parametrize("prefix", [1, 15, 16, 2047])
+@pytest.mark.parametrize("prefix", [1, 3, 4, 5, 15, 16, 2047])
 @pytest.mark.parametrize("numeric", [1, 1.0])
 def test_numeric_array_mixed_suffix_and_output_growth(container, prefix, numeric):
     # The suffix exceeds the initial numeric reservation and exercises every

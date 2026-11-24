@@ -21,6 +21,14 @@
   with bounded NEON loads and checked accumulator folding.
 - Decode exact-float array prefixes with a specialized loop, resuming ordinary
   mixed/container traversal at the first different tape tag.
+- Parse complete root integer tokens directly with checked integer conversion;
+  overflow, whitespace and other numeric grammar retain the parser fallback.
+- Keep heap parser arenas aligned to 16 bytes instead of rounding medium
+  inputs to 8 KiB increments. Preserve the 610/611-byte stack transition.
+- Batch clean x86 string prefixes in 64/128-byte blocks. Keep dense Unicode
+  construction on the original scalar loop when ASCII widening cannot help.
+- Guard fixed-size output writes after unbounded values and correct NumPy
+  float64 array reservations; preserve buffer growth and callback behavior.
 - Consume x86 string escape masks once per block, avoiding repeated scans
   for dense escaped strings.
 - Add a primary three-engine benchmark with identical inputs and UTF-8 bytes
