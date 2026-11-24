@@ -84,10 +84,20 @@ the reports. See [benchmark methodology](benchmarks/README.md) and the
 
 ## Scope and cleanup
 
-Local verification covers one macOS ARM64 / Python 3.13 environment. Automated
-CI is configured for Linux 3.10/3.13/3.14 and macOS/Windows 3.13. A configured
-job is not a passed result; consult the repository's Actions runs for current
-remote status. Broader upstream wheel support remains a release gate.
+Local verification covers one macOS ARM64 / Python 3.13 environment.
+[Cross-platform CI passed all five jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45407937853)
+for code commit `6f73c85af32731e427f80c18afebd5984a3050c0`:
+
+- Ubuntu 24.04 / Python 3.10: native build and upstream tests.
+- Ubuntu 24.04 / Python 3.13 and 3.14: wheel build, upstream and integration
+  tests, lint and formatting.
+- macOS 15 / Python 3.13: the same full checks.
+- Windows Server 2025 / Python 3.13: the same full checks, using upstream's
+  `PYO3_USE_RAW_DYLIB=0` import-library setting.
+
+The initial Windows attempt failed at linking because that setting was missing
+from the new workflow. The correction changed build configuration only.
+Broader upstream wheel/platform/version support remains a release gate.
 
 Temporary baseline and clean-install environments, Cargo target output,
 intermediate source/wheel archives and test/lint caches are removed with
