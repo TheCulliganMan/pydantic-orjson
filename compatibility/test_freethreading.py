@@ -8,8 +8,9 @@ import subprocess
 import sys
 import sysconfig
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from dataclasses import dataclass
-from threading import Barrier, Event
+from threading import Barrier, Event, Lock
 
 import pytest
 
@@ -154,17 +155,26 @@ def test_mutable_json_input_is_copied_before_parsing(view):
     payload = memoryview(shared) if view else shared
     barrier = Barrier(4)
     finished = Event()
+    # CPython 3.13 bytearray slice writes do not acquire its object mutex.
+    # Require the documented caller lock there. Keep 3.14+ exercising the
+    # exporter's internal lock without adding a Python lock around decoding.
+    input_lock = Lock() if sys.version_info < (3, 14) else nullcontext()
 
     def mutate():
         barrier.wait(timeout=15)
         while not finished.is_set():
-            shared[:] = b'{"value":22222222}'
-            shared[:] = b'{"value":11111111}'
+            with input_lock:
+                shared[:] = b'{"value":22222222}'
+                shared[:] = b'{"value":11111111}'
 
     def read():
         barrier.wait(timeout=15)
         for _ in range(1000):
-            assert orjson.loads(payload) in ({"value": 11111111}, {"value": 22222222})
+            with input_lock:
+                assert orjson.loads(payload) in (
+                    {"value": 11111111},
+                    {"value": 22222222},
+                )
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         writer = executor.submit(mutate)
@@ -175,6 +185,25 @@ def test_mutable_json_input_is_copied_before_parsing(view):
         finally:
             finished.set()
         writer.result(timeout=15)
+
+
+@pytest.mark.parametrize("view", [False, True])
+def test_concurrent_buffer_exports_are_released(view):
+    shared = bytearray(b'{"value":11111111}')
+    payload = memoryview(shared) if view else shared
+    barrier = Barrier(4)
+
+    def read(_):
+        barrier.wait(timeout=15)
+        for _ in range(1000):
+            assert orjson.loads(payload) == {"value": 11111111}
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        list(executor.map(read, range(4)))
+    if view:
+        payload.release()
+    # A lost increment/decrement can leave an export behind, blocking resize.
+    shared.extend(b" ")
 
 
 @pytest.mark.parametrize("factory", [bytearray, memoryview])
@@ -188,20 +217,25 @@ def test_mutable_input_error_owns_original_document(factory):
 
 
 def test_decode_while_another_thread_collects():
-    finished = Event()
     barrier = Barrier(4)
     encoded = orjson.dumps([{str(i): [i, "雪"]} for i in range(100)])
     expected = orjson.loads(encoded)
 
     def collect():
-        barrier.wait(timeout=15)
-        while not finished.is_set():
+        for _ in range(15):
+            barrier.wait(timeout=30)
             gc.collect()
+            # Give every reader a bounded batch before requesting another
+            # stop-the-world collection. A tight collector loop can starve
+            # attached threads indefinitely on experimental CPython 3.13t.
+            barrier.wait(timeout=30)
 
     def read():
-        barrier.wait(timeout=15)
-        for _ in range(250):
-            assert orjson.loads(encoded) == expected
+        for _ in range(15):
+            barrier.wait(timeout=30)
+            for _ in range(20):
+                assert orjson.loads(encoded) == expected
+            barrier.wait(timeout=30)
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         collector = executor.submit(collect)
@@ -209,6 +243,6 @@ def test_decode_while_another_thread_collects():
         try:
             for result in readers:
                 result.result(timeout=30)
+            collector.result(timeout=30)
         finally:
-            finished.set()
-        collector.result(timeout=15)
+            barrier.abort()

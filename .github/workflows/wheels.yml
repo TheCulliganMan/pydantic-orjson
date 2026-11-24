@@ -14,7 +14,7 @@ permissions:
 
 # These are downloadable build artifacts, not a PyPI or GitHub release.
 # Every t ABI wheel must import and execute with the GIL disabled.
-# setup-python t syntax: https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md
+# UV interpreter selectors: https://docs.astral.sh/uv/concepts/python-versions/#free-threaded-python
 # Runtime contract: https://docs.python.org/3/howto/free-threading-extensions.html
 jobs:
   wheel:
@@ -32,7 +32,9 @@ jobs:
           - {label: macos-arm64, runner: macos-15, architecture: arm64}
           - {label: windows-amd64, runner: windows-2025, architecture: x64}
     env:
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      UV_MANAGED_PYTHON: '1'
+      UV_PROJECT_ENVIRONMENT: .venv
+      UV_PYTHON: ${{ endsWith(matrix.python, 't') && matrix.python || format('{0}+gil', matrix.python) }}
       # Private CPython symbols require the full Windows import library.
       PYO3_USE_RAW_DYLIB: '0'
     defaults:
@@ -40,48 +42,66 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        id: python
+      - uses: astral-sh/setup-uv@v9
         with:
-          python-version: ${{ matrix.python }}
-          architecture: ${{ matrix.platform.architecture }}
+          version: '0.13.9'
+          enable-cache: true
+      - name: Install the requested UV-managed interpreter
+        run: uv python install "${UV_PYTHON%+gil}"
       - name: Install release toolchain
         run: |
           rustup toolchain install 1.99.0 --profile minimal
           rustup default 1.99.0
-          python -m pip install 'maturin==1.16.0' packaging
+      - name: Sync locked native and framework dependencies
+        if: matrix.python != '3.10' && matrix.python != '3.13t'
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - name: Sync published native dependencies for experimental Python 3.13t
+        if: matrix.python == '3.13t'
+        # Current Pydantic/AI dependencies do not publish supported 3.13t wheels.
+        run: uv sync --locked --no-install-project --no-build --python "$UV_PYTHON" --group native313t
+      - name: Sync locked Python 3.10 dependencies
+        if: matrix.python == '3.10'
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --extra pydantic
       - name: Verify selected interpreter
         env:
           REQUESTED_PYTHON: ${{ matrix.python }}
+          REQUESTED_ARCHITECTURE: ${{ matrix.platform.architecture }}
         run: |
-          python - <<'PY'
-          import os, sys, sysconfig
+          uv run --no-sync python - <<'PY'
+          import os, platform, sys, sysconfig
           requested = os.environ['REQUESTED_PYTHON']
           actual = f'{sys.version_info.major}.{sys.version_info.minor}'
           threaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
           assert actual == requested.removesuffix('t'), (requested, sys.version)
           assert threaded == requested.endswith('t'), (requested, threaded)
+          architecture = {'amd64': 'x64', 'x86_64': 'x64', 'aarch64': 'arm64', 'arm64': 'arm64'}[platform.machine().lower()]
+          assert architecture == os.environ['REQUESTED_ARCHITECTURE'], architecture
           print(sys.version)
           print('free-threaded ABI:', threaded)
           PY
-          python script/check-version
-      - name: Build Linux wheel
-        if: runner.os == 'Linux'
+          uv run --no-sync python script/check-version
+      - name: Build the replacement wheel through UV
         run: |
-          # The host is Ubuntu 24.04. Audit the actual glibc compatibility;
-          # do not relabel a host-built wheel as manylinux2014.
-          maturin build --release --strip --locked --compatibility manylinux_2_39 --out dist -i python
-      - name: Build macOS or Windows wheel
-        if: runner.os != 'Linux'
-        run: maturin build --release --strip --locked --out dist -i python
+          build_args='--locked --strip'
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            # Audit the Ubuntu 24.04 host's actual glibc compatibility;
+            # do not relabel a host-built wheel as manylinux2014.
+            build_args+=' --compatibility manylinux_2_39'
+          fi
+          # This fork tests an experimental 3.13t compatibility port. Keep
+          # PyO3's normal version guard enabled for every other interpreter.
+          if [[ "$UV_PYTHON" == '3.13t' ]]; then
+            export UNSAFE_PYO3_SKIP_VERSION_CHECK=1
+          fi
+          uv build --wheel --no-sources --python .venv -C "maturin.build-args=$build_args" --out-dir dist
       - name: Install exactly the built wheel
-        run: python -m pip install --force-reinstall --no-deps dist/*.whl
+        run: uv pip install --python .venv --no-deps --reinstall dist/*.whl
       - name: Verify wheel ABI and runtime GIL state
         env:
           REQUESTED_PYTHON: ${{ matrix.python }}
           SOURCE_SHA: ${{ github.sha }}
         run: |
-          python - <<'PY'
+          uv run --no-sync python - <<'PY'
           import hashlib, json, os, pathlib, subprocess, sys
           from packaging.utils import parse_wheel_filename
 
@@ -102,6 +122,8 @@ jobs:
           import json, sys, sysconfig
           before = getattr(sys, '_is_gil_enabled', lambda: True)()
           import orjson
+          from pathlib import Path
+          assert Path(orjson.__file__).is_relative_to(Path(sys.prefix)), orjson.__file__
           after = getattr(sys, '_is_gil_enabled', lambda: True)()
           threaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
           assert after is not threaded, 'Unexpected GIL state after importing orjson'
@@ -126,37 +148,31 @@ jobs:
           pathlib.Path('dist/runtime.json').write_text(json.dumps(runtime, indent=2) + '\n')
           print(json.dumps(runtime, indent=2))
           PY
-      - name: Install native and property test dependencies
-        run: python -m pip install -r test/requirements.txt hypothesis
       - name: Test native API and compatibility boundaries
         env:
           PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
           PYTHONMALLOC: debug
         run: |
-          python -m pytest -q test compatibility --ignore=compatibility/test_drop_in.py --junitxml=dist/native-tests.xml
-      - name: Install typed and framework dependencies
-        if: matrix.python != '3.10'
-        run: python -m pip install 'pydantic==2.14.4' 'pydantic-ai-slim==2.73.0' 'fastapi==0.165.0' 'httpx==0.28.1' numpy
+          uv run --no-sync python -m pytest -q test compatibility --ignore=compatibility/test_drop_in.py --junitxml=dist/native-tests.xml
       - name: Test Pydantic AI and FastAPI integration
-        if: matrix.python != '3.10'
+        if: matrix.python != '3.10' && matrix.python != '3.13t'
         env:
           PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
           PYTHONMALLOC: debug
-        run: python -m pytest -q compatibility/test_drop_in.py integration_pydantic --junitxml=dist/integration-tests.xml
+        run: uv run --no-sync python -m pytest -q compatibility/test_drop_in.py integration_pydantic --junitxml=dist/integration-tests.xml
       - name: Test Pydantic on Python 3.10
         if: matrix.python == '3.10'
         env:
           PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
           PYTHONMALLOC: debug
         run: |
-          python -m pip install 'pydantic==2.14.4'
-          python -m pytest -q integration_pydantic/test_codec.py integration_pydantic/test_semantics.py --junitxml=dist/integration-tests.xml
+          uv run --no-sync python -m pytest -q integration_pydantic/test_codec.py integration_pydantic/test_semantics.py --junitxml=dist/integration-tests.xml
       - name: Verify calls from multiple Python threads
         env:
           PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
           PYTHONMALLOC: debug
         run: |
-          python - <<'PY'
+          uv run --no-sync python - <<'PY'
           from concurrent.futures import ThreadPoolExecutor
           import sys, sysconfig
           import orjson
@@ -168,8 +184,8 @@ jobs:
           with ThreadPoolExecutor(max_workers=8) as executor:
               list(executor.map(check, range(4096)))
           PY
-          python -m pip check
-          python -m pip freeze > dist/dependencies.txt
+          uv pip check --python .venv
+          uv pip freeze --python .venv > dist/dependencies.txt
       - name: Upload tested wheel and evidence
         uses: actions/upload-artifact@v7
         with:

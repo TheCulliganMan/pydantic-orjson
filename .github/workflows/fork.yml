@@ -7,10 +7,105 @@ on:
 permissions:
   contents: read
 
+env:
+  UV_MANAGED_PYTHON: '1'
+  UV_PROJECT_ENVIRONMENT: .venv
+  # Private CPython symbols require the full Windows import library.
+  PYO3_USE_RAW_DYLIB: '0'
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
+  source-distribution:
+    name: Rust formatting and source-distribution round trip
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      UV_PYTHON: '3.13+gil'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v9
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install "${UV_PYTHON%+gil}"
+      - run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt
+      - run: rustup default 1.99.0
+      - run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - run: uv run --no-sync cargo fmt --all -- --check
+      - run: uv run --no-sync python script/check-version
+      - name: Build the source archive through UV
+        run: uv build --sdist --no-sources --python .venv --out-dir dist
+      - name: Verify source completeness and exclude rough build products
+        run: |
+          uv run --no-sync python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path, PurePosixPath
+          import tarfile
+
+          archives = list(Path('dist').glob('*.tar.gz'))
+          assert len(archives) == 1, archives
+          archive = archives[0]
+          forbidden = {'target', 'build', 'dist', '.artifacts', '__pycache__',
+                       '.pytest_cache', '.mypy_cache', '.ruff_cache', '.hypothesis'}
+          with tarfile.open(archive) as source:
+              paths = [PurePosixPath(member.name) for member in source.getmembers()]
+              roots = {path.parts[0] for path in paths}
+              assert len(roots) == 1, roots
+              bad = [str(path) for path in paths
+                     if path.is_absolute() or '..' in path.parts
+                     or any(part in forbidden or part.startswith('.venv') for part in path.parts[1:])
+                     or path.suffix == '.pyc']
+              assert not bad, bad
+              relative = {'/'.join(path.parts[1:]) for path in paths}
+              required = {'Cargo.toml', 'Cargo.lock', 'pyproject.toml', 'uv.lock',
+                          'build.rs', 'src/lib.rs', 'pysrc/orjson/__init__.pyi',
+                          'pysrc/orjson/pydantic.py', 'script/check-version',
+                          'scripts/build.sh', 'compatibility/differential.py',
+                          'integration_pydantic/test_codec.py', 'VALIDATION.md'}
+              assert required <= relative, sorted(required - relative)
+              assert any(path.startswith('data/') for path in relative), 'Missing test fixtures'
+              destination = Path('.artifacts/sdist-source').resolve()
+              source.extractall(destination, filter='data')
+          extracted = destination / roots.pop()
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              output.write(f'SDIST_SOURCE={extracted}\n')
+          Path('dist/sdist-contents.json').write_text(json.dumps({
+              'archive': archive.name,
+              'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+              'files': sorted(relative),
+          }, indent=2) + '\n')
+          PY
+      - name: Build and install a wheel from the archive
+        run: |
+          uv build dist/*.tar.gz --wheel --no-sources --python .venv -C 'maturin.build-args=--locked --strip' --out-dir dist/from-sdist
+          uv pip install --python .venv --no-deps --reinstall dist/from-sdist/*.whl
+      - name: Test the installed wheel using only the extracted source tests
+        env:
+          PYTHONMALLOC: debug
+        run: |
+          UV_PROJECT_ENVIRONMENT="$GITHUB_WORKSPACE/.venv" uv run --directory "$SDIST_SOURCE" --no-sync python -m pytest -q test compatibility integration_pydantic --junitxml="$GITHUB_WORKSPACE/dist/sdist-tests.xml"
+          uv pip check --python .venv
+      - name: Retain the source archive, rebuilt wheel, and validation evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: source-distribution-roundtrip
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Remove temporary source and build products
+        if: always()
+        run: rm -rf .artifacts/sdist-source target
+
   integration:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
+    env:
+      UV_PYTHON: ${{ format('{0}+gil', matrix.python) }}
     strategy:
       fail-fast: false
       matrix:
@@ -22,79 +117,109 @@ jobs:
           - {os: windows-2025, python: '3.13'}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: astral-sh/setup-uv@v9
         with:
-          python-version: ${{ matrix.python }}
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install "${UV_PYTHON%+gil}"
       - run: rustup toolchain install 1.99.0 --profile minimal
       - run: rustup default 1.99.0
-      - run: python -m pip install -r requirements-fork.txt
-      - run: python script/check-version
-      - run: maturin build --release --strip --locked --out dist
-        env:
-          # Match upstream Windows builds: private CPython symbols need the
-          # full import library, beyond pyo3-ffi's raw-dylib declarations.
-          PYO3_USE_RAW_DYLIB: '0'
-      - name: Install wheel
-        shell: bash
-        run: python -m pip install --force-reinstall dist/*.whl
-      - run: python -m pytest -q test compatibility integration_pydantic
+      - run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - run: uv run --no-sync python script/check-version
+      - run: uv build --wheel --no-sources --python .venv -C 'maturin.build-args=--locked --strip' --out-dir dist
+      - name: Install exactly the built wheel
+        run: uv pip install --python .venv --no-deps --reinstall dist/*.whl
+      - run: uv run --no-sync python -m pytest -q test compatibility integration_pydantic
         env:
           PYTHONMALLOC: debug
-      - run: ruff check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts
-      - run: ruff format --check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts
+      - run: uv run --no-sync ruff check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts
+      - run: uv run --no-sync ruff format --check pysrc/orjson/pydantic.py pysrc/orjson/pydantic_ai.py compatibility integration_pydantic benchmarks scripts
+      - run: uv pip check --python .venv
 
   older-python:
     runs-on: ubuntu-24.04
+    env:
+      UV_PYTHON: ${{ format('{0}+gil', matrix.python) }}
     strategy:
       fail-fast: false
       matrix:
         python: ['3.10', '3.11', '3.12']
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: astral-sh/setup-uv@v9
         with:
-          python-version: ${{ matrix.python }}
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install "${UV_PYTHON%+gil}"
       - run: rustup toolchain install 1.99.0 --profile minimal
       - run: rustup default 1.99.0
-      - run: python -m pip install 'maturin>=1.10,<2' -r test/requirements.txt
-      - run: maturin build --release --strip --locked --out dist
-      - run: python -m pip install dist/*.whl
-      - run: python -m pytest -q test
+      - name: Sync native and framework dependencies
+        if: matrix.python != '3.10'
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - name: Sync Python 3.10 native and Pydantic dependencies
+        if: matrix.python == '3.10'
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --extra pydantic
+      - run: uv build --wheel --no-sources --python .venv -C 'maturin.build-args=--locked --strip' --out-dir dist
+      - run: uv pip install --python .venv --no-deps --reinstall dist/*.whl
+      - run: uv run --no-sync python -m pytest -q test
         env:
           PYTHONMALLOC: debug
       - name: Typed integration on older supported Python
         if: matrix.python != '3.10'
-        run: |
-          python -m pip install 'pydantic==2.14.4' 'pydantic-ai-slim==2.73.0' 'fastapi==0.165.0' 'httpx==0.28.1' numpy hypothesis
-          python -m pytest -q compatibility integration_pydantic
+        run: uv run --no-sync python -m pytest -q compatibility integration_pydantic
         env:
           PYTHONMALLOC: debug
       - name: Pydantic core integration on Python 3.10
         if: matrix.python == '3.10'
-        run: |
-          python -m pip install 'pydantic==2.14.4'
-          python -m pytest -q integration_pydantic/test_codec.py integration_pydantic/test_semantics.py
+        run: uv run --no-sync python -m pytest -q integration_pydantic/test_codec.py integration_pydantic/test_semantics.py
+      - run: uv pip check --python .venv
 
   free-threaded:
     name: Linux / Python ${{ matrix.python }} / no GIL
     runs-on: ubuntu-24.04
+    env:
+      UV_PYTHON: ${{ matrix.python }}
     strategy:
       fail-fast: false
       matrix:
         python: ['3.13t', '3.14t', '3.15t']
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: astral-sh/setup-uv@v9
         with:
-          python-version: ${{ matrix.python }}
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install "${UV_PYTHON%+gil}"
       - run: rustup toolchain install 1.99.0 --profile minimal
       - run: rustup default 1.99.0
-      - run: python -m pip install -r requirements-fork.txt
-      - run: maturin build --release --strip --locked --out dist
-      - run: python -m pip install dist/*.whl
+      - name: Sync current free-threaded integration dependencies
+        if: matrix.python != '3.13t'
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - name: Sync published native dependencies for experimental Python 3.13t
+        if: matrix.python == '3.13t'
+        run: uv sync --locked --no-install-project --no-build --python "$UV_PYTHON" --group native313t
+      - name: Build the free-threaded wheel
+        run: |
+          # This fork tests an experimental 3.13t compatibility port. Keep
+          # PyO3's normal version guard enabled for every other interpreter.
+          if [[ "$UV_PYTHON" == '3.13t' ]]; then
+            export UNSAFE_PYO3_SKIP_VERSION_CHECK=1
+          fi
+          uv build --wheel --no-sources --python .venv -C 'maturin.build-args=--locked --strip' --out-dir dist
+      - run: uv pip install --python .venv --no-deps --reinstall dist/*.whl
       - name: Require default import to keep the GIL disabled
-        run: python -I -c "import sys; assert not sys._is_gil_enabled(); import orjson; assert not sys._is_gil_enabled()"
-      - run: python -X faulthandler -m pytest -q test compatibility integration_pydantic
+        run: uv run --no-sync python -I -c "import sys; assert not sys._is_gil_enabled(); import orjson; assert not sys._is_gil_enabled()"
+      - name: Test native API and full typed integration
+        if: matrix.python != '3.13t'
+        run: uv run --no-sync python -X faulthandler -m pytest -q test compatibility integration_pydantic
         env:
           PYTHON_GIL: '0'
           PYTHONMALLOC: debug
+      - name: Test experimental Python 3.13t native compatibility
+        if: matrix.python == '3.13t'
+        # Current Pydantic/AI dependencies do not publish supported 3.13t wheels.
+        run: uv run --no-sync python -X faulthandler -m pytest -q test compatibility --ignore=compatibility/test_drop_in.py
+        env:
+          PYTHON_GIL: '0'
+          PYTHONMALLOC: debug
+      - run: uv pip check --python .venv

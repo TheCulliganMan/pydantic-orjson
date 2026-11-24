@@ -1,0 +1,15 @@
+{
+  "allowed_logical_cpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "physical_core_representatives": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "selected_logical_cpu": 3
+}

@@ -1,10 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --no-sync python
 # SPDX-License-Identifier: MPL-2.0
 # Copyright ijl (2025)
 
 from pathlib import Path
 
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10
+    import tomli as tomllib
 
 cargo_doc = tomllib.loads(Path("Cargo.toml").read_text(encoding="utf-8"))
 pyproject_doc = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))

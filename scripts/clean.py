@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --no-sync python
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 """Remove this checkout's rough outputs; keep dist, .venv and committed reports."""
 
+import argparse
 import shutil
 from pathlib import Path
 
@@ -9,6 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--preserve-env", type=Path, default=ROOT / ".venv")
+    args = parser.parse_args()
+    preserved = args.preserve_env.resolve()
     for name in (
         "target",
         "build",
@@ -19,11 +24,14 @@ def main() -> None:
         ".venv-asan-ft",
         ".venv-published",
         ".venv-freethreaded",
+        ".venv-313t",
         ".hypothesis",
         ".pytest_cache",
         ".ruff_cache",
     ):
         path = ROOT / name
+        if path.resolve() == preserved:
+            continue
         if path.is_symlink():
             path.unlink()
         elif path.is_dir():

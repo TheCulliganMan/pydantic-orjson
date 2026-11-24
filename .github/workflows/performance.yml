@@ -18,13 +18,18 @@ jobs:
     env:
       PERF_BASELINE_KIND: ${{ matrix.baseline }}
       PERF_SOURCE_BASE: e56965ebcfdc1905318da14d37b8b07990130109
+      UV_MANAGED_PYTHON: '1'
+      UV_PROJECT_ENVIRONMENT: .venv
+      UV_PYTHON: '3.13'
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v7
+      - uses: astral-sh/setup-uv@v9
         with:
-          python-version: '3.13'
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install 3.13
       - run: rustup toolchain install 1.99.0 --profile minimal
       - run: rustup default 1.99.0
       - name: Build candidate and prepare the selected baseline
@@ -34,37 +39,67 @@ jobs:
           mkdir -p .artifacts/perf results
           git rev-parse HEAD > results/candidate-commit.txt
           rustc --version --verbose > results/rustc.txt
-          python -m venv .artifacts/perf/baseline
-          python -m venv .artifacts/perf/candidate
-          for variant in baseline candidate; do
-            .artifacts/perf/$variant/bin/python -m pip install -r requirements-fork.txt
+          uv --version > results/uv.txt
+          # Both environments use this checkout's same lock, not the historical
+          # source checkout's dependency declarations. Only orjson differs.
+          for environment in .artifacts/perf/baseline .venv; do
+            UV_PROJECT_ENVIRONMENT="$environment" uv sync --locked --no-install-project --python 3.13 --group native --group integration
           done
+          uv run --no-sync python -c 'from importlib.metadata import version; print("maturin==" + version("maturin"))' > .artifacts/perf/build-constraints.txt
 
           if [[ "$PERF_BASELINE_KIND" == source ]]; then
             mkdir -p .artifacts/perf/source
             git archive "$PERF_SOURCE_BASE" | tar -x -C .artifacts/perf/source
             printf '%s\n' "$PERF_SOURCE_BASE" > results/baseline-source-commit.txt
-            .artifacts/perf/candidate/bin/maturin build --manifest-path .artifacts/perf/source/Cargo.toml --release --strip --locked -i .artifacts/perf/baseline/bin/python --out .artifacts/perf/baseline-wheels 2>&1 | tee results/build-baseline.txt
-            .artifacts/perf/baseline/bin/python -m pip install .artifacts/perf/baseline-wheels/*.whl
+            uv build .artifacts/perf/source --wheel --no-sources --python .artifacts/perf/baseline --build-constraints .artifacts/perf/build-constraints.txt -C 'maturin.build-args=--locked --strip' --out-dir .artifacts/perf/baseline-wheels 2>&1 | tee results/build-baseline.txt
+            uv pip install --python .artifacts/perf/baseline --no-deps --reinstall .artifacts/perf/baseline-wheels/*.whl
           else
             # Fail if the official platform wheel is unavailable; do not silently
             # substitute another locally compiled source build for this control.
-            .artifacts/perf/baseline/bin/python -m pip install --index-url https://pypi.org/simple --only-binary=:all: --no-deps --report results/baseline-install.json 'orjson==3.13.0'
+            uv pip install --python .artifacts/perf/baseline --default-index https://pypi.org/simple --only-binary=:all: --no-deps --reinstall --verbose 'orjson==3.13.0' 2>&1 | tee results/baseline-install.log
+            # UV has no pip --report equivalent. Retain the download log and
+            # installed wheel metadata/native hash as the provenance receipt.
+            UV_PROJECT_ENVIRONMENT=.artifacts/perf/baseline uv run --no-sync python - <<'PY'
+          import hashlib
+          import importlib.metadata
+          import json
+          from pathlib import Path
+
+          dist = importlib.metadata.distribution("orjson")
+          native = [path for path in dist.files if str(path).endswith((".so", ".pyd"))]
+          assert len(native) == 1, native
+          native_path = dist.locate_file(native[0])
+          receipt = {
+              "requested": "orjson==3.13.0",
+              "index": "https://pypi.org/simple",
+              "only_binary": True,
+              "installed_version": dist.version,
+              "wheel_metadata": dist.read_text("WHEEL"),
+              "installer": dist.read_text("INSTALLER"),
+              "native_sha256": hashlib.sha256(native_path.read_bytes()).hexdigest(),
+          }
+          assert dist.version == "3.13.0", receipt
+          Path("results/baseline-install.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          PY
           fi
 
-          .artifacts/perf/candidate/bin/maturin build --release --strip --locked -i .artifacts/perf/candidate/bin/python --out .artifacts/perf/candidate-wheels 2>&1 | tee results/build-candidate.txt
-          .artifacts/perf/candidate/bin/python -m pip install .artifacts/perf/candidate-wheels/*.whl
+          uv build --wheel --no-sources --python .venv --build-constraints .artifacts/perf/build-constraints.txt -C 'maturin.build-args=--locked --strip' --out-dir .artifacts/perf/candidate-wheels 2>&1 | tee results/build-candidate.txt
+          uv pip install --python .venv --no-deps --reinstall .artifacts/perf/candidate-wheels/*.whl
           for variant in baseline candidate; do
-            .artifacts/perf/$variant/bin/python -m pip check
-            .artifacts/perf/$variant/bin/python -m pip freeze > results/dependencies-$variant.txt
+            environment=.venv
+            if [[ "$variant" == baseline ]]; then environment=.artifacts/perf/baseline; fi
+            uv pip check --python "$environment"
+            uv pip freeze --python "$environment" > "results/dependencies-$variant.txt"
           done
-          .artifacts/perf/candidate/bin/python compatibility/differential.py --baseline .artifacts/perf/baseline/bin/python --candidate .artifacts/perf/candidate/bin/python --output results/compatibility.json
+          baseline_python=$(UV_PROJECT_ENVIRONMENT=.artifacts/perf/baseline uv run --no-sync python -c 'import sys; print(sys.executable)')
+          candidate_python=$(uv run --no-sync python -c 'import sys; print(sys.executable)')
+          uv run --no-sync python compatibility/differential.py --baseline "$baseline_python" --candidate "$candidate_python" --output results/compatibility.json
 
       - name: Select one permitted physical-core representative
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          uv run --no-sync python - <<'PY'
           import json
           import os
           from pathlib import Path
@@ -104,7 +139,9 @@ jobs:
           fi
           measure() {
             local variant="$1" report="$2"
-            .artifacts/perf/$variant/bin/python benchmarks/pyperf_suite.py "${group[@]}" --affinity "$PERF_CPU" -p 4 -n 4 -w 2 --min-time 0.07 -o "results/$report.json" 2>&1 | tee "results/$report.log"
+            local environment=.venv
+            if [[ "$variant" == baseline ]]; then environment=.artifacts/perf/baseline; fi
+            UV_PROJECT_ENVIRONMENT="$environment" uv run --no-sync python benchmarks/pyperf_suite.py "${group[@]}" --affinity "$PERF_CPU" -p 4 -n 4 -w 2 --min-time 0.07 -o "results/$report.json" 2>&1 | tee "results/$report.log"
           }
           measure baseline baseline
           measure candidate candidate
@@ -119,8 +156,8 @@ jobs:
           if [[ "$PERF_BASELINE_KIND" == published ]]; then
             selection=(--native-only)
           fi
-          .artifacts/perf/candidate/bin/python benchmarks/compare_pyperf.py results/baseline.json results/candidate.json "${selection[@]}" 2>&1 | tee results/comparison.txt
-          .artifacts/perf/candidate/bin/python benchmarks/compare_pyperf.py results/baseline-reverse.json results/candidate-reverse.json "${selection[@]}" 2>&1 | tee results/comparison-reverse.txt
+          uv run --no-sync python benchmarks/compare_pyperf.py results/baseline.json results/candidate.json "${selection[@]}" 2>&1 | tee results/comparison.txt
+          uv run --no-sync python benchmarks/compare_pyperf.py results/baseline-reverse.json results/candidate-reverse.json "${selection[@]}" 2>&1 | tee results/comparison-reverse.txt
           {
             printf '### %s baseline on %s\n\n' "$PERF_BASELINE_KIND" "$RUNNER_ARCH"
             printf 'Both run orders and raw worker samples are retained in the artifact. '
@@ -139,4 +176,4 @@ jobs:
       - name: Remove temporary environments and build products
         if: always()
         shell: bash
-        run: rm -rf .artifacts/perf target
+        run: rm -rf .artifacts/perf .venv target

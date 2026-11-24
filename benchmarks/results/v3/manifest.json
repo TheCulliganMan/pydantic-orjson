@@ -1,0 +1,692 @@
+{
+  "candidate_commit": "655e430ed9e2c6260df2362d6b586a55cd44f8d3",
+  "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45421088810",
+  "removed_metadata_fields": [
+    "hostname",
+    "python_executable"
+  ],
+  "files": [
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "baseline-install.json",
+      "original_sha256": "f4bba9a325167a7f3b1223620fddcf71435a5f852f829f4fd887dccfeb221f13",
+      "original_bytes": 45077,
+      "file": "arm64-published/baseline-install.json",
+      "retained_sha256": "f4bba9a325167a7f3b1223620fddcf71435a5f852f829f4fd887dccfeb221f13",
+      "retained_bytes": 45077
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "baseline-reverse.json",
+      "original_sha256": "8780e55c7ab712d94d92b40caf6d866478e27e572aa42354d86135166b1c469c",
+      "original_bytes": 59812,
+      "sanitized_json_sha256": "57cfea12d85816f29a10f8e5019803a985597a615d8bcff07a414191ff279101",
+      "file": "arm64-published/baseline-reverse.json.gz",
+      "retained_sha256": "9ed576e8fec2fc4ad6bc3abf8694e012919bdf9558e37daece9c0c8c23b0a19f",
+      "retained_bytes": 18912
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "baseline-reverse.log",
+      "original_sha256": "a0f8c15b1f9b3353c16c363355c23a02a408d6e2e0bb49f83889afcf516faa08",
+      "original_bytes": 7629,
+      "file": "arm64-published/baseline-reverse.log.gz",
+      "retained_sha256": "3df7cef3402644e0c13a7f12f85cdecf62258182e612d3381d88d7508d258c1d",
+      "retained_bytes": 769
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "baseline.json",
+      "original_sha256": "21a669e2de41ef98306217121aca4fe377ee5b0f99f96f6d4077d073d99ed7f2",
+      "original_bytes": 58701,
+      "sanitized_json_sha256": "1efaaf113aaea4cab7489c8eada71e068705d3459809a37f6f03fc7f569e44e6",
+      "file": "arm64-published/baseline.json.gz",
+      "retained_sha256": "1ad83f8e4bb30ff8723d0745296b06aac4134004e8f54614e4d86451c698420c",
+      "retained_bytes": 18713
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "baseline.log",
+      "original_sha256": "9f8cb3c488e1de195f442774ff384b3bbe199893d3b3e2be998c9b034092f00b",
+      "original_bytes": 8770,
+      "file": "arm64-published/baseline.log.gz",
+      "retained_sha256": "fc66bc3281dfaf066a8bec6ec2284187b4aa1cd7b4250bdf2d69704f04a83f69",
+      "retained_bytes": 783
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "build-candidate.txt",
+      "original_sha256": "e0ad9d21a2b1e2c915b4c9484e49f70139e83255eab896426603380616cb8df1",
+      "original_bytes": 1570,
+      "file": "arm64-published/build-candidate.txt",
+      "retained_sha256": "e0ad9d21a2b1e2c915b4c9484e49f70139e83255eab896426603380616cb8df1",
+      "retained_bytes": 1570
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "candidate-commit.txt",
+      "original_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "original_bytes": 41,
+      "file": "arm64-published/candidate-commit.txt",
+      "retained_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "candidate-reverse.json",
+      "original_sha256": "dc60496791b0c081f93e24c440d93c69827777cc8921f3ab841437b18a5f09ea",
+      "original_bytes": 58987,
+      "sanitized_json_sha256": "c8dc738165cdab0ea2dfd905c81dfa5a6351a7350ac9f092da345db840061e92",
+      "file": "arm64-published/candidate-reverse.json.gz",
+      "retained_sha256": "5caba85b9641cefa70a67edf211e6b5d4ebe1b6ed12a3c6b3ae92b18ee228538",
+      "retained_bytes": 18868
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "candidate-reverse.log",
+      "original_sha256": "bef4ccdf422103bb92207771ce0b8eb7ef63906fed55c556dd093001b811067f",
+      "original_bytes": 6130,
+      "file": "arm64-published/candidate-reverse.log.gz",
+      "retained_sha256": "74c2d5f51657235de90eca8b7f8ec8acf097bd27d20b13ce0ba92185327dc316",
+      "retained_bytes": 755
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "candidate.json",
+      "original_sha256": "e22e9821d2c8dcd3241659e3d6c19bed619665f9499d54971704f757bdb798ed",
+      "original_bytes": 60397,
+      "sanitized_json_sha256": "bb41c7f433b3e952b2e7c7cb82e9d6fe836a9186fc0fab50e30a312bdc86f4c7",
+      "file": "arm64-published/candidate.json.gz",
+      "retained_sha256": "06d690aa5c628eaa07eb93527acdeafec00e124012a3879523cf673ca4cb5715",
+      "retained_bytes": 19124
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "candidate.log",
+      "original_sha256": "fb85c2e3e89cb61ca420b3949f825afa91a6e8d4c699049fefcfef39ce03d3dc",
+      "original_bytes": 6173,
+      "file": "arm64-published/candidate.log.gz",
+      "retained_sha256": "975aba0270743c982057a61ee505b00cb4272312937825e257da9a9aa524d9cb",
+      "retained_bytes": 785
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "comparison-reverse.txt",
+      "original_sha256": "738cd59f552e31a9ac1b7cb1631207f03567aca77b96e79757df5b9278287e1e",
+      "original_bytes": 3230,
+      "file": "arm64-published/comparison-reverse.txt",
+      "retained_sha256": "738cd59f552e31a9ac1b7cb1631207f03567aca77b96e79757df5b9278287e1e",
+      "retained_bytes": 3230
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "comparison.txt",
+      "original_sha256": "915f53cc717dcf5f7465c8ef4a7950ffe4af5c5d4918cc98812bd3c15223983b",
+      "original_bytes": 3238,
+      "file": "arm64-published/comparison.txt",
+      "retained_sha256": "915f53cc717dcf5f7465c8ef4a7950ffe4af5c5d4918cc98812bd3c15223983b",
+      "retained_bytes": 3238
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "compatibility.json",
+      "original_sha256": "4898d10a31d280f2028a31d7e6d554936e0ba4a1297f06e16d9ed857f21bbe41",
+      "original_bytes": 272,
+      "file": "arm64-published/compatibility.json",
+      "retained_sha256": "4898d10a31d280f2028a31d7e6d554936e0ba4a1297f06e16d9ed857f21bbe41",
+      "retained_bytes": 272
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "cpu-selection.json",
+      "original_sha256": "1cc7e8276bd41b3448a3ef837fe5921d5ec9003c85ceaae9897108f5e86dadbd",
+      "original_bytes": 161,
+      "file": "arm64-published/cpu-selection.json",
+      "retained_sha256": "1cc7e8276bd41b3448a3ef837fe5921d5ec9003c85ceaae9897108f5e86dadbd",
+      "retained_bytes": 161
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "dependencies-baseline.txt",
+      "original_sha256": "739547fdc0474dfb6d8b92ca0ce21aa2260c04d680c1e792c472c356d6e1206b",
+      "original_bytes": 761,
+      "file": "arm64-published/dependencies-baseline.txt",
+      "retained_sha256": "739547fdc0474dfb6d8b92ca0ce21aa2260c04d680c1e792c472c356d6e1206b",
+      "retained_bytes": 761
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "dependencies-candidate.txt",
+      "original_sha256": "5639007a0cc7dd3ea69276c065b263f4c78c1138a1c6b90113d0e0ce814a887c",
+      "original_bytes": 983,
+      "file": "arm64-published/dependencies-candidate.txt",
+      "retained_sha256": "5639007a0cc7dd3ea69276c065b263f4c78c1138a1c6b90113d0e0ce814a887c",
+      "retained_bytes": 983
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-published",
+      "original_file": "rustc.txt",
+      "original_sha256": "60586c5678459d91006a242307c9d42841a6a719f612863d27ff30ffb3f4bf4f",
+      "original_bytes": 197,
+      "file": "arm64-published/rustc.txt",
+      "retained_sha256": "60586c5678459d91006a242307c9d42841a6a719f612863d27ff30ffb3f4bf4f",
+      "retained_bytes": 197
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "baseline-reverse.json",
+      "original_sha256": "cc7afbf282ebce1b88e9e62ca31510b284707d62b5113d466757dee69fa0df0e",
+      "original_bytes": 86249,
+      "sanitized_json_sha256": "f24bc12b710aeeb01c510460bade0de4a4c68dc814aace651d76e3f1f811345e",
+      "file": "arm64-source/baseline-reverse.json.gz",
+      "retained_sha256": "60802c9e9d51f71aa67c7ca257358afde7c6dc1ceb2a51436cd7bb06a00aa605",
+      "retained_bytes": 26620
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "baseline-reverse.log",
+      "original_sha256": "9a182444ea3604ad98490c7b91d1de67e2650d4030692f0bc4eb16a2211a0fcd",
+      "original_bytes": 11230,
+      "file": "arm64-source/baseline-reverse.log.gz",
+      "retained_sha256": "b90a71c9fc80d6f5cbf58fbf0bcd35dc4d6943e3ca41402952e44573a5645b14",
+      "retained_bytes": 950
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "baseline-source-commit.txt",
+      "original_sha256": "467277bb232d98c13addee4dddedad1c776934753b6dbc28d908b7ca0188211c",
+      "original_bytes": 41,
+      "file": "arm64-source/baseline-source-commit.txt",
+      "retained_sha256": "467277bb232d98c13addee4dddedad1c776934753b6dbc28d908b7ca0188211c",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "baseline.json",
+      "original_sha256": "e6a62dc13fa8be9e891c851f5d34d710dee4182e521bceaee2530b561408700f",
+      "original_bytes": 85485,
+      "sanitized_json_sha256": "478db9668fe3bebd8358a301eb9595cb36dee02522814f33581375842ceab24e",
+      "file": "arm64-source/baseline.json.gz",
+      "retained_sha256": "1db1c61bc7ac711d4fca2854ece1cb4b893fd8a340a6e3b7173bfaaa6f988242",
+      "retained_bytes": 26612
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "baseline.log",
+      "original_sha256": "b984c99cb3385a1b54168f7ca5e1c19f456fc05bef68292e301d637b9742eabb",
+      "original_bytes": 11062,
+      "file": "arm64-source/baseline.log.gz",
+      "retained_sha256": "81957457fae9ddd6ab8f5e847c7c8bb0e9f753caceccf673207372ac59100d83",
+      "retained_bytes": 909
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "build-baseline.txt",
+      "original_sha256": "06f09466e13b5c9cdeefc30af7bef4569d383e0bdeeccc179e8eb13152d7d39c",
+      "original_bytes": 1590,
+      "file": "arm64-source/build-baseline.txt",
+      "retained_sha256": "06f09466e13b5c9cdeefc30af7bef4569d383e0bdeeccc179e8eb13152d7d39c",
+      "retained_bytes": 1590
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "build-candidate.txt",
+      "original_sha256": "144e88ae3c87232b570c7b5388afd9d3fbd07e684dce869a60f488b2024ed60f",
+      "original_bytes": 1055,
+      "file": "arm64-source/build-candidate.txt",
+      "retained_sha256": "144e88ae3c87232b570c7b5388afd9d3fbd07e684dce869a60f488b2024ed60f",
+      "retained_bytes": 1055
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "candidate-commit.txt",
+      "original_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "original_bytes": 41,
+      "file": "arm64-source/candidate-commit.txt",
+      "retained_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "candidate-reverse.json",
+      "original_sha256": "28b61761cb248d55187dbfa1bc313cb7d24c4d6354411a1c5e96266595ae49b0",
+      "original_bytes": 85892,
+      "sanitized_json_sha256": "3c216a5005685a181a6fb035b8bce6cf406d574b7958248123cf9d4a07055bbf",
+      "file": "arm64-source/candidate-reverse.json.gz",
+      "retained_sha256": "5c7e36b620458367b6ccce0a68e084e2bc1508178865ff0ed382d3a9aaadfcd3",
+      "retained_bytes": 26683
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "candidate-reverse.log",
+      "original_sha256": "acfca49d77fb4a7d9a1e88374890892989c433cc1f15e8bd9b5cbd58e4c433b9",
+      "original_bytes": 10669,
+      "file": "arm64-source/candidate-reverse.log.gz",
+      "retained_sha256": "d6bd8f0514ffe44bea6f7b1244a9d45d527fde909ecd4b4643db19572a7f3ea8",
+      "retained_bytes": 903
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "candidate.json",
+      "original_sha256": "28fbe7ff2bbbdf3322e13abb4e8cf9c7279a56c18d0c271aa9244a53d75ef5e6",
+      "original_bytes": 84894,
+      "sanitized_json_sha256": "4c8e6d2dafa685e953379382dc81aa1eec8820fbd414fcf62898a06b9706f68a",
+      "file": "arm64-source/candidate.json.gz",
+      "retained_sha256": "dadfc71b52486e1649c4e657cd1b187b23d50cfb8590f6b10694f263e14303b3",
+      "retained_bytes": 26428
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "candidate.log",
+      "original_sha256": "5af5096e1b17b746c074e649e1a090f6caa806bf63de6a87f25c6d4283fff73d",
+      "original_bytes": 11432,
+      "file": "arm64-source/candidate.log.gz",
+      "retained_sha256": "805cd1d05ffdfb2b9fc0e993daf9b3f745d5f7460597918b764fc47b00cf5741",
+      "retained_bytes": 907
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "comparison-reverse.txt",
+      "original_sha256": "669baf90079c4041e631661bfae20c735f0816f557050a60dc1665dde6e44b87",
+      "original_bytes": 4386,
+      "file": "arm64-source/comparison-reverse.txt",
+      "retained_sha256": "669baf90079c4041e631661bfae20c735f0816f557050a60dc1665dde6e44b87",
+      "retained_bytes": 4386
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "comparison.txt",
+      "original_sha256": "b613d7e0f7b31fc0c70eb27fe51670422ef045ba4b0c3b0c14d2a1c51e0d1e01",
+      "original_bytes": 4158,
+      "file": "arm64-source/comparison.txt",
+      "retained_sha256": "b613d7e0f7b31fc0c70eb27fe51670422ef045ba4b0c3b0c14d2a1c51e0d1e01",
+      "retained_bytes": 4158
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "compatibility.json",
+      "original_sha256": "9aa5d040c7510e861e78a819ff2f655f2d0ca3526e3a9159c0cc935290d61785",
+      "original_bytes": 283,
+      "file": "arm64-source/compatibility.json",
+      "retained_sha256": "9aa5d040c7510e861e78a819ff2f655f2d0ca3526e3a9159c0cc935290d61785",
+      "retained_bytes": 283
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "cpu-selection.json",
+      "original_sha256": "1cc7e8276bd41b3448a3ef837fe5921d5ec9003c85ceaae9897108f5e86dadbd",
+      "original_bytes": 161,
+      "file": "arm64-source/cpu-selection.json",
+      "retained_sha256": "1cc7e8276bd41b3448a3ef837fe5921d5ec9003c85ceaae9897108f5e86dadbd",
+      "retained_bytes": 161
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "dependencies-baseline.txt",
+      "original_sha256": "592b6ef35cc471a5ecd2aee295a5c8bda2b42c40ffb2371ef068e2f381044fd2",
+      "original_bytes": 982,
+      "file": "arm64-source/dependencies-baseline.txt",
+      "retained_sha256": "592b6ef35cc471a5ecd2aee295a5c8bda2b42c40ffb2371ef068e2f381044fd2",
+      "retained_bytes": 982
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "dependencies-candidate.txt",
+      "original_sha256": "3c31e7d8a1140431f40f89f10857e4a738a05065d21fc2bd0a52b46d494c9a11",
+      "original_bytes": 983,
+      "file": "arm64-source/dependencies-candidate.txt",
+      "retained_sha256": "3c31e7d8a1140431f40f89f10857e4a738a05065d21fc2bd0a52b46d494c9a11",
+      "retained_bytes": 983
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-arm-source",
+      "original_file": "rustc.txt",
+      "original_sha256": "60586c5678459d91006a242307c9d42841a6a719f612863d27ff30ffb3f4bf4f",
+      "original_bytes": 197,
+      "file": "arm64-source/rustc.txt",
+      "retained_sha256": "60586c5678459d91006a242307c9d42841a6a719f612863d27ff30ffb3f4bf4f",
+      "retained_bytes": 197
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "baseline-install.json",
+      "original_sha256": "eb5a768ecaab80db00ccfe461bed10b2db5fc95a42bc6e80cfb135b0a86e72e0",
+      "original_bytes": 45074,
+      "file": "x86_64-published/baseline-install.json",
+      "retained_sha256": "eb5a768ecaab80db00ccfe461bed10b2db5fc95a42bc6e80cfb135b0a86e72e0",
+      "retained_bytes": 45074
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "baseline-reverse.json",
+      "original_sha256": "1fac0dcdf33b949fe6fd2ea5d92e4fa8298be4ab687f6f03690d8cfea79723c5",
+      "original_bytes": 61827,
+      "sanitized_json_sha256": "31f29e2ccd5b7f46b36dfd530ea8e71dcc33d1fd618e7a4da51fc0db0fc76488",
+      "file": "x86_64-published/baseline-reverse.json.gz",
+      "retained_sha256": "a1f0dacde435e31a5b2f24ce36ec9fe303de824b4d0aa982d8941fb3c708a298",
+      "retained_bytes": 19280
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "baseline-reverse.log",
+      "original_sha256": "fafda4373993846c9edd32561103e926f1f427639596ecef6ae1052c680737e0",
+      "original_bytes": 7193,
+      "file": "x86_64-published/baseline-reverse.log.gz",
+      "retained_sha256": "4ce26f8e5fd462928974fb4a9b24b43bf6361f2d8033773f3591b896c1ed2e2e",
+      "retained_bytes": 662
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "baseline.json",
+      "original_sha256": "872edd77f84f0daf683b54e76b676b99615cee20fd71e77a7c61b7e46859032a",
+      "original_bytes": 62058,
+      "sanitized_json_sha256": "40f4565d945b21a090c2aac717f6be4408b3627f60c5484d2d863e9e3cadc97c",
+      "file": "x86_64-published/baseline.json.gz",
+      "retained_sha256": "ce2452e086f099b66d35ae90184ed59a40c98b38366e64c5c772c18f94b5994c",
+      "retained_bytes": 19248
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "baseline.log",
+      "original_sha256": "8c4a8f5beec4c7a36c16a5d96b45c6487b764836b47f30ac15232e590aa89ae8",
+      "original_bytes": 8710,
+      "file": "x86_64-published/baseline.log.gz",
+      "retained_sha256": "e7374a506693b96ea9017bcad93dd10ed854302b55f15f5351138e9e5915633d",
+      "retained_bytes": 674
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "build-candidate.txt",
+      "original_sha256": "6ba93132e495b07207eb24a5885f6376671106888efa23cc83031e58659c5132",
+      "original_bytes": 1569,
+      "file": "x86_64-published/build-candidate.txt",
+      "retained_sha256": "6ba93132e495b07207eb24a5885f6376671106888efa23cc83031e58659c5132",
+      "retained_bytes": 1569
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "candidate-commit.txt",
+      "original_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "original_bytes": 41,
+      "file": "x86_64-published/candidate-commit.txt",
+      "retained_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "candidate-reverse.json",
+      "original_sha256": "bb03b94a11e5eb3dae9c64d56b671a24227b76d7aa731ae18c070a10c3af31fb",
+      "original_bytes": 63466,
+      "sanitized_json_sha256": "2f0f287efc5edbd4e5fead38f090fb02e934967a1da8bacf561600a678c0bc2a",
+      "file": "x86_64-published/candidate-reverse.json.gz",
+      "retained_sha256": "bf0bd294f3d8750be6a0a290e9cd9ca8dd540e241b19836ac261b0e664748995",
+      "retained_bytes": 19504
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "candidate-reverse.log",
+      "original_sha256": "180bb0fbe2a9a5abf90443b9f4b20f715830fca717709ee55878c6e57adecdc8",
+      "original_bytes": 9466,
+      "file": "x86_64-published/candidate-reverse.log.gz",
+      "retained_sha256": "fbb062e5d005e66fee71726b67f3b555d47ea15e598686a9d1d53cd090a5697d",
+      "retained_bytes": 674
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "candidate.json",
+      "original_sha256": "b2e3e15adc7f0305df4aaf0687860571357a4945440f0bf72aa69b042d2cb474",
+      "original_bytes": 64155,
+      "sanitized_json_sha256": "74805f2db3675d81e993e8cc54fc8916bede379720d83c35120ce5e0bff50fe7",
+      "file": "x86_64-published/candidate.json.gz",
+      "retained_sha256": "3d1f70fecf47546ba8cc485823bfa6f64fca1603abe59f629babd0e58cd633e9",
+      "retained_bytes": 19718
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "candidate.log",
+      "original_sha256": "4b694de72425e82964ccce90d6312da3457d53d23a52010b8963a18cc26c058e",
+      "original_bytes": 10220,
+      "file": "x86_64-published/candidate.log.gz",
+      "retained_sha256": "469685c81154fd921c91e66cae15f4d0613c1a36a2b4851313fe05d433355ace",
+      "retained_bytes": 683
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "comparison-reverse.txt",
+      "original_sha256": "e73cbf51ca506b26dd5f862a39288274eaf567a8e1644436f3f3e1ab986bb74d",
+      "original_bytes": 3270,
+      "file": "x86_64-published/comparison-reverse.txt",
+      "retained_sha256": "e73cbf51ca506b26dd5f862a39288274eaf567a8e1644436f3f3e1ab986bb74d",
+      "retained_bytes": 3270
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "comparison.txt",
+      "original_sha256": "c0b70080b95013221be52344ae3a55bab318de0bf03a33c78e70833f463bf1da",
+      "original_bytes": 3284,
+      "file": "x86_64-published/comparison.txt",
+      "retained_sha256": "c0b70080b95013221be52344ae3a55bab318de0bf03a33c78e70833f463bf1da",
+      "retained_bytes": 3284
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "compatibility.json",
+      "original_sha256": "4898d10a31d280f2028a31d7e6d554936e0ba4a1297f06e16d9ed857f21bbe41",
+      "original_bytes": 272,
+      "file": "x86_64-published/compatibility.json",
+      "retained_sha256": "4898d10a31d280f2028a31d7e6d554936e0ba4a1297f06e16d9ed857f21bbe41",
+      "retained_bytes": 272
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "cpu-selection.json",
+      "original_sha256": "1d2042597b8d271f1f5046593dc0e29a464c7200e2982e8a5d7e95437bd6432c",
+      "original_bytes": 147,
+      "file": "x86_64-published/cpu-selection.json",
+      "retained_sha256": "1d2042597b8d271f1f5046593dc0e29a464c7200e2982e8a5d7e95437bd6432c",
+      "retained_bytes": 147
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "dependencies-baseline.txt",
+      "original_sha256": "739547fdc0474dfb6d8b92ca0ce21aa2260c04d680c1e792c472c356d6e1206b",
+      "original_bytes": 761,
+      "file": "x86_64-published/dependencies-baseline.txt",
+      "retained_sha256": "739547fdc0474dfb6d8b92ca0ce21aa2260c04d680c1e792c472c356d6e1206b",
+      "retained_bytes": 761
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "dependencies-candidate.txt",
+      "original_sha256": "4b9a7ca429d4573591dee765366420e9326f04b1456a9991d41df5c418fdbfe0",
+      "original_bytes": 982,
+      "file": "x86_64-published/dependencies-candidate.txt",
+      "retained_sha256": "4b9a7ca429d4573591dee765366420e9326f04b1456a9991d41df5c418fdbfe0",
+      "retained_bytes": 982
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-published",
+      "original_file": "rustc.txt",
+      "original_sha256": "b569b0c98ea3133c7252b4b8ea6b39b7b353813df0dd5f5c412c355691424112",
+      "original_bytes": 196,
+      "file": "x86_64-published/rustc.txt",
+      "retained_sha256": "b569b0c98ea3133c7252b4b8ea6b39b7b353813df0dd5f5c412c355691424112",
+      "retained_bytes": 196
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "baseline-reverse.json",
+      "original_sha256": "4e536f086e4a8e1f5b95d6db73b7a231c98f19ced54ec7efbfc2a3d67d82ea9c",
+      "original_bytes": 91393,
+      "sanitized_json_sha256": "8d6860a6f89cb9a4afc8c9ae41c7b453b4eed312a50cbab88be5f9cec08533c4",
+      "file": "x86_64-source/baseline-reverse.json.gz",
+      "retained_sha256": "1d907ce3dc3d2cd2fdc1a23f716ae53e14860554ade95419bcec69771016c7ec",
+      "retained_bytes": 27227
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "baseline-reverse.log",
+      "original_sha256": "911a1a2f918fc0e87abc341b0ef0b134b87ecc1e9f06654e9566a127b6be502a",
+      "original_bytes": 11792,
+      "file": "x86_64-source/baseline-reverse.log.gz",
+      "retained_sha256": "074593986e6c633100cd5bd4fbbd40ddccbbc3a370ad2b52aaae89c8901e19dd",
+      "retained_bytes": 827
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "baseline-source-commit.txt",
+      "original_sha256": "467277bb232d98c13addee4dddedad1c776934753b6dbc28d908b7ca0188211c",
+      "original_bytes": 41,
+      "file": "x86_64-source/baseline-source-commit.txt",
+      "retained_sha256": "467277bb232d98c13addee4dddedad1c776934753b6dbc28d908b7ca0188211c",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "baseline.json",
+      "original_sha256": "2418aae562487a6e0d2765396a9f28f6e94636f89573f7b91a689754b2cc2bf2",
+      "original_bytes": 91853,
+      "sanitized_json_sha256": "bbc75b90172e0dcb144122272530b129d6f0009e7ade0884fdb8c25fdde16cac",
+      "file": "x86_64-source/baseline.json.gz",
+      "retained_sha256": "10e5314437e199b3179bfd4ff6d162e3510cf0a598983ed7060959a928c6d271",
+      "retained_bytes": 27172
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "baseline.log",
+      "original_sha256": "b786c01cdbccd15edbe457a0f16d8d3c2c39ad3e540fb6a7a99fc787aff07a00",
+      "original_bytes": 13267,
+      "file": "x86_64-source/baseline.log.gz",
+      "retained_sha256": "2ad2d00aa456843a38d6b608c402d70c643e3e5cb87b9b0b4ff544f7e8268f24",
+      "retained_bytes": 906
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "build-baseline.txt",
+      "original_sha256": "b26224a581a128943fde4d306c98b1d9f4a46d9418dc843f3cfb18c26b017d9d",
+      "original_bytes": 1590,
+      "file": "x86_64-source/build-baseline.txt",
+      "retained_sha256": "b26224a581a128943fde4d306c98b1d9f4a46d9418dc843f3cfb18c26b017d9d",
+      "retained_bytes": 1590
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "build-candidate.txt",
+      "original_sha256": "6736c8f0cb99bc6c5f2f2c5bd2ea9533e5c2cf0bacffecab27a834aa34fa2c43",
+      "original_bytes": 1054,
+      "file": "x86_64-source/build-candidate.txt",
+      "retained_sha256": "6736c8f0cb99bc6c5f2f2c5bd2ea9533e5c2cf0bacffecab27a834aa34fa2c43",
+      "retained_bytes": 1054
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "candidate-commit.txt",
+      "original_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "original_bytes": 41,
+      "file": "x86_64-source/candidate-commit.txt",
+      "retained_sha256": "49678361616058db55aa73a4ba4405e54266adee7d81c970f7ccc8c2637f72cd",
+      "retained_bytes": 41
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "candidate-reverse.json",
+      "original_sha256": "7f5ba6451b5cbb6758418fc5a8680bba857aaa92deaf5130f97d688e0eda70e7",
+      "original_bytes": 89600,
+      "sanitized_json_sha256": "b1d1496e6f1e321ddc004badb818b036004aaab16808427fc44be3c434f93e0b",
+      "file": "x86_64-source/candidate-reverse.json.gz",
+      "retained_sha256": "be494332e4c737daa54b83893223f6d376a896245bf41fa473a46786da1fcc17",
+      "retained_bytes": 27063
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "candidate-reverse.log",
+      "original_sha256": "1d61cc89d787ca5cbe0a2bb046e60a2060f551e8b38a9e85e2e40225ded06659",
+      "original_bytes": 12196,
+      "file": "x86_64-source/candidate-reverse.log.gz",
+      "retained_sha256": "15fcc22de97f28d38ea005e45879bcfc61e400bab3c526aaa5844d03dd911621",
+      "retained_bytes": 930
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "candidate.json",
+      "original_sha256": "e98b5e3ba9083aa99bbfc6e0c18ee3ec841a587afbdfbb4eb9c16dc3da4b4bbd",
+      "original_bytes": 92538,
+      "sanitized_json_sha256": "4829af160a2deaea11d17ed8a9301e63e6088dc5be3b98f13cf99a244519cbc0",
+      "file": "x86_64-source/candidate.json.gz",
+      "retained_sha256": "9b0c7ad48140e976ca4b9ed99257e6ad7c026b3299fc0e63ff8a15cd6668be17",
+      "retained_bytes": 27447
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "candidate.log",
+      "original_sha256": "af4fb61509550aebed5e02b4aea6b042e31283df5a6fbeefb4ef8b9a0cf0ea7f",
+      "original_bytes": 12151,
+      "file": "x86_64-source/candidate.log.gz",
+      "retained_sha256": "544b8ad5ad48ec927efb1ab46b4ce673a96b6cfc32a59e9465afa7a6fb3e836c",
+      "retained_bytes": 881
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "comparison-reverse.txt",
+      "original_sha256": "1b67877981ae1594914383798683f5c2148f20ed1b23116750ec5d09d386a635",
+      "original_bytes": 4432,
+      "file": "x86_64-source/comparison-reverse.txt",
+      "retained_sha256": "1b67877981ae1594914383798683f5c2148f20ed1b23116750ec5d09d386a635",
+      "retained_bytes": 4432
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "comparison.txt",
+      "original_sha256": "060dd1b65ce2e5db07d2c9ff67f60d7708c832631542e33a8014f6a992525d2c",
+      "original_bytes": 4414,
+      "file": "x86_64-source/comparison.txt",
+      "retained_sha256": "060dd1b65ce2e5db07d2c9ff67f60d7708c832631542e33a8014f6a992525d2c",
+      "retained_bytes": 4414
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "compatibility.json",
+      "original_sha256": "9aa5d040c7510e861e78a819ff2f655f2d0ca3526e3a9159c0cc935290d61785",
+      "original_bytes": 283,
+      "file": "x86_64-source/compatibility.json",
+      "retained_sha256": "9aa5d040c7510e861e78a819ff2f655f2d0ca3526e3a9159c0cc935290d61785",
+      "retained_bytes": 283
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "cpu-selection.json",
+      "original_sha256": "1d2042597b8d271f1f5046593dc0e29a464c7200e2982e8a5d7e95437bd6432c",
+      "original_bytes": 147,
+      "file": "x86_64-source/cpu-selection.json",
+      "retained_sha256": "1d2042597b8d271f1f5046593dc0e29a464c7200e2982e8a5d7e95437bd6432c",
+      "retained_bytes": 147
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "dependencies-baseline.txt",
+      "original_sha256": "88198912b7aa8ff5559898c5159003571060af6a0b4d00e165ac579e2c51fd72",
+      "original_bytes": 981,
+      "file": "x86_64-source/dependencies-baseline.txt",
+      "retained_sha256": "88198912b7aa8ff5559898c5159003571060af6a0b4d00e165ac579e2c51fd72",
+      "retained_bytes": 981
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "dependencies-candidate.txt",
+      "original_sha256": "559cb936d848bdfb3773bcc4c24ce80eacdabdf15468dfc1771a2a7019fb858a",
+      "original_bytes": 982,
+      "file": "x86_64-source/dependencies-candidate.txt",
+      "retained_sha256": "559cb936d848bdfb3773bcc4c24ce80eacdabdf15468dfc1771a2a7019fb858a",
+      "retained_bytes": 982
+    },
+    {
+      "artifact": "performance-ubuntu-26.04-source",
+      "original_file": "rustc.txt",
+      "original_sha256": "b569b0c98ea3133c7252b4b8ea6b39b7b353813df0dd5f5c412c355691424112",
+      "original_bytes": 196,
+      "file": "x86_64-source/rustc.txt",
+      "retained_sha256": "b569b0c98ea3133c7252b4b8ea6b39b7b353813df0dd5f5c412c355691424112",
+      "retained_bytes": 196
+    }
+  ]
+}

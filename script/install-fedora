@@ -9,7 +9,7 @@ rm -f /etc/yum.repos.d/fedora-cisco-openh264.repo || true
 echo 'max_parallel_downloads=10' >> /etc/dnf/dnf.conf
 echo 'timeout=1' >> /etc/dnf/dnf.conf
 
-packages="rustup clang lld "${PYTHON_PACKAGE}" python3-uv"
+packages="rustup clang lld python3-uv"
 
 if [[ $# -gt 1 ]]; then
     packages="${packages} $@"
@@ -30,4 +30,4 @@ rm -rf "${VENV}"
 uv venv --python "${PYTHON}" "${VENV}"
 source "${VENV}/bin/activate"
 
-uv pip install --upgrade "maturin>=1.10,<2" -r test/requirements.txt -r integration/requirements.txt
+UV_PROJECT_ENVIRONMENT="${VENV}" uv sync --locked --python "${PYTHON}" --no-install-project --group native --group integration

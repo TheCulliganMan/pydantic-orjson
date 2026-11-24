@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --no-sync python
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 """Run an instrumented installed wheel with its matching ASan runtime."""
 

@@ -1,9 +1,21 @@
-# Fork changelog
+# Project changelog
 
-## 3.13.0+pydantic.3 — free-threaded qualification
+## 3.13.0+pydantic.3 — free-threaded and UV qualification
+
+- Manage Python versions, environments, locking, builds and test execution
+  through UV 0.13.9+, with `uv.lock` and explicit native/integration groups.
+  UV invokes the pinned maturin backend for Rust/C compilation.
+- Keep this as an independent personal repository, retain upstream provenance
+  and licenses, and disable pushes to the fetch-only upstream remote.
+- Replace superseded upstream CI definitions with three maintained UV workflows;
+  preserve historical validation and timing artifacts as records of older builds.
 
 - Add free-threaded CPython 3.13t, 3.14t and 3.15t build targets with no-GIL
   runtime checks; remove the inherited environment-variable build gate.
+  Experimental 3.13t is carried with a targeted PyO3 version-check override;
+  all other ABIs keep the normal dependency version checks. Use the separate
+  `native313t` group for native-only 3.13t qualification; current Pydantic/AI
+  free-threaded integration targets begin at 3.14t.
 - Snapshot mutable Python containers under their critical sections and retain
   keys/values while serializing after the lock is released. Snapshots are
   shallow and do not promise atomic consistency across a nested object graph.

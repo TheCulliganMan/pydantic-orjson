@@ -103,9 +103,11 @@ impl Utf8Buffer {
 }
 
 // Mutable input needs an immutable snapshot before parsing without the GIL.
-// A live buffer export pins storage; the exporter lock protects Python-side
-// bytearray updates while CPython copies. External native writers must obey
-// their exporter's synchronization contract, as with other buffer consumers.
+// A live buffer export pins storage. On 3.14+ the exporter lock also excludes
+// bytearray's synchronized writes during copying. 3.13 bytearray writes do not
+// acquire that lock, so callers must synchronize all mutable-buffer access.
+// On every version, memoryview aliases and external writers require caller
+// synchronization with decoding; not every buffer writer locks its exporter.
 #[cfg(Py_GIL_DISABLED)]
 impl Utf8Buffer {
     unsafe fn from_mutable_buffer(
@@ -113,9 +115,18 @@ impl Utf8Buffer {
     ) -> Result<Self, DeserializeError<'static>> {
         unsafe {
             let mut view = core::mem::MaybeUninit::<pyo3_ffi::Py_buffer>::uninit();
-            if pyo3_ffi::PyObject_GetBuffer(ptr, view.as_mut_ptr(), pyo3_ffi::PyBUF_C_CONTIGUOUS)
-                != 0
-            {
+            // 3.13 uses plain export counters for bytearray and memoryview.
+            // Serialize our own acquisitions/releases even for read-only data.
+            #[cfg(not(Py_3_14))]
+            let mut export_section =
+                core::mem::MaybeUninit::<pyo3_ffi::PyCriticalSection>::uninit();
+            #[cfg(not(Py_3_14))]
+            pyo3_ffi::PyCriticalSection_Begin(export_section.as_mut_ptr(), ptr);
+            let status =
+                pyo3_ffi::PyObject_GetBuffer(ptr, view.as_mut_ptr(), pyo3_ffi::PyBUF_C_CONTIGUOUS);
+            #[cfg(not(Py_3_14))]
+            pyo3_ffi::PyCriticalSection_End(export_section.as_mut_ptr());
+            if status != 0 {
                 pyo3_ffi::PyErr_Clear();
                 return Err(DeserializeError::invalid(Cow::Borrowed(INPUT_TYPE_MESSAGE)));
             }
@@ -128,7 +139,7 @@ impl Utf8Buffer {
                 ptr
             };
             if exporter.is_null() {
-                pyo3_ffi::PyBuffer_Release(&raw mut view);
+                release_buffer(ptr, &raw mut view);
                 pyo3_ffi::PyErr_Clear();
                 return Err(DeserializeError::invalid(Cow::Borrowed(INPUT_TYPE_MESSAGE)));
             }
@@ -137,7 +148,7 @@ impl Utf8Buffer {
             let copied = pyo3_ffi::PyBytes_FromStringAndSize(view.buf.cast(), view.len);
             pyo3_ffi::PyCriticalSection_End(section.as_mut_ptr());
             pyo3_ffi::Py_DECREF(exporter);
-            pyo3_ffi::PyBuffer_Release(&raw mut view);
+            release_buffer(ptr, &raw mut view);
             if copied.is_null() {
                 pyo3_ffi::PyErr_Clear();
                 return Err(DeserializeError::invalid(Cow::Borrowed(
@@ -155,6 +166,19 @@ impl Utf8Buffer {
                 }
             }
         }
+    }
+}
+
+#[cfg(Py_GIL_DISABLED)]
+unsafe fn release_buffer(_ptr: *mut crate::ffi::PyObject, view: *mut pyo3_ffi::Py_buffer) {
+    unsafe {
+        #[cfg(not(Py_3_14))]
+        let mut section = core::mem::MaybeUninit::<pyo3_ffi::PyCriticalSection>::uninit();
+        #[cfg(not(Py_3_14))]
+        pyo3_ffi::PyCriticalSection_Begin(section.as_mut_ptr(), _ptr);
+        pyo3_ffi::PyBuffer_Release(view);
+        #[cfg(not(Py_3_14))]
+        pyo3_ffi::PyCriticalSection_End(section.as_mut_ptr());
     }
 }
 

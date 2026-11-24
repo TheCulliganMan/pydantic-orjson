@@ -1,27 +1,10 @@
 #!/usr/bin/env bash
-
-set -eou pipefail
-
-rm -rf .cargo
-rm -f ${CARGO_TARGET_DIR}/wheels/*.whl
-
-export UNSAFE_PYO3_BUILD_FREE_THREADED=1
-export UNSAFE_PYO3_SKIP_VERSION_CHECK=1
-
-export CC="${CC:-clang}"
-export LD="${LD:-lld}"
-export TARGET="${TARGET:-x86_64-unknown-linux-gnu}"
-export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-target}"
-
-export CFLAGS="-Os -fstrict-aliasing"
-
-export RUSTFLAGS="-C panic=unwind -C linker=${CC} -C link-arg=-fuse-ld=${LD}"
-
-maturin build --profile=dev --target="${TARGET}"
-
-uv pip install ${CARGO_TARGET_DIR}/wheels/*.whl
-
-pytest -v test
-
-mkdir .cargo
-cp ci/config.toml .cargo
+set -euo pipefail
+cd "$(dirname "$0")/.."
+uv sync --locked --no-install-project --group native --group integration
+mkdir -p .artifacts
+build_dir=$(mktemp -d "$PWD/.artifacts/debug-wheel.XXXXXX")
+build_python=$(uv run --no-sync python -c 'import sys; print(sys.executable)')
+uv build --wheel --no-sources --python "$build_python" -C 'maturin.build-args=--locked --profile dev' --out-dir "$build_dir"
+uv pip install --python "$build_python" --no-deps --reinstall "$build_dir"/*.whl
+uv run --no-sync python -m pytest -v test compatibility integration_pydantic

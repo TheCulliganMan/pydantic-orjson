@@ -7,6 +7,28 @@ implemented work from the remaining qualification needed for
 a production compatibility and speed claim. See [validation](VALIDATION.md) for
 actual build, test and measurement results.
 
+## UV workflow and repository ownership
+
+This is an independent personal GitHub repository, retaining orjson's source
+history and licenses. Publishing means commits and tested artifacts in
+`TheCulliganMan/pydantic-orjson`; no upstream pull request is part of the work.
+Upstream remains a fetch-only source of provenance and future comparisons.
+
+All current Python environment, dependency, build and execution commands use
+UV 0.13.9+. `uv.lock` and the explicit `native`/`integration` dependency groups
+replace the old flat development requirements file. `dev` includes both groups;
+no groups are installed by default. Experimental 3.13t uses the mutually
+exclusive `native313t` group with compatible published native-test packages;
+current Pydantic/AI qualification on free-threaded Python begins at 3.14t.
+`uv sync --locked --no-install-project` prepares the selected dependencies, `uv build --wheel --no-sources` invokes the
+pinned maturin backend, and `uv pip install` installs the exact built wheel.
+Run checks with `uv run --no-sync` to preserve that installed artifact. Alternate
+environments require `UV_PROJECT_ENVIRONMENT` on each command; `--python` alone
+does not select the project environment. Rust/C compilation still requires the native toolchain; `uv_build` cannot compile this
+extension. Qualification must check the UV lock, clean sync, isolated wheel
+build, installed-wheel tests and all maintained workflows. Historical evidence
+retains its original toolchain records without implying migration completion.
+
 ## Free-threaded implementation and qualification
 
 The target is actual no-GIL execution on CPython 3.13t, 3.14t and 3.15t, alongside
@@ -32,7 +54,11 @@ and serializer, including resize operations. Python container critical sections
 do not lock NumPy's storage or an arbitrary native exporter. See
 [NumPy thread safety](https://numpy.org/doc/stable/reference/thread_safety.html).
 
-Python 3.13t is experimental: callers must synchronize class/type renaming
+Python 3.13t is experimental. PyO3 0.29 no longer officially supports that
+free-threaded ABI, so only the 3.13t build path bypasses its version check with
+`UNSAFE_PYO3_SKIP_VERSION_CHECK=1`. All other ABIs keep normal checks, and 3.13t
+must pass build, import and full concurrency/compatibility qualification.
+Callers must synchronize class/type renaming
 and metadata mutation with codec calls. Its type-name setter lacks the
 stop-the-world protection added in 3.14; exact type names in serialization
 errors remain part of compatibility. See the [concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency)
@@ -42,9 +68,10 @@ The manual wheel workflow contains 45 combinations across Linux x86-64/ARM64,
 macOS Intel/ARM64 and Windows x86-64, with separate regular/free-threaded/all
 selectors. Each successful job retains a wheel, digest, dependency snapshot and
 runtime/test evidence. Linux builds target glibc 2.39+. The release gate is
-completed build, install, native/property/integration and concurrency checks in
-every declared cell; configuration alone is not completion. Record actual
-outcomes in `VALIDATION.md` and retain failures until corrected or explicitly
+completed build, install, native/property and concurrency checks in every cell,
+plus applicable integration checks on regular Python and 3.14t/3.15t. Current
+Pydantic-core/AI dependencies are not qualified on 3.13t; configuration alone
+is not completion. Record actual outcomes in `VALIDATION.md` and retain failures until corrected or explicitly
 removed from the supported matrix.
 
 ## Native and integration implementation from `.2`
@@ -135,7 +162,7 @@ required before treating a streamed output as complete.
 | Pydantic AI | Official message schema, discriminator tags, tools, timestamps and validation | Offline agent persistence/resume, streaming completion, binary/retry messages and full conversation state tested; qualify provider-specific applications |
 | Other frameworks | Same module/distribution identity, signatures, options, error contract | Add real Litestar, Django integrations, HTTPX serializers and task/cache clients selected from downstream usage |
 | Packaging | Single file owner, same dependency identity, reproducible wheels | 45-cell replacement-wheel workflow; see validation for completed jobs and remaining platform coverage |
-| Free-threaded CPython | No automatic GIL enabling; safe concurrent object ownership and input lifetimes | 3.13t/3.14t/3.15t concurrency and shared-mutation tests; each platform must pass before qualification |
+| Free-threaded CPython | No automatic GIL enabling; safe concurrent object ownership and input lifetimes | Native concurrency tests on 3.13t/3.14t/3.15t; current optional integrations target 3.14t/3.15t; each platform must pass before qualification |
 
 “Anywhere orjson is used” is the release goal, not a claim established by a
 few framework tests. Maintain a published supported-version matrix and allow
@@ -231,7 +258,8 @@ shared CI still does not substitute for dedicated production qualification.
 - Retain only the installed working environment, final wheel and compact
   evidence reports locally. `scripts/clean.py` removes known rough outputs;
   source code and committed benchmark evidence are retained. This also removes
-  the temporary `.venv-freethreaded` environment after qualification.
+  temporary qualification environments unless explicitly retained with
+  `--preserve-env`. The build script preserves its selected UV environment.
 
 ## Primary references
 
@@ -247,4 +275,5 @@ shared CI still does not substitute for dedicated production qualification.
 - [FastAPI responses](https://fastapi.tiangolo.com/advanced/custom-response/)
 
 Documentation links track current upstream guidance. Exact locally tested
-versions are captured in `requirements-fork.txt` and `VALIDATION.md`.
+versions are captured in `uv.lock` and `VALIDATION.md`. Historical evidence
+retains the dependency snapshots used for its measured artifacts.

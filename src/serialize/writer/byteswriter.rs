@@ -89,7 +89,7 @@ impl BytesWriter {
         unsafe {
             self.append_and_terminate(append);
             let bytes = PyBytes_FromStringAndSize(
-                self.bytes.cast::<i8>().cast_const(),
+                self.bytes.cast::<core::ffi::c_char>().cast_const(),
                 usize_to_isize(self.len),
             );
             debug_assert!(!bytes.is_null());

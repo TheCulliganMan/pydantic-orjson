@@ -1,5 +1,30 @@
 # Free-threaded implementation — 3.13.0+pydantic.3
 
+## UV migration
+
+UV 0.13.9 now selects and installs Python, creates environments, resolves the
+52-package universal lock, invokes the pinned maturin backend with `uv build`,
+installs exact wheels and runs all Python checks. The old requirements files
+and duplicate upstream workflows have been replaced. Rust/C compilation still
+uses the native toolchain. The workflow follows official
+[UV project sync](https://docs.astral.sh/uv/concepts/projects/sync/),
+[Python selection](https://docs.astral.sh/uv/concepts/python-versions/), and
+[build guidance](https://docs.astral.sh/uv/concepts/build-backend/).
+
+A fresh canonical UV build on CPython 3.13.12 passed all 1,997 tests with 43
+skips and four expected deprecation warnings, Ruff and dependency consistency.
+A separate one-package environment imports and uses the installed wheel
+without Pydantic. Historical sections below retain the tools and dependency
+files used at their measured commits; those files are no longer current setup
+instructions.
+
+Current Pydantic/AI dependencies no longer support experimental 3.13t. Its
+separate `native313t` group uses compatible published test wheels and qualifies
+the native API only. Current optional no-GIL integration targets are 3.14t and
+3.15t. Ordinary Python support remains 3.10–3.15 (AI requires 3.11+).
+
+## Native port qualification
+
 The `.3` implementation adds actual GIL-disabled wheels for CPython 3.13t,
 3.14t and 3.15t. Import must leave the GIL disabled; tests assert that state.
 Regular CPython 3.10–3.15 remains supported. The wheel workflow covers five
@@ -13,6 +38,7 @@ Local release-wheel checks on macOS ARM64:
 | --- | --- |
 | CPython 3.13.12, regular GIL, debug allocator | **1,997 passed; 43 skipped; 4 expected warnings** |
 | CPython 3.14.3t, `PYTHON_GIL=0`, debug allocator | **2,026 passed; 14 skipped; 4 expected warnings** |
+| Rust + C parser AddressSanitizer, CPython 3.14.3t | **2,014 passed; 14 skipped; 4 expected warnings; no ASan errors** |
 | Differential, regular candidate vs published/source baselines | **2,425 cases + 7 API contracts; zero mismatches** |
 | Differential, 3.14t candidate vs published 3.13.12 baseline | **2,425 cases + 7 API contracts; zero mismatches**; this corpus comparison crosses Python versions |
 
@@ -35,10 +61,24 @@ output growth/errors and GC are exercised with real Python threads.
 
 Concurrency limits are explicit in [compatibility](compatibility/README.md):
 container snapshots are shallow; concurrent class/type mutation on experimental
-3.13t requires caller synchronization; concurrent writes through memoryview
+3.13t requires caller synchronization, as do all concurrent mutable-buffer writes
+on that version. Concurrent writes through memoryview
 aliases, native buffer writers and NumPy array mutation also require caller
 synchronization. No-GIL execution does not imply an atomic snapshot of an entire
 mutable object graph or guaranteed linear speedup.
+
+The free-threaded ASan run instruments Rust and the C parser, not CPython.
+Free-threaded CPython requires mimalloc (`PYTHONMALLOC=debug`); ASan therefore
+does not provide complete heap-shadow coverage of Python-managed allocations.
+Twelve RSS-growth tests are excluded from ASan and pass in the normal suite.
+This is not a ThreadSanitizer or native-fuzzing certification.
+
+The measured `.2` implementation has [complete cross-platform pyperf evidence](benchmarks/results/v2/README.md)
+with all raw samples, both run orders and both matched-source and published
+baselines. Improvements and regressions are both retained. The local
+[3.14t thread diagnostic](benchmarks/results/threaded-314t.json) shows useful
+decode scaling on its larger fixture, but slower encode throughput with shared
+inputs; it is not a universal parallel-speedup claim.
 
 ---
 

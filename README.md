@@ -1,7 +1,9 @@
 # Pydantic orjson
 
-An independent orjson fork with optional Pydantic v2 and Pydantic AI integration.
-The existing native `orjson` API is preserved. This alpha implements native
+An independent JSON library based on orjson, maintained in
+[TheCulliganMan/pydantic-orjson](https://github.com/TheCulliganMan/pydantic-orjson)
+as a standalone personal repository, with optional Pydantic v2 and Pydantic AI
+integration. The existing native `orjson` API is preserved. This alpha implements native
 encoding and decoding optimizations, reusable typed codecs, and resumable
 Pydantic AI persistence. Version `.3` adds a free-threaded CPython port with
 the GIL disabled; platform qualification is in progress. Performance depends on
@@ -13,24 +15,59 @@ measured results and limitations.
 - [Drop-in compatibility contract](compatibility/README.md)
 - [Typed/AI API examples](integration_pydantic/README.md)
 - [Benchmark methodology and measurements](benchmarks/README.md)
-- [Upstream provenance](UPSTREAM.md) and [fork changelog](FORK_CHANGELOG.md)
+- [Upstream provenance](UPSTREAM.md) and [project changelog](FORK_CHANGELOG.md)
 
 ## Build and use
 
-Requires Rust 1.95+, a C compiler, and uv. The reproducible development script
-uses CPython 3.13 and pinned test dependencies:
+Requires Rust 1.95+, a C compiler and **uv 0.13.9 or newer**. UV manages
+Python selection, dependency locking, environments, package builds and test
+execution. `uv.lock` records Python dependencies; `Cargo.lock` records Rust
+dependencies. The development script uses the checked-in Python default and
+accepts another supported version:
 
 ```sh
 git clone https://github.com/TheCulliganMan/pydantic-orjson.git
 cd pydantic-orjson
 bash scripts/build.sh
-.venv/bin/python -c 'import orjson; print(orjson.loads(orjson.dumps({"ready": True})))'
+uv run --no-sync python -c 'import orjson; print(orjson.loads(orjson.dumps({"ready": True})))'
 ```
 
 The script builds a release wheel in `dist/`, installs it into `.venv`, runs the
 upstream and integration tests, and removes rough build artifacts on success.
-If interrupted or a check fails, run `.venv/bin/python scripts/clean.py` after
-inspection. The script preserves the installed environment and final wheel.
+For example, use a separate UV environment for free-threaded builds:
+
+```sh
+UV_PROJECT_ENVIRONMENT=.venv-freethreaded bash scripts/build.sh 3.14t
+UV_PROJECT_ENVIRONMENT=.venv-313t bash scripts/build.sh 3.13t
+```
+
+The 3.13t script selects the separate `native313t` dependency group and tests the
+native API only. Current Pydantic/AI dependencies are not qualified on 3.13t;
+free-threaded optional-integration targets are 3.14t and 3.15t. Set
+`UV_PROJECT_ENVIRONMENT` on every later `uv run` targeting either environment;
+`--python` alone does not select a different project environment.
+The script preserves the selected environment and final wheel when cleaning.
+If interrupted, inspect the failure and run cleanup through UV:
+`uv run --no-sync python scripts/clean.py --preserve-env .venv`.
+
+The equivalent manual POSIX sequence is:
+
+```sh
+uv sync --locked --no-install-project --group native --group integration
+uv build --wheel --no-sources -C 'maturin.build-args=--locked --strip'
+uv pip install --python .venv/bin/python --reinstall --no-deps dist/orjson-3.13.0+pydantic.3-cp313-cp313-*.whl
+uv run --no-sync pytest -q test compatibility integration_pydantic
+uv pip check --python .venv/bin/python
+```
+
+`native` and `integration` are explicit dependency groups; `dev` includes both.
+Experimental 3.13t uses `native313t` instead, with compatible published test
+packages and no current Pydantic/AI integration dependencies. These groups must
+not be combined with `native313t`. There are no default dependency groups. Tests use `uv run --no-sync` so they
+exercise the installed wheel without replacing it with an editable build.
+`uv build` invokes the pinned maturin backend to compile Rust/C extensions;
+UV's `uv_build` backend only handles pure Python. See the official
+[UV backend guidance](https://docs.astral.sh/uv/concepts/build-backend/).
 
 The project is named `pydantic-orjson`, but the **distribution and import are
 both `orjson`**. Install this wheel in place of upstream, or pin a reviewed
@@ -40,9 +77,10 @@ commit using a direct requirement (replace the placeholder with its full SHA):
 orjson[pydantic] @ git+https://github.com/TheCulliganMan/pydantic-orjson.git@<commit-sha>
 ```
 
-Use the `ai` extra for Pydantic AI (Python 3.11+). Core imports need neither
-Pydantic nor AI. Do not install a second distribution that also owns the
-`orjson` package directory. Run `pip check` and the consuming application's
+Use the `ai` extra for Pydantic AI on Python 3.11+. On Python 3.10 its dependency
+marker omits Pydantic AI; native orjson and the Pydantic codec remain available.
+Core imports need neither Pydantic nor AI. Do not install a second distribution
+that also owns the `orjson` package directory. Run `uv pip check` and the consuming application's
 suite after replacement. Pin the direct source or wheel in your lockfile;
 a subsequent unconstrained PyPI upgrade can reinstall upstream. To roll back,
 remove the direct requirement and reinstall the upstream version your app used.
@@ -95,6 +133,9 @@ x86-64: 45 version/platform combinations. Its `regular`, `free-threaded` and
 see [validation](VALIDATION.md) for completed results and the
 [wheel workflow](.github/workflows/wheels.yml) for downloadable artifacts from
 successful jobs. Linux artifacts target `manylinux_2_39` (glibc 2.39+).
+The 3.13t jobs qualify native orjson only; the current optional Pydantic/AI
+free-threaded matrix begins at 3.14t. Standard GIL-enabled Python support is
+unchanged.
 
 Free-threaded jobs check both the wheel ABI and actual runtime state: importing
 orjson must leave the GIL disabled, and the concurrency tests run with
@@ -102,8 +143,11 @@ orjson must leave the GIL disabled, and the concurrency tests run with
 containers and copies mutable JSON input before parsing. These protect object
 lifetimes; they do not make a changing nested object graph one atomic snapshot.
 Callers should synchronize application updates when a consistent document is
-required. Python 3.13t support is experimental and requires caller locking for
-concurrent class/type metadata changes. See the [free-threaded build and concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency).
+required. Python 3.13t support is experimental, uses a compatibility override
+for PyO3's version check, and requires caller locking for concurrent class/type
+metadata changes and all mutable-input writers, including direct bytearray
+updates. CPython 3.13 bytearray writes do not acquire its object mutex. See the
+[free-threaded build and concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency).
 
 Keep shared NumPy arrays read-only during encoding, or use the same lock for
 serialization and every writer/resizer. Concurrent writes through memoryview
@@ -117,11 +161,12 @@ PyPI publication or official affiliation with upstream projects.
 
 ---
 
-The original upstream README follows, including its upstream-specific install
-instructions and performance claims. Those claims describe upstream orjson,
-not an improvement produced by this fork. Its statements about the GIL and
-future free-threading support also describe upstream; the fork's free-threaded
-contract and qualification status appear above.
+The upstream API reference follows, with installation/build/test commands
+adapted to this repository's UV workflow. Its historical performance claims
+and upstream publication details describe upstream orjson. Statements about
+the GIL and future free-threading support also describe upstream; this project's
+free-threaded contract and qualification status appear above. Source attribution
+and license notices are retained.
 
 # orjson
 
@@ -160,7 +205,9 @@ later.
 orjson does not and will not support PyPy, embedded Python builds for
 Android/iOS, or PEP 554 subinterpreters.
 
-orjson may support PEP 703 free-threading when it is stable.
+This fork provides GIL-disabled CPython 3.13t–3.15t builds under the
+[free-threaded concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency)
+above; Python 3.13t support is experimental.
 
 Releases follow semantic versioning and serializing a new object type
 without an opt-in flag is considered a breaking change.
@@ -203,21 +250,24 @@ available in the repository.
 
 ### Install
 
-To install a wheel from PyPI, install the `orjson` package.
+Install this project's reviewed wheel with UV, using the artifact matching the
+Python version and platform:
 
-In `requirements.in` or `requirements.txt` format, specify:
-
-```txt
-orjson >= 3.10,<4
+```sh
+uv pip install --reinstall '/path/to/orjson-3.13.0+pydantic.3-<python-tag>-<abi-tag>-<platform>.whl'
+uv pip check
 ```
 
-In `pyproject.toml` format, specify:
+For a UV-managed consuming project, pin this personal repository to a reviewed
+commit rather than resolving upstream from PyPI:
 
-```toml
-orjson = "^3.10"
+```sh
+uv add 'orjson[pydantic] @ git+https://github.com/TheCulliganMan/pydantic-orjson.git@<commit-sha>'
 ```
 
-To build a wheel, see [packaging](https://github.com/ijl/orjson?tab=readme-ov-file#packaging).
+Building from Git still needs Rust and a C compiler. To build a local wheel,
+see [packaging](#packaging). Installing `orjson` from the default registry
+selects upstream's distribution, not this repository's modified build.
 
 ### Quickstart
 
@@ -1197,36 +1247,47 @@ functions and objects using the normal `PyImport_*` APIs.
 
 ## Packaging
 
-To package orjson requires at least [Rust](https://www.rust-lang.org/) 1.95,
-a C compiler, and the [maturin](https://github.com/PyO3/maturin) build tool.
-The recommended build command is:
+This repository uses UV 0.13.9+ as its Python build frontend, with Rust 1.95+
+and a C compiler for the extension. The maturin backend is pinned in
+`pyproject.toml` and installed by UV into the isolated build environment.
 
 ```sh
-maturin build --release --strip
+uv sync --locked --no-install-project --group native --group integration
+uv build --wheel --no-sources -C 'maturin.build-args=--locked --strip'
+uv build --sdist --no-sources
 ```
 
-The project's own CI tests against `nightly-2026-10-01` and stable 1.95. It
-is prudent to pin the nightly version because that channel can introduce
-breaking changes. There is a significant performance benefit to using
-nightly.
+The maintained CI pins Rust 1.99.0. To select another supported Python or a
+free-threaded interpreter, pass `--python` to UV or use
+`UV_PROJECT_ENVIRONMENT=.venv-freethreaded bash scripts/build.sh 3.15t`.
+For experimental native-only 3.13t, use
+`UV_PROJECT_ENVIRONMENT=.venv-313t bash scripts/build.sh 3.13t`.
+The build script also installs the exact wheel,
+runs checks through `uv run --no-sync` and cleans intermediate products.
+Current dependency selections are recorded in `uv.lock`, including Python
+version markers for older supported runtimes.
 
-orjson is tested, on Linux, using native hardware for amd64 and aarch64,
-aarch64 to run an armv7 container, amd64 to run an i686 container; on macOS,
-native hardware for aarch64 and a cross-compilation for amd64; on Windows,
-native hardware for amd64 and aarch64, and amd64 for i686.
+The replacement-wheel matrix targets Linux x86-64/ARM64, macOS Intel/ARM64 and
+Windows x86-64. Read [validation](VALIDATION.md) for completed job results;
+upstream's broader wheel/platform list above does not certify this project's
+artifacts. No PyPI or upstream pull-request publication is part of this build.
 
-The library does not require any other host-level or Python package to be
-installed.
+For native-only test dependencies, use `uv sync --locked --no-install-project
+--group native`, install the built wheel, then run
+`uv run --no-sync pytest -q test`. The `integration` group adds Pydantic,
+Pydantic AI and framework tests where supported. On experimental 3.13t, use
+`native313t` alone; current Pydantic-core and AI dependencies are not part of
+that runtime's qualification. To run the full suite after
+installing both groups and the wheel:
 
-The source distribution on PyPI contains all dependencies' source and can be
-built without network access. The file can be downloaded from
-`https://files.pythonhosted.org/packages/source/o/orjson/orjson-${version}.tar.gz`.
+```sh
+uv run --no-sync pytest -q test compatibility integration_pydantic
+```
 
-orjson's tests are included in the source distribution on PyPI. The tests
-require only `pytest`. There are optional packages such as `pytz` and `numpy`
-listed in `test/requirements.txt` and used in ~10% of tests. Not having these
-dependencies causes the tests needing them to skip. Tests can be run
-with `pytest -q test`.
+Historical build commands and upstream measurements remain in their dated
+validation/evidence records. They are not current environment instructions.
+The source archive is built through UV; offline rebuild qualification must
+verify all Rust and Python build dependencies are available locally.
 
 ## License
 

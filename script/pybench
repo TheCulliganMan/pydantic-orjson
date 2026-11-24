@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-pytest \
+uv run --no-sync --with pytest-benchmark --with pytest-random-order pytest \
     --verbose \
     --benchmark-min-time=1 \
     --benchmark-max-time=5 \

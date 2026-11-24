@@ -1,0 +1,74 @@
+Selected cases and recorded environment/fixture metadata match.
+Median ratio = baseline / candidate; >1 favors the candidate.
+Medians are descriptive; pyperf's statistical comparison follows.
+
+| Case | Baseline median µs | Candidate median µs | Median ratio |
+| --- | ---: | ---: | ---: |
+| dumps.event | 0.157 | 0.155 | 1.015x |
+| loads.event | 0.491 | 0.397 | 1.236x |
+| dumps.records | 10.371 | 10.391 | 0.998x |
+| loads.records | 46.566 | 46.341 | 1.005x |
+| dumps.ascii_text | 0.504 | 0.502 | 1.004x |
+| loads.ascii_text | 1.685 | 1.682 | 1.001x |
+| dumps.unicode_text | 0.513 | 0.511 | 1.006x |
+| loads.unicode_text | 4.319 | 4.362 | 0.990x |
+| dumps.escaped_text | 1.268 | 1.265 | 1.002x |
+| loads.escaped_text | 2.289 | 2.284 | 1.002x |
+| dumps.dense_escapes | 5.958 | 5.924 | 1.006x |
+| loads.dense_escapes | 3.338 | 3.345 | 0.998x |
+| dumps.numbers | 7.999 | 8.362 | 0.957x |
+| loads.numbers | 51.599 | 51.975 | 0.993x |
+| dumps.floats | 52.534 | 53.215 | 0.987x |
+| loads.floats | 89.259 | 87.720 | 1.018x |
+| dumps.datetimes | 5.572 | 5.504 | 1.012x |
+| loads.datetimes | 1.349 | 1.303 | 1.035x |
+| dumps.records_fastapi | 23.874 | 21.337 | 1.119x |
+| dumps.records_sorted | 14.388 | 14.405 | 0.999x |
+| dumps.records_pretty | 14.615 | 15.176 | 0.963x |
+| loads.bytes_64 | 0.222 | 0.154 | 1.441x |
+| loads.bytes_256 | 0.283 | 0.213 | 1.327x |
+| loads.bytes_321 | 0.313 | 0.242 | 1.290x |
+| loads.bytes_322 | 0.301 | 0.291 | 1.035x |
+| loads.bytes_512 | 0.352 | 0.341 | 1.032x |
+| typed.adapter.dumps_small | 0.931 | 0.912 | 1.022x |
+| typed.adapter.loads_small | 0.998 | 0.989 | 1.009x |
+| typed.codec.dumps_small | 1.218 | 1.225 | 0.994x |
+| typed.codec.loads_small | 1.302 | 1.293 | 1.007x |
+| typed.codec.dumps_quiet_small | 1.455 | 1.414 | 1.029x |
+| typed.adapter.dumps_quiet_small | 0.936 | 0.926 | 1.011x |
+| typed.adapter.dumps_batch | 38.202 | 38.143 | 1.002x |
+| typed.adapter.loads_batch | 86.504 | 84.988 | 1.018x |
+| typed.codec.dumps_batch | 38.668 | 38.650 | 1.000x |
+| typed.codec.loads_batch | 85.914 | 86.838 | 0.989x |
+| typed.codec.dumps_quiet_batch | 38.881 | 38.839 | 1.001x |
+| typed.adapter.dumps_quiet_batch | 38.311 | 38.146 | 1.004x |
+
+The comparison does not certify stability, representative workload coverage, or a performance release gate.
+
+| Benchmark                       | baseline | candidate             |
+|---------------------------------|:--------:|:---------------------:|
+| dumps.event                     | 158 ns   | 155 ns: 1.02x faster  |
+| loads.event                     | 491 ns   | 397 ns: 1.23x faster  |
+| dumps.unicode_text              | 514 ns   | 510 ns: 1.01x faster  |
+| dumps.dense_escapes             | 5.96 us  | 5.92 us: 1.01x faster |
+| dumps.numbers                   | 8.00 us  | 8.40 us: 1.05x slower |
+| dumps.floats                    | 52.6 us  | 53.3 us: 1.01x slower |
+| loads.floats                    | 89.6 us  | 87.6 us: 1.02x faster |
+| dumps.datetimes                 | 5.58 us  | 5.49 us: 1.02x faster |
+| loads.datetimes                 | 1.35 us  | 1.29 us: 1.05x faster |
+| dumps.records_fastapi           | 23.8 us  | 21.5 us: 1.11x faster |
+| dumps.records_pretty            | 14.7 us  | 15.2 us: 1.04x slower |
+| loads.bytes_64                  | 222 ns   | 154 ns: 1.44x faster  |
+| loads.bytes_256                 | 283 ns   | 240 ns: 1.18x faster  |
+| loads.bytes_321                 | 313 ns   | 243 ns: 1.29x faster  |
+| loads.bytes_322                 | 303 ns   | 291 ns: 1.04x faster  |
+| loads.bytes_512                 | 364 ns   | 342 ns: 1.07x faster  |
+| typed.adapter.dumps_small       | 931 ns   | 911 ns: 1.02x faster  |
+| typed.adapter.loads_small       | 1.14 us  | 990 ns: 1.15x faster  |
+| typed.codec.dumps_quiet_small   | 1.47 us  | 1.42 us: 1.04x faster |
+| typed.adapter.dumps_quiet_small | 935 ns   | 926 ns: 1.01x faster  |
+| typed.adapter.loads_batch       | 86.4 us  | 85.3 us: 1.01x faster |
+| typed.codec.loads_batch         | 85.8 us  | 86.8 us: 1.01x slower |
+| Geometric mean                  | (ref)    | 1.04x faster          |
+
+Benchmark hidden because not significant (16): dumps.records, loads.records, dumps.ascii_text, loads.ascii_text, loads.unicode_text, dumps.escaped_text, loads.escaped_text, loads.dense_escapes, loads.numbers, dumps.records_sorted, typed.codec.dumps_small, typed.codec.loads_small, typed.adapter.dumps_batch, typed.codec.dumps_batch, typed.codec.dumps_quiet_batch, typed.adapter.dumps_quiet_batch

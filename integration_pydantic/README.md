@@ -1,6 +1,6 @@
 # Optional Pydantic integration
 
-The fork keeps `import orjson`, `orjson.dumps`, and `orjson.loads` unchanged.
+This project keeps `import orjson`, `orjson.dumps`, and `orjson.loads` unchanged.
 The following APIs are additive and use Pydantic's JSON semantics. They do not
 claim to accelerate Pydantic's own native JSON engine.
 
@@ -46,6 +46,16 @@ then calling `validate_python` would change strict-mode behavior for dates,
 tuples, and other types. Custom validators and serializers, aliases, exclusions,
 and schema-directed subclass filtering remain Pydantic's responsibility.
 
+The native library and Pydantic codec support Python 3.10+. Pydantic AI and
+FastAPI integration tests require Python 3.11+; on 3.10 the `ai` extra omits
+Pydantic AI and does not enable the history/conversation helpers.
+
+For free-threaded Python, current Pydantic/AI integration targets 3.14t and
+3.15t. Experimental 3.13t is native-orjson-only qualification using the separate
+`native313t` test group; current Pydantic-core/AI dependencies do not provide
+supported 3.13t builds. Do not interpret a passing native 3.13t wheel as
+qualification of these optional codecs on that interpreter.
+
 For message history with the optional Pydantic AI dependency:
 
 ```python
@@ -86,11 +96,16 @@ partial mode disabled before accepting it as complete.
 
 Tests include offline `TestModel` agent runs, conversation/history replay,
 deferred-tool state, binary/retry messages and a streamed structured output.
-External model requests are disabled in those agent tests:
+External model requests are disabled in those agent tests. Prepare the locked
+`native` and `integration` groups with UV and install the built wheel using the
+[development build](../README.md#build-and-use), then run:
 
 ```sh
-python -m pytest integration_pydantic
+uv run --no-sync pytest integration_pydantic
 ```
+
+Use UV 0.13.9+ throughout. The `--no-sync` flag keeps the installed wheel under
+test; dependency changes belong in `pyproject.toml` and `uv.lock`.
 
 References:
 

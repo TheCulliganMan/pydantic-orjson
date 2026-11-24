@@ -36,11 +36,71 @@ upstream = "https://github.com/ijl/orjson"
 
 [project.optional-dependencies]
 pydantic = ["pydantic>=2.14.4,<3"]
-ai = ["pydantic>=2.14.4,<3", "pydantic-ai-slim>=2.73,<3"]
+# Pydantic AI requires Python 3.11+. The marker keeps the universal uv lock
+# compatible with the native package and Pydantic-only helpers on Python 3.10.
+ai = ["pydantic>=2.14.4,<3", "pydantic-ai-slim>=2.73,<3; python_version >= '3.11'"]
 
 [build-system]
 build-backend = "maturin"
-requires = ["maturin>=1,<2"]
+requires = ["maturin==1.16.0"]
+
+# Test/tool versions are declared here; uv.lock records all transitive versions
+# and artifacts. Older interpreter branches retain compatible dependencies.
+[dependency-groups]
+native-common = [
+    "faker==40.63.0",
+    "maturin==1.16.0",
+    "pendulum==3.3.0",
+    "psutil==7.2.2",
+    "pytest==9.2.0",
+    "python-dateutil==2.9.0.post0",
+    "pytz==2026.6",
+    "ruff==0.17.6",
+    "tomli==2.5.0; python_version < '3.11'",
+]
+native = [
+    { include-group = "native-common" },
+    "hypothesis==6.151.9; python_version < '3.11'",
+    "hypothesis==6.170.17; python_version >= '3.11'",
+    "numpy==2.2.6; python_version < '3.11'",
+    "numpy==2.3.5; python_version >= '3.11' and python_version < '3.12'",
+    "numpy==2.5.5; python_version >= '3.12'",
+    "pandas==2.3.3; python_version < '3.11'",
+    "pandas==3.1.1; python_version >= '3.11'",
+    "pyperf==2.9.0; python_version < '3.11'",
+    "pyperf==2.11.0; python_version >= '3.11'",
+]
+# Current optional integration wheels require 3.14t+. Keep native 3.13t
+# qualification on published wheels; do not override dependency build guards.
+native313t = [
+    { include-group = "native-common" },
+    "hypothesis==6.151.9",
+    "numpy==2.3.5",
+    # pandas 2.3.3 publishes 3.13t wheels for Linux/macOS, not Windows.
+    "pandas==2.3.3; sys_platform != 'win32'",
+    "pyperf==2.11.0",
+]
+integration = [
+    "pydantic==2.14.4",
+    "pydantic-ai-slim==2.73.0; python_version >= '3.11'",
+    "fastapi==0.165.0; python_version >= '3.11'",
+    "httpx==0.28.1; python_version >= '3.11'",
+]
+dev = [{ include-group = "native" }, { include-group = "integration" }]
+
+[tool.uv]
+required-version = ">=0.13.9"
+default-groups = []
+conflicts = [
+    [{ group = "native313t" }, { group = "native" }],
+    [{ group = "native313t" }, { group = "integration" }],
+    [{ group = "native313t" }, { group = "dev" }],
+    [{ group = "native313t" }, { extra = "pydantic" }],
+    [{ group = "native313t" }, { extra = "ai" }],
+]
+
+[tool.uv.dependency-groups]
+native313t = { requires-python = ">=3.13,<3.14" }
 
 [tool.maturin]
 python-source = "pysrc"
@@ -52,13 +112,18 @@ include = [
     { format = "sdist", path = "compatibility/**/*" },
     { format = "sdist", path = "benchmarks/**/*" },
     { format = "sdist", path = "scripts/**/*" },
-    { format = "sdist", path = "requirements-fork.txt" },
+    { format = "sdist", path = "script/*" },
+    { format = "sdist", path = "data/**/*" },
+    { format = "sdist", path = "VALIDATION.md" },
+    { format = "sdist", path = "uv.lock" },
+    { format = "sdist", path = ".python-version" },
     { format = "sdist", path = ".cargo/*" },
     { format = "sdist", path = "build.rs" },
     { format = "sdist", path = "Cargo.lock" },
     { format = "sdist", path = "include/cargo/**/*" },
     { format = "sdist", path = "include/yyjson/**/*" },
 ]
+exclude = ["**/__pycache__/**", "**/*.pyc", "**/.DS_Store"]
 
 [tool.ruff]
 line-length = 88
