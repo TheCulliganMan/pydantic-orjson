@@ -18,7 +18,15 @@ macro_rules! validate_str {
 unsafe fn write_unicode<T>(buf: &str, mut data_ptr: *mut T, convert: impl Fn(char) -> T) -> *mut T {
     unsafe {
         let mut chars = buf.chars();
-        if buf.len() >= 64 && buf.as_bytes()[0].is_ascii() {
+        let bytes = buf.as_bytes();
+        // A bounded probe avoids repeated failed windows for dense Unicode.
+        // Byte slices may end inside a code point; no str slicing occurs here.
+        let has_ascii_block = bytes.len() >= 64
+            && bytes[0].is_ascii()
+            && bytes[..bytes.len().min(128)]
+                .chunks_exact(16)
+                .any(|chunk| chunk.is_ascii());
+        if has_ascii_block {
             const WIDTH: usize = 16;
             const HIGH_BITS: u64 = 0x8080_8080_8080_8080;
             while chars.as_str().len() >= WIDTH {

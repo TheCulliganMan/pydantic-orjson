@@ -303,8 +303,23 @@ fn populate_yy_array(mut list: PyListRef, elem: *mut yyjson_val) {
         let len = unsafe_yyjson_get_len(elem);
         assume!(len >= 1);
         let mut next = unsafe_yyjson_get_first(elem);
+        let mut i = 0;
 
-        for i in 0..len {
+        // Every primitive occupies one tape slot. Consume only an exact-double
+        // prefix; the first differing tag resumes generic container traversal.
+        // No Python object borrows the tape, and the list is private to this call.
+        if len >= 16 && (*next).tag as u8 == TAG_DOUBLE {
+            loop {
+                list.set(i, parse_yy_f64(next).as_ptr());
+                i += 1;
+                next = next.add(1);
+                if i == len || (*next).tag as u8 != TAG_DOUBLE {
+                    break;
+                }
+            }
+        }
+
+        for i in i..len {
             let val = next;
             let len = unsafe_yyjson_get_len(val);
             next = unsafe_yyjson_get_next_non_container(val);

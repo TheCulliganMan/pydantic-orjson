@@ -12,7 +12,7 @@ mod state;
 mod uuid;
 pub(crate) mod writer;
 
-use crate::ffi::{PyBytes_FromStringAndSize, PyFloatRef, PyIntRef, PyObject, PyTypeRef};
+use crate::ffi::{PyBytes_FromStringAndSize, PyFloatRef, PyIntRef, PyObject, PyStrRef, PyTypeRef};
 use crate::opt::{APPEND_NEWLINE, INDENT_2, Opt, STRICT_INTEGER};
 use crate::util::usize_to_isize;
 use core::ptr::NonNull;
@@ -21,7 +21,13 @@ use state::SerializerState;
 pub(crate) use writer::{
     CompactFormatter, ContainerSerializer, IndentFormatter, set_str_formatter_fn,
 };
-use writer::{JsonWriter, SmallFixedBuffer};
+use writer::{JsonWriter, SmallFixedBuffer, format_escaped_str_to};
+
+const SHORT_STRING_BUFFER_LENGTH: usize = 256;
+// Each UTF-8 byte can expand to a six-byte escape. The opening quote and
+// largest trailing SIMD store require 33 extra bytes, including when the AVX
+// remainder is empty. The closing quote and optional newline need less space.
+const SHORT_STRING_MAX_BYTES: usize = (SHORT_STRING_BUFFER_LENGTH - 33) / 6;
 
 pub(crate) fn serialize(
     ptr: *mut PyObject,
@@ -39,6 +45,23 @@ pub(crate) fn serialize(
             }
             if ob_type.as_ptr() == crate::typeref::FLOAT_TYPE {
                 return serialize_number::<true>(ptr, opts);
+            }
+            if ob_type.as_ptr() == crate::typeref::STR_TYPE {
+                let value = PyStrRef::from_ptr_unchecked(ptr)
+                    .as_str()
+                    .ok_or(SerializeError::InvalidStr)?;
+                if value.len() <= SHORT_STRING_MAX_BYTES {
+                    return Ok(serialize_short_string(value, opts));
+                }
+                // A scalar string has no indentation or callback behavior.
+                // Reuse its validated UTF-8 instead of dispatching the Python
+                // object and acquiring its UTF-8 view a second time.
+                return Ok(ContainerSerializer::new(
+                    CompactFormatter,
+                    SerializerState::new(opts),
+                    None,
+                )
+                .write_str(value));
             }
             let literal: &[u8] = if ob_type.as_ptr() == crate::typeref::NONE_TYPE {
                 b"null\n"
@@ -95,4 +118,27 @@ fn serialize_number<const FLOAT: bool>(
             usize_to_isize(buffer.len()),
         )
     }))
+}
+
+// Keep this scratch allocation off the frame used by containers and long
+// strings. The caller holds the original Python argument alive throughout;
+// exact str and its UTF-8 cache are immutable, including on free-threaded Python.
+#[inline(never)]
+fn serialize_short_string(value: &str, opts: Opt) -> NonNull<PyObject> {
+    debug_assert!(value.len() <= SHORT_STRING_MAX_BYTES);
+    let mut buffer = [core::mem::MaybeUninit::<u8>::uninit(); SHORT_STRING_BUFFER_LENGTH];
+    let dst = buffer.as_mut_ptr().cast::<u8>();
+    unsafe {
+        // The capacity-derived cutoff proves the dispatcher's writable range.
+        // Every architecture uses the same existing escape implementation.
+        let mut len = format_escaped_str_to(dst, value);
+        if opt_enabled!(opts, APPEND_NEWLINE) {
+            core::ptr::write(dst.add(len), b'\n');
+            len += 1;
+        }
+        nonnull!(PyBytes_FromStringAndSize(
+            dst.cast::<core::ffi::c_char>(),
+            usize_to_isize(len),
+        ))
+    }
 }

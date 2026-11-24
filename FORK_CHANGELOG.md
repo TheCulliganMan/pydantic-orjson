@@ -6,12 +6,21 @@
   runs, retaining generic dispatch for mixed suffixes and all options/errors.
 - Encode exact scalar primitives directly into finished bytes; reuse the
   existing numeric formatter for range, nonfinite and strict-integer behavior.
+- Encode exact strings through shared escaping, using bounded stack storage
+  through 37 UTF-8 bytes and reusing the validated UTF-8 for longer strings.
+- Retain immutable exact-string keys instead of allocating a Rust string for
+  each `OPT_NON_STR_KEYS` field; preserve converted keys, sorting and callbacks.
 - Replace yyjson's general pool with an invocation-local bounded bump arena.
   Include both input copy and geometric tape growth in its capacity bound,
   fixing valid dense pretty arrays rejected by the inherited allocation bound.
   The separate stack frame now handles documents through 610 UTF-8 bytes.
 - Decode exact null/boolean literals and small unescaped strings directly;
   widen ASCII runs within long mixed Unicode strings in fixed-size blocks.
+  Avoid widening when a bounded prefix probe finds no complete ASCII block.
+  On ARM, combine long-string UTF-8 character counting and width detection
+  with bounded NEON loads and checked accumulator folding.
+- Decode exact-float array prefixes with a specialized loop, resuming ordinary
+  mixed/container traversal at the first different tape tag.
 - Consume x86 string escape masks once per block, avoiding repeated scans
   for dense escaped strings.
 - Add a primary three-engine benchmark with identical inputs and UTF-8 bytes

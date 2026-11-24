@@ -13,7 +13,7 @@ mod uuid;
 
 pub(crate) use byteswriter::{BytesWriter, CompactFormatter, IndentFormatter, WriteFormatter};
 pub(crate) use container::ContainerSerializer;
-pub(crate) use format_str::{format_escaped_str, set_str_formatter_fn};
+pub(crate) use format_str::{format_escaped_str, format_escaped_str_to, set_str_formatter_fn};
 pub(crate) use half::f16_to_f32;
 pub(crate) use jsonwriter::JsonWriter;
 pub(crate) use num::{

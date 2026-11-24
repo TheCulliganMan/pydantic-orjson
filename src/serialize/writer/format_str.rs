@@ -3,6 +3,13 @@
 
 use crate::serialize::writer::{BytesWriter, JsonWriter};
 
+// Preserve the existing writer API and inline through the architecture-selected
+// dispatcher. The caller reserves space before invoking the string formatter.
+#[inline(always)]
+pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+    unsafe { format_escaped_str_to(writer.as_mut_buffer_ptr(), value) }
+}
+
 #[cfg(all(
     target_arch = "x86_64",
     feature = "avx512",
@@ -33,10 +40,14 @@ static mut STR_FORMATTER_FN: StrFormatter =
 
 #[cfg(all(target_arch = "x86_64", not(feature = "avx512")))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
     unsafe {
         crate::serialize::writer::str::format_escaped_str_impl_sse2_128(
-            writer.as_mut_buffer_ptr(),
+            dst,
             value.as_bytes().as_ptr(),
             value.len(),
         )
@@ -49,14 +60,12 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
     not(target_feature = "avx512vl")
 ))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
-    unsafe {
-        STR_FORMATTER_FN(
-            writer.as_mut_buffer_ptr(),
-            value.as_bytes().as_ptr(),
-            value.len(),
-        )
-    }
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
+    unsafe { STR_FORMATTER_FN(dst, value.as_bytes().as_ptr(), value.len()) }
 }
 
 #[cfg(all(
@@ -65,10 +74,14 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
     target_feature = "avx512vl"
 ))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
     unsafe {
         crate::serialize::writer::str::format_escaped_str_impl_512vl(
-            writer.as_mut_buffer_ptr(),
+            dst,
             value.as_bytes().as_ptr(),
             value.len(),
         )
@@ -77,10 +90,14 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
 
 #[cfg(all(not(target_arch = "x86_64"), feature = "generic_simd"))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
     unsafe {
         crate::serialize::writer::str::format_escaped_str_impl_generic_128(
-            writer.as_mut_buffer_ptr(),
+            dst,
             value.as_bytes().as_ptr(),
             value.len(),
         )
@@ -89,10 +106,14 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
 
 #[cfg(all(target_arch = "aarch64", not(feature = "generic_simd")))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
     unsafe {
         crate::serialize::writer::str::format_escaped_str_impl_neon_128(
-            writer.as_mut_buffer_ptr(),
+            dst,
             value.as_bytes().as_ptr(),
             value.len(),
         )
@@ -104,10 +125,14 @@ pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize
     not(feature = "generic_simd")
 ))]
 #[inline(always)]
-pub(crate) fn format_escaped_str(writer: &mut BytesWriter, value: &str) -> usize {
+/// # Safety
+/// `dst` must point to at least `6 * value.len() + 33` writable bytes. This
+/// includes the largest escape expansion and the trailing 32-byte SIMD store.
+/// The destination must not overlap the input string.
+pub(crate) unsafe fn format_escaped_str_to(dst: *mut u8, value: &str) -> usize {
     unsafe {
         crate::serialize::writer::str::format_escaped_str_scalar(
-            writer.as_mut_buffer_ptr(),
+            dst,
             value.as_bytes().as_ptr(),
             value.len(),
         )

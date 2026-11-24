@@ -79,6 +79,28 @@ impl Drop for OwnedSnapshotValue {
     }
 }
 
+// Exact Python strings are immutable. Retain their objects while borrowing
+// UTF-8, rather than allocating and copying a Rust String for every field name.
+// Converted keys keep their existing owned representation. The reference can
+// escape this enum only through AsRef, whose lifetime is bounded by &self.
+enum SnapshotKey {
+    Unicode {
+        text: &'static str,
+        _owner: OwnedSnapshotValue,
+    },
+    Converted(String),
+}
+
+impl AsRef<str> for SnapshotKey {
+    #[inline(always)]
+    fn as_ref(&self) -> &str {
+        match self {
+            Self::Unicode { text, .. } => text,
+            Self::Converted(text) => text.as_str(),
+        }
+    }
+}
+
 #[cold]
 #[inline(never)]
 pub(crate) fn format_default_unserializable(ptr: *mut PyObject) -> PyStrRef {
@@ -159,6 +181,15 @@ impl<F> ContainerSerializer<F>
 where
     F: WriteFormatter + Clone,
 {
+    // Entry point for an already validated top-level string. All escaping,
+    // growth and result finalization stay shared with the general serializer.
+    #[inline]
+    pub fn write_str(&mut self, value: &str) -> NonNull<PyObject> {
+        self.write_escaped_str(value);
+        self.writer
+            .finish(opt_enabled!(self.state.opts(), APPEND_NEWLINE))
+    }
+
     pub fn write(&mut self, ptr: *mut PyObject) -> Result<NonNull<PyObject>, SerializeError> {
         match self.serialize(ptr) {
             Ok(()) => Ok(self
@@ -416,13 +447,24 @@ where
         let opts = self.state.opts() & NOT_PASSTHROUGH;
 
         let map_iter = PyDictIterator::from_dict(dict).fuse();
-        let mut items: Vec<(String, OwnedSnapshotValue)> = Vec::with_capacity(map_iter.len());
+        let mut items: Vec<(SnapshotKey, OwnedSnapshotValue)> = Vec::with_capacity(map_iter.len());
         for (key, value) in map_iter {
             let value = OwnedSnapshotValue::new(value.as_ptr());
             if let Ok(ob) = PyStrRef::from_ptr(key.as_ptr()) {
+                // Acquire ownership before exposing the borrowed UTF-8. The
+                // free-threaded iterator already holds its own protected key
+                // reference until this loop finishes; this reference survives
+                // the iterator and arbitrary value callbacks that clear dict.
+                let owner = OwnedSnapshotValue::new(ob.as_ptr());
                 match ob.as_str() {
                     Some(uni) => {
-                        items.push((String::from(uni), value));
+                        items.push((
+                            SnapshotKey::Unicode {
+                                text: uni,
+                                _owner: owner,
+                            },
+                            value,
+                        ));
                     }
                     None => {
                         cold_path!();
@@ -431,7 +473,7 @@ where
                 }
             } else {
                 match pyobject_to_string(key.as_ptr(), opts) {
-                    Ok(key_as_str) => items.push((key_as_str, value)),
+                    Ok(key_as_str) => items.push((SnapshotKey::Converted(key_as_str), value)),
                     Err(err) => {
                         return Err(err);
                     }
@@ -439,7 +481,7 @@ where
             }
         }
 
-        // Keep the original owned-key snapshot and upfront conversion order.
+        // Keep the completed key/value snapshot and upfront conversion order.
         // Without sorting, a second vector of borrowed views adds only an
         // allocation and a full copy of those views before serialization.
         if opt_disabled!(opts, SORT_KEYS) {
@@ -450,7 +492,7 @@ where
         items
             .iter()
             .fuse()
-            .for_each(|(key, val)| items_as_str.push(((*key).as_str(), val.as_ptr())));
+            .for_each(|(key, val)| items_as_str.push((key.as_ref(), val.as_ptr())));
 
         if opt_enabled!(opts, SORT_KEYS) {
             sort_dict_items(&mut items_as_str);
