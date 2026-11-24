@@ -22,3 +22,9 @@ unmodified upstream engine.
 Existing upstream workflows remain available via manual dispatch. A smaller
 fork CI workflow runs on push and pull requests. No registry publication or
 release-upload workflow is enabled automatically.
+
+Windows source builds must set `PYO3_USE_RAW_DYLIB=0`, matching upstream's
+Windows workflow. orjson calls private CPython symbols that require the full
+Python import library. This is also described by the
+[PyO3 build guide](https://pyo3.rs/main/building-and-distribution.html#the-pyo3_use_raw_dylib-environment-variable).
+The fork CI includes this setting; no native code change is required.

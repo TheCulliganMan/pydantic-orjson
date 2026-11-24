@@ -29,6 +29,10 @@ jobs:
       - run: python -m pip install -r requirements-fork.txt
       - run: python script/check-version
       - run: maturin build --release --strip --locked --out dist
+        env:
+          # Match upstream Windows builds: private CPython symbols need the
+          # full import library, beyond pyo3-ffi's raw-dylib declarations.
+          PYO3_USE_RAW_DYLIB: '0'
       - name: Install wheel
         shell: bash
         run: python -m pip install --force-reinstall dist/*.whl

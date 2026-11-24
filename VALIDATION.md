@@ -69,9 +69,11 @@ For these runs upstream was rebuilt from an isolated archive of the same base
 commit, with the same build flags; its extension digest is recorded in those
 reports (`fb96a0295d4be56aee205013a82f4841c0dee6af3574435bf36c239f413209b2`).
 The first matched comparison's six raw encode/decode ratios range from
-0.965x to 1.034x (baseline median / candidate median), consistent with a
-compatibility baseline rather than an established speed gain. Matched runs
-remain noisy single-process diagnostics, not release-quality evidence.
+0.965x to 1.034x (baseline median / candidate median). The reversed comparison
+ranges from 0.889x to 1.049x for raw cases, while unchanged direct Pydantic
+controls also move to 0.828x and 0.862x. These results establish neither a
+speed gain nor performance acceptance. Matched runs remain noisy
+single-process diagnostics, not release-quality evidence.
 
 Benchmark metadata records the upstream Git HEAD plus a dirty working tree:
 measurements were made before the initial fork commit. Installed distribution
