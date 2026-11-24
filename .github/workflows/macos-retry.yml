@@ -1,0 +1,159 @@
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+name: Retry missing macOS ARM wheels
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Capacity fallback for the two unstarted jobs in wheel run 45432069452.
+# Build the exact qualified source, not the commit containing this workflow.
+# Keep the other 43 tested artifacts and record this separate run honestly.
+jobs:
+  wheel:
+    name: macos-arm64 / Python ${{ matrix.python }}
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13', '3.14']
+    env:
+      UV_MANAGED_PYTHON: '1'
+      UV_PROJECT_ENVIRONMENT: .venv
+      UV_PYTHON: ${{ format('{0}+gil', matrix.python) }}
+      PYO3_USE_RAW_DYLIB: '0'
+      QUALIFIED_SOURCE_SHA: ec6b33645756bd2e81f80259134f43dcb14e2c9c
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ec6b33645756bd2e81f80259134f43dcb14e2c9c
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - name: Verify qualified source checkout
+        run: |
+          test "$(git rev-parse HEAD)" = "$QUALIFIED_SOURCE_SHA"
+      - name: Install the requested UV-managed interpreter
+        run: uv python install "${UV_PYTHON%+gil}"
+      - name: Install release toolchain
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+      - name: Sync locked native and framework dependencies
+        run: uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+      - name: Verify selected interpreter
+        env:
+          REQUESTED_PYTHON: ${{ matrix.python }}
+          REQUESTED_ARCHITECTURE: arm64
+        run: |
+          uv run --no-sync python - <<'PY'
+          import os, platform, sys, sysconfig
+          requested = os.environ['REQUESTED_PYTHON']
+          actual = f'{sys.version_info.major}.{sys.version_info.minor}'
+          threaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
+          assert actual == requested.removesuffix('t'), (requested, sys.version)
+          assert threaded == requested.endswith('t'), (requested, threaded)
+          architecture = {'amd64': 'x64', 'x86_64': 'x64', 'aarch64': 'arm64', 'arm64': 'arm64'}[platform.machine().lower()]
+          assert architecture == os.environ['REQUESTED_ARCHITECTURE'], architecture
+          print(sys.version)
+          print('free-threaded ABI:', threaded)
+          PY
+          uv run --no-sync python script/check-version
+      - name: Build the replacement wheel through UV
+        run: uv build --wheel --no-sources --python .venv -C 'maturin.build-args=--locked --strip' --out-dir dist
+      - name: Install exactly the built wheel
+        run: uv pip install --python .venv --no-deps --reinstall dist/*.whl
+      - name: Verify wheel ABI and runtime GIL state
+        env:
+          REQUESTED_PYTHON: ${{ matrix.python }}
+        run: |
+          SOURCE_SHA=$(git rev-parse HEAD)
+          export SOURCE_SHA
+          test "$SOURCE_SHA" = "$QUALIFIED_SOURCE_SHA"
+          uv run --no-sync python - <<'PY'
+          import hashlib, json, os, pathlib, subprocess, sys
+          from packaging.utils import parse_wheel_filename
+
+          requested = os.environ['REQUESTED_PYTHON']
+          threaded = requested.endswith('t')
+          interpreter = 'cp' + requested.removesuffix('t').replace('.', '')
+          abi = interpreter + ('t' if threaded else '')
+          wheels = list(pathlib.Path('dist').glob('*.whl'))
+          assert len(wheels) == 1, wheels
+          wheel = wheels[0]
+          _, _, _, tags = parse_wheel_filename(wheel.name)
+          assert any(tag.interpreter == interpreter and tag.abi == abi for tag in tags), tags
+          environment = dict(os.environ)
+          environment.pop('PYTHON_GIL', None)
+          program = '''
+          import json, sys, sysconfig
+          before = getattr(sys, '_is_gil_enabled', lambda: True)()
+          import orjson
+          from pathlib import Path
+          assert Path(orjson.__file__).is_relative_to(Path(sys.prefix)), orjson.__file__
+          after = getattr(sys, '_is_gil_enabled', lambda: True)()
+          threaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
+          assert after is not threaded, 'Unexpected GIL state after importing orjson'
+          value = {'ready': True, 'items': [1, None, 'snow: 雪']}
+          assert orjson.loads(orjson.dumps(value)) == value
+          print(json.dumps({'python': sys.version,
+                            'free_threaded_abi': bool(sysconfig.get_config_var('Py_GIL_DISABLED')),
+                            'gil_before_import': before, 'gil_after_import': after,
+                            'native_api_version': orjson.__version__}))
+          '''
+          import textwrap
+          result = subprocess.run([sys.executable, '-I', '-c', textwrap.dedent(program)],
+                                  env=environment, text=True, capture_output=True, check=True)
+          runtime = json.loads(result.stdout)
+          assert runtime['free_threaded_abi'] == threaded
+          if threaded:
+              assert runtime['gil_before_import'] is False, runtime
+          runtime.update(source_sha=os.environ['SOURCE_SHA'], wheel=wheel.name,
+                         wheel_sha256=hashlib.sha256(wheel.read_bytes()).hexdigest(),
+                         import_stderr=result.stderr,
+                         runtime_contract='GIL disabled' if threaded else 'regular CPython GIL')
+          pathlib.Path('dist/runtime.json').write_text(json.dumps(runtime, indent=2) + '\n')
+          print(json.dumps(runtime, indent=2))
+          PY
+      - name: Test native API and compatibility boundaries
+        env:
+          PYTHON_GIL: '1'
+          PYTHONMALLOC: debug
+        run: uv run --no-sync python -m pytest -q test compatibility --ignore=compatibility/test_drop_in.py --junitxml=dist/native-tests.xml
+      - name: Test Pydantic AI and FastAPI integration
+        env:
+          PYTHON_GIL: '1'
+          PYTHONMALLOC: debug
+        run: uv run --no-sync python -m pytest -q compatibility/test_drop_in.py integration_pydantic --junitxml=dist/integration-tests.xml
+      - name: Verify calls from multiple Python threads
+        env:
+          PYTHON_GIL: '1'
+          PYTHONMALLOC: debug
+        run: |
+          uv run --no-sync python - <<'PY'
+          from concurrent.futures import ThreadPoolExecutor
+          import sys, sysconfig
+          import orjson
+          threaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
+          assert getattr(sys, '_is_gil_enabled', lambda: True)() is not threaded
+          def check(index):
+              value = {'id': index, 'text': '雪\\\n' * 64, 'items': list(range(32))}
+              assert orjson.loads(orjson.dumps(value)) == value
+          with ThreadPoolExecutor(max_workers=8) as executor:
+              list(executor.map(check, range(4096)))
+          PY
+          uv pip check --python .venv
+          uv pip freeze --python .venv > dist/dependencies.txt
+      - name: Upload tested wheel and evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: orjson-macos-arm64-cp${{ matrix.python }}
+          path: dist/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
