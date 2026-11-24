@@ -4,7 +4,7 @@
 use crate::ffi::{PyFloatRef, PyIntRef};
 use crate::serialize::{
     error::SerializeError,
-    writer::{BytesWriter, write_float64, write_integer_i64, write_integer_u64},
+    writer::{JsonWriter, write_float64, write_integer_i64, write_integer_u64},
 };
 
 #[cfg(feature = "inline_int")]
@@ -19,8 +19,8 @@ const STRICT_INT_MAX: i64 = 9007199254740991;
 
 #[cfg(feature = "inline_int")]
 #[inline(always)]
-pub(crate) fn serialize_int(
-    writer: &mut BytesWriter,
+pub(crate) fn serialize_int<B: JsonWriter>(
+    writer: &mut B,
     ob: PyIntRef,
     strict_integer: bool,
 ) -> Result<(), SerializeError> {
@@ -58,8 +58,8 @@ pub(crate) fn serialize_int(
 
 #[cfg(not(feature = "inline_int"))]
 #[inline(always)]
-pub(crate) fn serialize_int(
-    writer: &mut BytesWriter,
+pub(crate) fn serialize_int<B: JsonWriter>(
+    writer: &mut B,
     ob: PyIntRef,
     strict_integer: bool,
 ) -> Result<(), SerializeError> {
@@ -88,6 +88,6 @@ pub(crate) fn serialize_int(
     }
 }
 
-pub(crate) fn serialize_float(writer: &mut BytesWriter, ob: PyFloatRef) {
+pub(crate) fn serialize_float<B: JsonWriter>(writer: &mut B, ob: PyFloatRef) {
     write_float64(writer, ob.value());
 }

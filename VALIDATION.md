@@ -1,3 +1,24 @@
+# Validation evidence
+
+## 3.13.0+pydantic.4 development candidate
+
+The initial native optimization candidate built through UV on macOS ARM64,
+CPython 3.13.12, Rust 1.99.0. Its installed wheel passed **2,430 tests,
+45 skips and four expected warnings** with `PYTHONMALLOC=debug`, including
+the nine benchmark-contract tests. Added checks cover numeric mixed suffixes,
+scalar options/errors, every escape position around vector boundaries, Unicode
+code-point boundaries, decoder allocation growth and reentrant collection.
+
+This is local correctness evidence. Performance acceptance and cross-platform
+qualification of `.4` remain in progress. The new primary workflow compares
+the actual portable candidate wheel with published ORJSON 3.13.0 and Python
+stdlib json across 89 cases, retaining both orders and all process samples.
+Its all-wins gate rejects any regression, tie, unstable or incomplete result.
+See [methodology](benchmarks/README.md) and [the historical timing audit](benchmarks/FORENSICS.md).
+
+All qualification and release claims in the following sections refer to the
+immutable `.3` release and its recorded source commits, not the `.4` candidate.
+
 # Free-threaded implementation — 3.13.0+pydantic.3
 
 ## UV migration

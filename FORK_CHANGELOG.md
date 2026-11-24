@@ -1,5 +1,28 @@
 # Project changelog
 
+## 3.13.0+pydantic.4 — development candidate
+
+- Bound numeric-array output reservations and specialize exact integer/float
+  runs, retaining generic dispatch for mixed suffixes and all options/errors.
+- Encode exact scalar primitives directly into finished bytes; reuse the
+  existing numeric formatter for range, nonfinite and strict-integer behavior.
+- Replace yyjson's general pool with an invocation-local bounded bump arena.
+  Include both input copy and geometric tape growth in its capacity bound,
+  fixing valid dense pretty arrays rejected by the inherited allocation bound.
+  The separate stack frame now handles documents through 610 UTF-8 bytes.
+- Decode exact null/boolean literals and small unescaped strings directly;
+  widen ASCII runs within long mixed Unicode strings in fixed-size blocks.
+- Consume x86 string escape masks once per block, avoiding repeated scans
+  for dense escaped strings.
+- Add a primary three-engine benchmark with identical inputs and UTF-8 bytes
+  output: Pydantic ORJSON, published ORJSON and stdlib json. Retain balanced
+  orders, raw process samples, hashes, instability checks and an explicit
+  all-cases-wins gate. Typed pipelines are distinguished from native parsing.
+
+These are candidates pending full performance acceptance, not a claim of
+universal speed superiority. See [benchmark methodology](benchmarks/README.md)
+and the [earlier timing audit](benchmarks/FORENSICS.md).
+
 ## 3.13.0+pydantic.3 — free-threaded and UV qualification
 
 - Manage Python versions, environments, locking, builds and test execution

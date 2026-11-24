@@ -220,11 +220,33 @@ where
         array_iter: &mut T,
     ) -> Result<(), SerializeError> {
         self.recursion += 1;
-        assume!(array_iter.len() > 0);
-        F::reserve_array(&mut self.writer, array_iter.len(), PER_ITEM_RESERVE);
+        let len = array_iter.len();
+        assume!(len > 0);
+        let first = array_iter.next().unwrap().as_ptr();
+
+        // Numeric arrays need a bounded amount of output per element. Reserving
+        // the generic object budget can allocate hundreds of kilobytes for a
+        // few kilobytes of integers, crossing allocator size classes before
+        // finish() shrinks the result. Keep small and mixed arrays on the
+        // ordinary path, and verify every element before using this shortcut.
+        if len >= 16 {
+            let first_type = PyTypeRef::from_pyobject(first);
+            if first_type.as_ptr() == unsafe { crate::typeref::INT_TYPE } {
+                self.serialize_numeric_array_inner::<T, false>(first, array_iter, len)?;
+                self.recursion -= 1;
+                return Ok(());
+            }
+            if first_type.as_ptr() == unsafe { crate::typeref::FLOAT_TYPE } {
+                self.serialize_numeric_array_inner::<T, true>(first, array_iter, len)?;
+                self.recursion -= 1;
+                return Ok(());
+            }
+        }
+
+        F::reserve_array(&mut self.writer, len, PER_ITEM_RESERVE);
         F::array_open(&mut self.writer);
 
-        self.serialize(array_iter.next().unwrap().as_ptr())?;
+        self.serialize(first)?;
 
         for each in array_iter {
             F::item_separator(&mut self.writer);
@@ -233,6 +255,70 @@ where
 
         F::array_close(&mut self.writer);
         self.recursion -= 1;
+        Ok(())
+    }
+
+    #[inline(never)]
+    fn serialize_numeric_array_inner<
+        T: Iterator<Item = BorrowedPyRef> + ExactSizeIterator,
+        const FLOAT: bool,
+    >(
+        &mut self,
+        first: *mut PyObject,
+        array_iter: &mut T,
+        len: usize,
+    ) -> Result<(), SerializeError> {
+        // Integer output is at most 20 bytes; the float formatter requires 40
+        // writable bytes. reserve_array also includes separators, indentation,
+        // and a trailing safety margin. These bounds apply only to exact types.
+        F::reserve_array(&mut self.writer, len, if FLOAT { 40 } else { 20 });
+        F::array_open(&mut self.writer);
+        let strict_integer = self.state.is_enabled(STRICT_INTEGER);
+        let numeric_type = unsafe {
+            if FLOAT {
+                crate::typeref::FLOAT_TYPE
+            } else {
+                crate::typeref::INT_TYPE
+            }
+        };
+        macro_rules! write_number {
+            ($ptr:expr) => {
+                if FLOAT {
+                    serialize_float(&mut self.writer, unsafe {
+                        PyFloatRef::from_ptr_unchecked($ptr)
+                    });
+                } else {
+                    serialize_int(
+                        &mut self.writer,
+                        unsafe { PyIntRef::from_ptr_unchecked($ptr) },
+                        strict_integer,
+                    )?;
+                }
+            };
+        }
+        write_number!(first);
+
+        // Do not use the iterator's len() after consumption: historical GIL
+        // iterators report their original length. Keep an explicit count so a
+        // mixed-type suffix receives its full generic reservation.
+        let mut remaining = len - 1;
+        while let Some(each) = array_iter.next() {
+            let ptr = each.as_ptr();
+            if PyTypeRef::from_pyobject(ptr).as_ptr() != numeric_type {
+                F::reserve_array(&mut self.writer, remaining, PER_ITEM_RESERVE);
+                F::item_separator(&mut self.writer);
+                self.serialize(ptr)?;
+                for each in array_iter {
+                    F::item_separator(&mut self.writer);
+                    self.serialize(each.as_ptr())?;
+                }
+                break;
+            }
+            F::item_separator(&mut self.writer);
+            write_number!(ptr);
+            remaining -= 1;
+        }
+        F::array_close(&mut self.writer);
         Ok(())
     }
 

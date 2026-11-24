@@ -2,8 +2,7 @@
 // Copyright ijl (2022-2026), Anders Kaseorg (2023)
 
 use super::ffi::{
-    YYJSON_READ_SUCCESS, yyjson_alc, yyjson_alc_pool_init, yyjson_doc, yyjson_read_err,
-    yyjson_read_opts, yyjson_val,
+    YYJSON_READ_SUCCESS, yyjson_alc, yyjson_doc, yyjson_read_err, yyjson_read_opts, yyjson_val,
 };
 use crate::deserialize::DeserializeError;
 use crate::deserialize::pyobject::get_unicode_key;
@@ -11,7 +10,7 @@ use crate::ffi::{
     PyBoolRef, PyDictRef, PyFloatRef, PyIntRef, PyListRef, PyMem_Free, PyMem_Malloc, PyNoneRef,
     PyStrRef,
 };
-use core::ffi::c_char;
+use core::ffi::{c_char, c_void};
 use core::mem::MaybeUninit;
 use core::ptr::{NonNull, null, null_mut};
 use std::borrow::Cow;
@@ -42,11 +41,94 @@ fn unsafe_yyjson_get_first(ctn: *mut yyjson_val) -> *mut yyjson_val {
     unsafe { ctn.add(1) }
 }
 
-const MINIMUM_BUFFER_CAPACITY: usize = 4096;
+const MINIMUM_BUFFER_CAPACITY: usize = 8192;
 
-const fn buffer_capacity_to_allocate(len: usize) -> usize {
-    // The max memory size is (json_size / 2 * 16 * 1.5 + padding).
-    (((len / 2) * 24) + 256 + (MINIMUM_BUFFER_CAPACITY - 1)) & !(MINIMUM_BUFFER_CAPACITY - 1)
+const fn buffer_capacity_to_allocate(len: usize) -> Option<usize> {
+    // At most len / 2 + 1 values, 16 bytes each, with less than 1.5x
+    // geometric tape growth. The input copy needs len additional bytes.
+    // 256 covers the document header, tape padding and allocation alignment.
+    // Omitting the copy from this bound rejects some valid pretty documents.
+    let Some(capacity) = len.checked_mul(13) else {
+        return None;
+    };
+    let Some(capacity) = capacity.checked_add(256 + MINIMUM_BUFFER_CAPACITY - 1) else {
+        return None;
+    };
+    Some(capacity & !(MINIMUM_BUFFER_CAPACITY - 1))
+}
+
+const ARENA_ALIGNMENT: usize = 16;
+
+// yyjson's nonincremental reader allocates the input copy, then the document
+// and value tape. Only that final allocation grows, so it can expand in place.
+// Error cleanup frees the tape and input; the caller releases the entire arena.
+// All state belongs to this invocation, including during reentrant GC callbacks.
+struct Arena {
+    ptr: *mut u8,
+    capacity: usize,
+    used: usize,
+}
+
+impl Arena {
+    fn new(ptr: *mut c_void, capacity: usize) -> Self {
+        Self {
+            ptr: ptr.cast(),
+            capacity,
+            used: (ptr as usize).wrapping_neg() & (ARENA_ALIGNMENT - 1),
+        }
+    }
+
+    fn aligned_size(size: usize) -> Option<usize> {
+        size.checked_add(ARENA_ALIGNMENT - 1)
+            .map(|size| size & !(ARENA_ALIGNMENT - 1))
+    }
+
+    unsafe extern "C" fn malloc(ctx: *mut c_void, size: usize) -> *mut c_void {
+        let arena = unsafe { &mut *ctx.cast::<Self>() };
+        let Some(size) = Self::aligned_size(size) else {
+            return null_mut();
+        };
+        let Some(end) = arena.used.checked_add(size) else {
+            return null_mut();
+        };
+        if end > arena.capacity {
+            return null_mut();
+        }
+        let ptr = unsafe { arena.ptr.add(arena.used) };
+        arena.used = end;
+        ptr.cast()
+    }
+
+    unsafe extern "C" fn realloc(
+        ctx: *mut c_void,
+        ptr: *mut c_void,
+        old_size: usize,
+        size: usize,
+    ) -> *mut c_void {
+        let arena = unsafe { &mut *ctx.cast::<Self>() };
+        let Some(start) = (ptr as usize).checked_sub(arena.ptr as usize) else {
+            return null_mut();
+        };
+        let Some(old_size) = Self::aligned_size(old_size) else {
+            return null_mut();
+        };
+        if start.checked_add(old_size) != Some(arena.used) {
+            return null_mut();
+        }
+        let Some(size) = Self::aligned_size(size) else {
+            return null_mut();
+        };
+        let Some(end) = start.checked_add(size) else {
+            return null_mut();
+        };
+        if end > arena.capacity {
+            return null_mut();
+        }
+        arena.used = end;
+        ptr
+    }
+
+    unsafe extern "C" fn free(_ctx: *mut c_void, _ptr: *mut c_void) {}
 }
 
 #[allow(clippy::cast_ptr_alignment)]
@@ -63,7 +145,13 @@ pub(crate) fn deserialize(
     data: &'static str,
 ) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
     assume!(!data.is_empty());
-    let buffer_capacity = buffer_capacity_to_allocate(data.len());
+    let Some(buffer_capacity) = buffer_capacity_to_allocate(data.len()) else {
+        return Err(DeserializeError::from_yyjson(
+            Cow::Borrowed("Not enough memory to allocate buffer for parsing"),
+            0,
+            data,
+        ));
+    };
     if buffer_capacity == MINIMUM_BUFFER_CAPACITY {
         return deserialize_small(data);
     }
@@ -100,15 +188,13 @@ fn deserialize_with_buffer(
     buffer_ptr: *mut core::ffi::c_void,
     buffer_capacity: usize,
 ) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
-    let mut alloc = yyjson_alc {
-        malloc: None,
-        realloc: None,
-        free: None,
-        ctx: null_mut(),
+    let mut arena = Arena::new(buffer_ptr, buffer_capacity);
+    let alloc = yyjson_alc {
+        malloc: Some(Arena::malloc),
+        realloc: Some(Arena::realloc),
+        free: Some(Arena::free),
+        ctx: (&raw mut arena).cast(),
     };
-    unsafe {
-        yyjson_alc_pool_init(&raw mut alloc, buffer_ptr, buffer_capacity);
-    }
 
     let mut err = yyjson_read_err {
         code: YYJSON_READ_SUCCESS,

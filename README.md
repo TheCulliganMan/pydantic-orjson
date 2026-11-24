@@ -12,6 +12,12 @@ Performance depends on
 the workload, architecture and build flags. See the validation report for
 measured results and limitations.
 
+The `.4` development candidate adds numeric/scalar encoding paths, a simpler
+decoder arena and string optimizations. Its performance acceptance is in progress;
+the qualified `.3` release above remains available. The primary benchmark now
+compares **Pydantic ORJSON**, published **ORJSON**, and Python **json**, with
+every case and scale visible and an all-cases speed gate.
+
 - [Implementation plan and release gates](PLAN.md)
 - [Local build and test evidence](VALIDATION.md)
 - [Drop-in compatibility contract](compatibility/README.md)
@@ -57,7 +63,7 @@ The equivalent manual POSIX sequence is:
 ```sh
 uv sync --locked --no-install-project --group native --group integration
 uv build --wheel --no-sources -C 'maturin.build-args=--locked --strip'
-uv pip install --python .venv/bin/python --reinstall --no-deps dist/orjson-3.13.0+pydantic.3-cp313-cp313-*.whl
+uv pip install --python .venv/bin/python --reinstall --no-deps dist/orjson-3.13.0+pydantic.4-cp313-cp313-*.whl
 uv run --no-sync pytest -q test compatibility integration_pydantic
 uv pip check --python .venv/bin/python
 ```

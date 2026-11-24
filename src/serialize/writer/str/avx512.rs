@@ -29,26 +29,18 @@ pub(crate) unsafe fn format_escaped_str_impl_512vl(
         while nb >= STRIDE {
             let str_vec = _mm256_loadu_epi8(src.cast::<i8>());
 
-            _mm256_storeu_epi8(dst.cast::<i8>(), str_vec);
-
             let mask = _mm256_cmpeq_epu8_mask(str_vec, blash)
                 | _mm256_cmpeq_epu8_mask(str_vec, quote)
                 | _mm256_cmplt_epu8_mask(str_vec, x20);
 
             if mask != 0 {
-                let cn = mask.trailing_zeros() as usize;
-                src = src.add(cn);
-                dst = dst.add(cn);
-                nb -= cn;
-                nb -= 1;
-
-                write_escape!(*(src), dst);
-                src = src.add(1);
+                write_escape_mask!(dst, src, STRIDE, mask);
             } else {
-                nb -= STRIDE;
+                _mm256_storeu_epi8(dst.cast::<i8>(), str_vec);
                 dst = dst.add(STRIDE);
-                src = src.add(STRIDE);
             }
+            nb -= STRIDE;
+            src = src.add(STRIDE);
         }
 
         loop {

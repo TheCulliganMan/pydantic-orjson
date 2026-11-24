@@ -10,7 +10,8 @@ import pytest
 
 import orjson
 
-SIZES = (318, 319, 320, 321, 322, 323, 324)
+# Retain the original 321/322 boundary and exercise the current 610/611 one.
+SIZES = (318, 319, 320, 321, 322, 323, 324, 607, 608, 609, 610, 611, 612, 613, 614)
 FACTORIES = (
     pytest.param(lambda raw: raw.decode("utf-8"), id="str"),
     pytest.param(bytes, id="bytes"),
@@ -68,7 +69,7 @@ def test_json_whitespace_at_boundaries_is_accepted(factory, size):
 
 
 @pytest.mark.parametrize("factory", FACTORIES)
-@pytest.mark.parametrize("depth", [158, 159, 160, 161, 162])
+@pytest.mark.parametrize("depth", [158, 159, 160, 161, 162, 303, 304, 305, 306, 307])
 def test_nested_documents_crossing_arena_boundary(factory, depth):
     raw = b"[" * depth + b"0" + b"]" * depth
     value = orjson.loads(factory(raw))
@@ -92,11 +93,40 @@ def test_invalid_utf8_is_rejected_before_parsing(size):
         assert caught.value.msg == "str is not valid UTF-8: surrogates not allowed"
 
 
+@pytest.mark.parametrize("factory", FACTORIES)
+@pytest.mark.parametrize("count", [938, 939, 940, 1000, 4096, 16384])
+def test_dense_pretty_arrays_have_capacity_for_input_and_growing_tape(factory, count):
+    # Two spaces select yyjson's pretty-size estimate. Inherited arena sizing
+    # omitted the input copy and rejected the valid count=939 document.
+    raw = b"[  " + b"0," * (count - 1) + b"0]"
+    assert orjson.loads(factory(raw)) == [0] * count
+
+
+@pytest.mark.parametrize("prefix", [b"[", b"[  ", b" \n[  "])
+def test_dense_array_tape_growth_at_each_small_size(prefix):
+    # Exercise successive 1.5x tape growth thresholds in stack and heap arenas.
+    for count in range(1, 4097):
+        raw = prefix + b"0," * (count - 1) + b"0]"
+        decoded = orjson.loads(raw)
+        assert len(decoded) == count
+        assert decoded == [0] * count
+
+
+@pytest.mark.parametrize("count", [939, 4096])
+def test_error_positions_after_dense_tape_growth(count):
+    raw = b"[  " + b"0," * count + b"]"
+    with pytest.raises(orjson.JSONDecodeError) as caught:
+        orjson.loads(raw)
+    assert caught.value.msg == "trailing comma is not allowed"
+    assert caught.value.doc == raw.decode()
+    assert caught.value.pos == len(raw) - 2
+
+
 @pytest.mark.skipif(
     bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
     reason="free-threaded GC does not trigger this in-call allocation-threshold callback",
 )
-@pytest.mark.parametrize("array_length", [100, 110], ids=["stack", "heap"])
+@pytest.mark.parametrize("array_length", [200, 210], ids=["stack", "heap"])
 def test_gc_callback_can_reenter_decoder_without_corrupting_outer_document(
     array_length,
 ):

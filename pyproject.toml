@@ -1,6 +1,6 @@
 [project]
 name = "orjson"
-version = "3.13.0+pydantic.3"
+version = "3.13.0+pydantic.4"
 repository = "https://github.com/TheCulliganMan/pydantic-orjson"
 description = "orjson-compatible native JSON with optional Pydantic and Pydantic AI adapters"
 requires-python = ">=3.10"

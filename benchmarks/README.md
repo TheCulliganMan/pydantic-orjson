@@ -1,5 +1,85 @@
 # Performance evidence
 
+The primary comparison is **Pydantic ORJSON**, the published **ORJSON** wheel,
+and Python's standard-library **json**. The unchanged distribution/module name
+`orjson` is retained for drop-in compatibility; it is not used as an ambiguous
+display label for both libraries. A matched source build remains a separate
+engineering control.
+
+## Three-engine matrix
+
+Prepare two environments with the same UV-managed Python and locked dependency
+groups. Install the exact candidate wheel in one and the official binary wheel
+in the other; keep build/install logs and wheel digests. The runner never builds
+or replaces either installed package. For example, after preparation:
+
+```sh
+uv run --no-sync python benchmarks/run_matrix.py --candidate-python .venv/bin/python --orjson-python .venv-published/bin/python --output results/matrix --profile standard
+uv run --no-sync python benchmarks/report_matrix.py results/matrix
+uv run --no-sync python benchmarks/report_matrix.py results/matrix --gate all-wins
+```
+
+On Linux add `--affinity <permitted-logical-CPU>` to keep every worker on the
+same CPU. On macOS `--macos-qos` requests user-initiated scheduling; it does not
+pin a performance core. All child interpreters run through `uv run --no-project
+--python <exact-environment-interpreter>`. No environment synchronization occurs
+inside timed runs. The `json` engine uses the candidate's Python interpreter,
+imports the standard-library accelerator and never calls orjson.
+
+The **standard profile has 89 cases**, including both encode and decode for
+scalar values; records at 1/16/128/1024 items; ASCII, Unicode, sparse and dense
+escapes at 32/256/4096/65536 characters; integer and float arrays at 8/128/2048
+items; sorted, pretty and FastAPI-flags record encoding; typed record pipelines;
+and byte-input decode sizes 64/256/321/322/512/610/611/4096/65536. The full profile
+adds one-megabyte strings, 16,384 records, 32,768 numbers and more arena-boundary
+neighbors. The smoke profile or `--cases` selection is diagnostic only and can
+never satisfy a performance gate. Keep all standard cases in public primary
+comparisons, including regressions. A result covers only its measured Python,
+architecture and artifact; regular-GIL results do not qualify free-threaded builds.
+
+Every encoder returns **UTF-8 bytes**. `json.dumps` uses compact separators and
+`ensure_ascii=False`, with `.encode('utf-8')` inside the timed expression. This
+is the wire-format contract of orjson, not a bytes-versus-string comparison.
+Pretty/sorted rows use equivalent settings, and all decoders receive identical
+canonical UTF-8 bytes. Correctness is checked before and after timing against
+independently prepared standard-library JSON, including fixture immutability.
+Canonical fixture hashes and actual output byte lengths are recorded separately;
+valid floating-point spellings need not be byte-identical to be semantically equal.
+
+Typed rows compare explicitly composed pipelines: `Codec` uses the public
+Pydantic `TypeAdapter.dump_json/validate_json`; the ORJSON and json pipelines
+include `TypeAdapter.dump_python(mode='json')` before encoding or
+`TypeAdapter.validate_python` after parsing. They measure those compositions,
+not native-parser improvements or the fastest possible Pydantic workflow.
+**Every user can call the same direct TypeAdapter API without this package.**
+The separate engineering suite below retains direct-adapter controls to measure
+wrapper overhead. Schemas/adapters are constructed outside the timed warm calls.
+FastAPI-flags rows measure record serialization, not HTTP throughput. Datetime,
+NumPy, Fragment and Pydantic AI helper capability gaps are explicitly listed as
+unsupported where applicable, never assigned fake zero-duration measurements.
+
+For each case the runner rotates the order of all three engines and then reverses
+it, instead of running whole libraries many minutes apart. Each round records
+four fresh worker processes, four timed samples per process, two warmups and a
+0.07-second minimum by default. All raw reports/logs are retained with hashes in
+an incrementally written manifest. The manifest records CPU policies, SMT
+siblings, CPU pressure and `/proc/stat` when available; pyperf retains per-worker
+timings and environment details. An interrupted run remains explicitly incomplete.
+
+The report refuses missing cases/rounds, changed hashes, mismatched fixtures,
+Python builds/dependencies or engine identities. The default report **does not
+assert qualification**. `--gate all-wins` fails unless every standard/full case
+beats both baselines with the declared sampling and stability requirements.
+The default win threshold is >1% separation between the slowest candidate worker
+median and fastest baseline worker median across all rounds. A >10% worker,
+within-worker sample spread or round drift is unstable. `--gate no-regressions`
+allows at most 2% observed slowdown; passing it is not a speed-win claim.
+These deliberately conservative observed bounds are not confidence intervals.
+Shared-runner instability fails a gate rather than becoming a claimed speedup.
+
+See the [forensic audit](FORENSICS.md) for why historical ARM numeric 10× results
+cannot establish wins or regressions, despite matching fixtures and metadata.
+
 Version `.2` adds native string encoding, small-document parsing and dictionary
 snapshot changes; `.3` adds the free-threaded port. Their performance must be
 measured against both a matched upstream source build and the published wheel. The published wheel
@@ -31,7 +111,7 @@ results and limitations rather than inferring gains from these design changes.
   Apple M5 no-GIL measurement, interpreted below. It is not an upstream-wheel
   comparison and does not qualify every free-threaded platform.
 
-## Process-isolated suite
+## Separate source-build and direct-adapter engineering controls
 
 Build baseline and candidate release wheels in separate environments with the
 same Python, dependencies, compiler and flags. Install the published

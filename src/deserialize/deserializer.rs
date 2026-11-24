@@ -3,7 +3,7 @@
 
 use super::DeserializeError;
 use super::input::Utf8Buffer;
-use crate::ffi::{PyDictRef, PyListRef, PyStrRef};
+use crate::ffi::{PyBoolRef, PyDictRef, PyListRef, PyNoneRef, PyStrRef};
 use core::ptr::NonNull;
 
 #[repr(transparent)]
@@ -23,14 +23,35 @@ impl Deserializer {
 
     #[inline]
     pub fn deserialize(&self) -> Result<NonNull<crate::ffi::PyObject>, DeserializeError<'static>> {
-        if self.buffer.len() == 2 {
-            cold_path!();
-            match self.buffer.as_bytes() {
+        let bytes = self.buffer.as_bytes();
+        match bytes.len() {
+            2 => match bytes {
                 b"[]" => return Ok(PyListRef::with_capacity(0).as_non_null_ptr()),
                 b"{}" => return Ok(PyDictRef::new().as_non_null_ptr()),
                 b"\"\"" => return Ok(PyStrRef::empty().as_non_null_ptr()),
                 _ => {}
-            }
+            },
+            4 => match bytes {
+                b"null" => return Ok(PyNoneRef::none().as_non_null_ptr()),
+                b"true" => return Ok(PyBoolRef::pytrue().as_non_null_ptr()),
+                _ => {}
+            },
+            5 if bytes == b"false" => return Ok(PyBoolRef::pyfalse().as_non_null_ptr()),
+            _ => {}
+        }
+        // UTF-8 has already been validated by Utf8Buffer. Small unescaped
+        // strings can construct their Python value without an input copy and
+        // parser tape; all escapes, controls and extra JSON syntax use yyjson.
+        if (3..=64).contains(&bytes.len())
+            && bytes[0] == b'"'
+            && bytes[bytes.len() - 1] == b'"'
+            && bytes[1..bytes.len() - 1]
+                .iter()
+                .all(|byte| *byte >= 32 && *byte != b'"' && *byte != b'\\')
+        {
+            return Ok(
+                PyStrRef::from_str(&self.buffer.as_str()[1..bytes.len() - 1]).as_non_null_ptr(),
+            );
         }
         crate::deserialize::backend::deserialize(self.buffer.as_str())
     }

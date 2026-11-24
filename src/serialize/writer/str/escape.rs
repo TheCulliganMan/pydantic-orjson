@@ -2,6 +2,30 @@
 // Copyright ijl (2024-2026)
 // the constants and SIMD approach are adapted from cloudwego's sonic-rs
 
+// Consume a block's escape mask once. Rescanning a vector after each escape
+// makes dense inputs do a full SIMD comparison for every input byte.
+#[cfg(target_arch = "x86_64")]
+macro_rules! write_escape_mask {
+    ($dst:expr, $src:expr, $len:expr, $mask:expr) => {{
+        let mut mask = $mask as u32;
+        let mut offset = 0usize;
+        while mask != 0 {
+            let index = mask.trailing_zeros() as usize;
+            if index != offset {
+                core::ptr::copy_nonoverlapping($src.add(offset), $dst, index - offset);
+                $dst = $dst.add(index - offset);
+            }
+            write_escape!(*$src.add(index), $dst);
+            offset = index + 1;
+            mask &= mask - 1;
+        }
+        if offset != $len {
+            core::ptr::copy_nonoverlapping($src.add(offset), $dst, $len - offset);
+            $dst = $dst.add($len - offset);
+        }
+    }};
+}
+
 #[cfg(feature = "inline_int")]
 macro_rules! write_escape {
     ($byte:expr, $dst:expr) => {

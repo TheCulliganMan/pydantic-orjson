@@ -1,4 +1,4 @@
-name: Performance comparison
+name: Source build engineering comparison
 on:
   workflow_dispatch:
 

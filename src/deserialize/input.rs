@@ -96,10 +96,6 @@ impl Utf8Buffer {
     pub fn as_bytes(&self) -> &'static [u8] {
         self.buffer.as_bytes()
     }
-
-    pub fn len(&self) -> usize {
-        self.buffer.len()
-    }
 }
 
 // Mutable input needs an immutable snapshot before parsing without the GIL.

@@ -44,21 +44,14 @@ pub(crate) unsafe fn format_escaped_str_impl_sse2_128(
                     _mm_cmpeq_epi8(_mm_subs_epu8(str_vec, x20), v0),
                 ));
 
-                _mm_storeu_si128(dst.cast::<__m128i>(), str_vec);
-
                 if mask != 0 {
-                    let cn = mask.trailing_zeros() as usize;
-                    nb -= cn;
-                    dst = dst.add(cn);
-                    src = src.add(cn);
-                    nb -= 1;
-                    write_escape!(*(src), dst);
-                    src = src.add(1);
+                    write_escape_mask!(dst, src, STRIDE, mask);
                 } else {
-                    nb -= STRIDE;
+                    _mm_storeu_si128(dst.cast::<__m128i>(), str_vec);
                     dst = dst.add(STRIDE);
-                    src = src.add(STRIDE);
                 }
+                nb -= STRIDE;
+                src = src.add(STRIDE);
             }
 
             let mut scratch: [u8; 32] = [b'a'; 32];

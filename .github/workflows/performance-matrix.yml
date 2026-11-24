@@ -1,0 +1,88 @@
+name: Pydantic ORJSON vs ORJSON vs json
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matrix:
+    name: Three engines / ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-26.04, ubuntu-26.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    env:
+      UV_MANAGED_PYTHON: '1'
+      UV_PROJECT_ENVIRONMENT: .venv
+      UV_PYTHON: '3.13+gil'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install 3.13
+      - name: Prepare identical locked environments
+        run: |
+          for environment in .venv .artifacts/perf/upstream; do
+            UV_PROJECT_ENVIRONMENT="$environment" uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+          done
+          mkdir -p results
+          git rev-parse HEAD > results/source-commit.txt
+          uv --version > results/uv.txt
+          lscpu > results/cpu.txt
+      - name: Build the portable replacement wheel
+        run: bash scripts/build_linux.sh 3.13 2>&1 | tee results/build.txt
+      - name: Install exact candidate and published upstream wheels
+        run: |
+          uv pip install --python .venv --no-deps --reinstall dist/*.whl
+          uv pip install --python .artifacts/perf/upstream --default-index https://pypi.org/simple --only-binary=:all: --no-deps --reinstall --verbose 'orjson==3.13.0' 2>&1 | tee results/upstream-install.txt
+          uv pip freeze --python .venv > results/candidate-dependencies.txt
+          uv pip freeze --python .artifacts/perf/upstream > results/upstream-dependencies.txt
+          uv pip check --python .venv
+          uv pip check --python .artifacts/perf/upstream
+      - name: Validate compatibility before timing
+        env:
+          PYTHONMALLOC: debug
+        run: |
+          uv run --no-sync python -m pytest -q test compatibility integration_pydantic benchmarks/test_matrix.py --junitxml=results/tests.xml
+          uv run --no-sync python compatibility/differential.py --baseline .artifacts/perf/upstream/bin/python --candidate .venv/bin/python --output results/differential.json
+      - name: Select one allowed CPU for all three engines
+        run: |
+          uv run --no-sync python - <<'PY'
+          import json, os
+          from pathlib import Path
+          allowed = sorted(os.sched_getaffinity(0))
+          selected = allowed[-1]
+          Path('results/cpu-selection.json').write_text(json.dumps({'allowed': allowed, 'selected': selected}) + '\n')
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f'PERF_CPU={selected}\n')
+          PY
+      - name: Measure every engine in balanced order
+        run: |
+          uv run --no-sync python benchmarks/run_matrix.py --candidate-python .venv/bin/python --orjson-python .artifacts/perf/upstream/bin/python --output results/matrix --profile standard --affinity "$PERF_CPU"
+      - name: Require stable wins on every declared case
+        run: |
+          uv run --no-sync python benchmarks/report_matrix.py results/matrix --gate all-wins
+      - name: Attach the complete three-way result
+        if: always()
+        run: |
+          if [[ -f results/matrix/comparison.md ]]; then cat results/matrix/comparison.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: three-engines-${{ matrix.runner }}
+          path: |
+            results/
+            dist/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Remove temporary environments and build products
+        if: always()
+        run: rm -rf .artifacts .venv target
