@@ -1,0 +1,77 @@
+name: Large JSON benchmark
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  large:
+    name: 1 / 10 / 100 MiB / ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-26.04, ubuntu-26.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    env:
+      UV_MANAGED_PYTHON: '1'
+      UV_PROJECT_ENVIRONMENT: .venv
+      UV_PYTHON: '3.13+gil'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv python install 3.13
+      - name: Prepare identical locked environments
+        run: |
+          for environment in .venv .artifacts/large/upstream; do
+            UV_PROJECT_ENVIRONMENT="$environment" uv sync --locked --no-install-project --python "$UV_PYTHON" --group native --group integration
+          done
+          mkdir -p results
+          git rev-parse HEAD > results/source-commit.txt
+          uv --version > results/uv.txt
+          lscpu > results/cpu.txt
+      - name: Build actual portable wheel
+        run: bash scripts/build_linux.sh 3.13 2>&1 | tee results/build.txt
+      - name: Install candidate and published upstream wheels
+        run: |
+          uv pip install --python .venv --no-deps --reinstall dist/*.whl
+          uv pip install --python .artifacts/large/upstream --default-index https://pypi.org/simple --only-binary=:all: --no-deps --reinstall --verbose 'orjson==3.13.0' 2>&1 | tee results/upstream-install.txt
+          uv pip check --python .venv
+          uv pip check --python .artifacts/large/upstream
+          uv pip freeze --python .venv > results/candidate-dependencies.txt
+          uv pip freeze --python .artifacts/large/upstream > results/upstream-dependencies.txt
+      - name: Validate fixtures and reporting contracts
+        run: uv run --no-sync python -m pytest -q benchmarks/test_large_fixtures.py benchmarks/test_report_large.py
+      - name: Select one allowed CPU
+        run: |
+          uv run --no-sync python - <<'PY'
+          import os
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f'PERF_CPU={max(os.sched_getaffinity(0))}\n')
+          PY
+      - name: Measure large JSON and separate observed RSS probes
+        run: |
+          uv run --no-sync python benchmarks/run_large.py --candidate-python .venv/bin/python --orjson-python .artifacts/large/upstream/bin/python --fixtures .artifacts/large/fixtures --output results/large --source-commit "$GITHUB_SHA" --affinity "$PERF_CPU"
+      - name: Publish every measured case in the report
+        run: |
+          uv run --no-sync python benchmarks/report_large.py results/large
+          cat results/large/comparison.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: large-json-${{ matrix.runner }}
+          path: |
+            results/
+            dist/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Clean generated fixtures and rough builds
+        if: always()
+        run: uv run --no-sync python scripts/clean.py --preserve-env .venv
