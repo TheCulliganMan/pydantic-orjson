@@ -39,9 +39,13 @@
 - Clean intermediate free-threaded environments and Cargo output with the
   existing cleanup command; retain final wheels and published evidence.
 
-Qualification is in progress. Python 3.13t is experimental and requires caller
-synchronization for concurrent class/type metadata changes. The configured
-matrix does not imply that every build has passed. See [validation](VALIDATION.md) for completed checks. NumPy
+All 45 declared wheel variants passed build/runtime qualification at source
+commit `ec6b336`, with 43 main-run jobs plus two same-source fallback jobs after
+GitHub macOS runner capacity cancellations. The release includes checksums,
+raw test/ABI/GIL evidence and the source archive. Broader performance gates
+remain open; this is an alpha. Python 3.13t is experimental and requires caller
+synchronization for concurrent class/type metadata changes. See
+[validation](VALIDATION.md) for exact coverage. NumPy
 arrays must remain read-only during encoding or use caller-managed locking,
 consistent with [NumPy's thread-safety guidance](https://numpy.org/doc/stable/reference/thread_safety.html).
 

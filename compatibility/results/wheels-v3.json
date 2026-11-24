@@ -1,0 +1,2713 @@
+{
+  "schema_version": 1,
+  "distribution": "orjson",
+  "version": "3.13.0+pydantic.3",
+  "native_api_version": "3.13.0",
+  "source_sha": "ec6b33645756bd2e81f80259134f43dcb14e2c9c",
+  "source_url": "https://github.com/TheCulliganMan/pydantic-orjson/commit/ec6b33645756bd2e81f80259134f43dcb14e2c9c",
+  "qualification_mode": "primary-plus-capacity-fallback",
+  "workflow_runs": {
+    "wheels": {
+      "url": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "conclusion": "failure",
+      "jobs_passed": 43,
+      "unstarted_jobs": [
+        {
+          "name": "macos-arm64 / Python 3.13",
+          "conclusion": "cancelled",
+          "databaseId": 138579833364,
+          "url": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452/job/138579833364"
+        },
+        {
+          "name": "macos-arm64 / Python 3.14",
+          "conclusion": "cancelled",
+          "databaseId": 138579833424,
+          "url": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452/job/138579833424"
+        }
+      ]
+    },
+    "capacity_fallback": {
+      "url": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45438936680",
+      "conclusion": "success",
+      "jobs_passed": 2,
+      "jobs": [
+        "macos-arm64 / Python 3.13",
+        "macos-arm64 / Python 3.14"
+      ],
+      "workflow_head_sha": "8f5856712a464e01a669c195b3b8d3daf61c6b8c",
+      "built_source_sha": "ec6b33645756bd2e81f80259134f43dcb14e2c9c",
+      "workflow_source": "https://github.com/TheCulliganMan/pydantic-orjson/blob/8f5856712a464e01a669c195b3b8d3daf61c6b8c/.github/workflows/macos-retry.yml",
+      "workflow_sha256": "c064edd6d9476ddeec88df62bbeac65aa8770b3c6a746f29e09c54aff326816a",
+      "runner": "macos-15 (ARM64)"
+    },
+    "core": {
+      "url": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432070230",
+      "conclusion": "success",
+      "jobs_passed": 12
+    }
+  },
+  "scope": {
+    "platforms": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "macos-x86_64",
+      "macos-arm64",
+      "windows-amd64"
+    ],
+    "python_abis": [
+      "3.10",
+      "3.11",
+      "3.12",
+      "3.13",
+      "3.14",
+      "3.15",
+      "3.13t",
+      "3.14t",
+      "3.15t"
+    ],
+    "python_313t": "experimental native-only; current Pydantic/AI dependencies not qualified",
+    "python_310": "native and Pydantic Codec; AI/FastAPI require 3.11+",
+    "free_threaded": "15 wheels imported with the GIL disabled before and after import; debug-allocator native tests and thread checks passed",
+    "linux_baselines": "glibc 2.17 through Python 3.14/3.14t; glibc 2.28 for 3.15/3.15t",
+    "host_thread_roundtrips_per_cell": 4096,
+    "performance": "This is build/runtime compatibility evidence, not a throughput or universal compatibility claim."
+  },
+  "totals": {
+    "wheels": 45,
+    "regular_wheels": 30,
+    "free_threaded_wheels": 15,
+    "native_passed": 87663,
+    "native_skipped": 1482,
+    "integration_passed": 2320,
+    "integration_skipped": 0,
+    "failures": 0,
+    "errors": 0
+  },
+  "source_distribution": {
+    "filename": "orjson-3.13.0+pydantic.3.tar.gz",
+    "sha256": "cc144a445fd30e5be81cb3f3af7ae90e4f3892665500b9599c6695a6c0dec2b5",
+    "member_count": 840,
+    "roundtrip_tests": {
+      "tests": 2042,
+      "passed": 1997,
+      "skipped": 45,
+      "failures": 0,
+      "errors": 0
+    },
+    "rebuilt_wheel": {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-linux_x86_64.whl",
+      "sha256": "ac9b59c279112009dcf00fa6e6955713c28400ca808e93a53bf7fd00e07b5102",
+      "tags": [
+        "cp313-cp313-linux_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313-x86_64-linux-gnu.so",
+      "native_sha256": "ff73c77afc5a3974762a2b42257f514e43279f1185b3b6f6fa9851c6841446de"
+    },
+    "core_jobs_passed": 12
+  },
+  "wheels": [
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "f32c67d8875c80ccf45c929f7cfffd507b0bffd95d5a06089c46d56e8edd91db",
+      "tags": [
+        "cp310-cp310-manylinux2014_x86_64",
+        "cp310-cp310-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-310-x86_64-linux-gnu.so",
+      "native_sha256": "5c768b9cf635431e70aa10e67add88962fecb8d8113cbb975610d9f1d598f4da",
+      "platform": "linux-x86_64",
+      "python": "3.10",
+      "runtime_python": "3.10.22 (main, Oct  9 2026, 15:21:30) [Clang 22.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "codec-only",
+      "integration_tests": {
+        "tests": 37,
+        "passed": 37,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.10",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "b1c4d88789a9700671b11551896ccad8f19ab66a742abc0a689f48e55f286df7",
+      "tags": [
+        "cp311-cp311-manylinux2014_x86_64",
+        "cp311-cp311-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-311-x86_64-linux-gnu.so",
+      "native_sha256": "7012118712079508ffbcee0dba65c7d36c76f861bf92be1d867fbecf64f044cb",
+      "platform": "linux-x86_64",
+      "python": "3.11",
+      "runtime_python": "3.11.18 (main, Nov 11 2026, 00:16:37) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.11",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "55af230ba9561f9bb659aa1d0b07af887ccdffc067ab8e4628da4ef73d3312de",
+      "tags": [
+        "cp312-cp312-manylinux2014_x86_64",
+        "cp312-cp312-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-312-x86_64-linux-gnu.so",
+      "native_sha256": "1bb83eeeb837368f8448af8aa8dc85c3434f0d23bc106d68221ac6d42e5a560b",
+      "platform": "linux-x86_64",
+      "python": "3.12",
+      "runtime_python": "3.12.16 (main, Nov 11 2026, 00:15:59) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.12",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "ebb609008fcc1ef41ade262287da63bd6d84a5253c4dacf62da9b3256685d57f",
+      "tags": [
+        "cp313-cp313-manylinux2014_x86_64",
+        "cp313-cp313-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313-x86_64-linux-gnu.so",
+      "native_sha256": "31d9d71261bd0425e31151770a9dcbd5dcd57f771ade79e055fe1f6e1cb442b0",
+      "platform": "linux-x86_64",
+      "python": "3.13",
+      "runtime_python": "3.13.18 (main, Nov 11 2026, 00:17:48) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.13",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "8560db881b1526d828b27064a63bc54c942d5df662ba58faea859a1126483c57",
+      "tags": [
+        "cp314-cp314-manylinux2014_x86_64",
+        "cp314-cp314-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314-x86_64-linux-gnu.so",
+      "native_sha256": "3412659528b763da578c4a76c11be08d7c503c0df5173076fc79854aac4077e9",
+      "platform": "linux-x86_64",
+      "python": "3.14",
+      "runtime_python": "3.14.10 (main, Nov 11 2026, 00:18:44) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.14",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315-manylinux_2_28_x86_64.whl",
+      "sha256": "a37722be27ba583308557befd7f4a69de35f1c7c803019294f64d616c5ccc5d0",
+      "tags": [
+        "cp315-cp315-manylinux_2_28_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315-x86_64-linux-gnu.so",
+      "native_sha256": "33d26726cbd9f91e2afcbe2d9887b0f9dab54dc338a436ab7fea8cabafd466ab",
+      "platform": "linux-x86_64",
+      "python": "3.15",
+      "runtime_python": "3.15.2 (main, Nov 11 2026, 00:19:20) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1944,
+        "skipped": 37,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.15",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.28"
+        ],
+        "image": "quay.io/pypa/manylinux_2_28_x86_64@sha256:55a36963bc0504cdf004011001c1072306402f0b8b83be5a5eba7068f93eec53",
+        "compatibility": "manylinux_2_28",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "675a59f44839238b448e6605a98eda7582026f46c0802d01e1d24af3a37d354d",
+      "tags": [
+        "cp313-cp313t-manylinux2014_x86_64",
+        "cp313-cp313t-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313t-x86_64-linux-gnu.so",
+      "native_sha256": "c16e0daa9def8a82a16dd5db7ce2fa57f18e96bd71f87ef10fc8a8deae58fc7c",
+      "platform": "linux-x86_64",
+      "python": "3.13t",
+      "runtime_python": "3.13.18 experimental free-threading build (main, Nov 11 2026, 00:18:12) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "native-only",
+      "integration_tests": null,
+      "artifact": "orjson-linux-x86_64-cp3.13t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "6e0b39e7be6ebe09c29f092ebb54b9a4ac722f16c587ebbc74cb9f378368973e",
+      "tags": [
+        "cp314-cp314t-manylinux2014_x86_64",
+        "cp314-cp314t-manylinux_2_17_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314t-x86_64-linux-gnu.so",
+      "native_sha256": "13d74661a23c5b7454ec9b31ec0fe24e7c39216d18a563110cb92579f60c454c",
+      "platform": "linux-x86_64",
+      "python": "3.14t",
+      "runtime_python": "3.14.10 free-threading build (main, Nov 11 2026, 00:18:18) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.14t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_x86_64@sha256:8a79ff36ce155d8f242dc8013d73c5e8bbe937defb15de7d7afb342c1ab537f4",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315t-manylinux_2_28_x86_64.whl",
+      "sha256": "9619af0a41e20a0c3c6e80a5f702885318dba525cb4f542f432daa70ac85d1bd",
+      "tags": [
+        "cp315-cp315t-manylinux_2_28_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315t-x86_64-linux-gnu.so",
+      "native_sha256": "f589cbb432b935617c0ead4158c2e23c325f4092c40bd12f785f29d1c9b2eb79",
+      "platform": "linux-x86_64",
+      "python": "3.15t",
+      "runtime_python": "3.15.2 free-threading build (main, Nov 11 2026, 00:19:22) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1975,
+        "skipped": 6,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-x86_64-cp3.15t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.28"
+        ],
+        "image": "quay.io/pypa/manylinux_2_28_x86_64@sha256:55a36963bc0504cdf004011001c1072306402f0b8b83be5a5eba7068f93eec53",
+        "compatibility": "manylinux_2_28",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "7919a82611f8a3c548e4c6e6d3c8105afb6fa39227e6b06339f63ad175a1e363",
+      "tags": [
+        "cp310-cp310-manylinux2014_aarch64",
+        "cp310-cp310-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-310-aarch64-linux-gnu.so",
+      "native_sha256": "63e8796193af3ce31f485ed7ff0bf17635f08a30f75da0a764fe804e31874ad4",
+      "platform": "linux-aarch64",
+      "python": "3.10",
+      "runtime_python": "3.10.22 (main, Oct  9 2026, 15:20:35) [Clang 22.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "codec-only",
+      "integration_tests": {
+        "tests": 37,
+        "passed": 37,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.10",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "a3c233e0096cf6efc02d31210a4639e4c4f226434201cb2fe92972f30065aaa4",
+      "tags": [
+        "cp311-cp311-manylinux2014_aarch64",
+        "cp311-cp311-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-311-aarch64-linux-gnu.so",
+      "native_sha256": "0234a62e7b076fdde20c1bb839b4e301a05bbc616de9bb0571292df8235182d7",
+      "platform": "linux-aarch64",
+      "python": "3.11",
+      "runtime_python": "3.11.18 (main, Nov 11 2026, 00:18:57) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.11",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "01b0abfebd311411b5b6c67d5739974c95a164720a7c90a4305c5709519aacc6",
+      "tags": [
+        "cp312-cp312-manylinux2014_aarch64",
+        "cp312-cp312-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-312-aarch64-linux-gnu.so",
+      "native_sha256": "7c7718f2820285e2c8ac20896293816770cace4a4fa97bf573f1c2ad72e53b30",
+      "platform": "linux-aarch64",
+      "python": "3.12",
+      "runtime_python": "3.12.16 (main, Nov 11 2026, 00:17:04) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.12",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "bbf4b16a1372e8057e126e0df206e63b1a28db61767fed8369246e8c6e63afab",
+      "tags": [
+        "cp313-cp313-manylinux2014_aarch64",
+        "cp313-cp313-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313-aarch64-linux-gnu.so",
+      "native_sha256": "dfe6ba1a71e80f609063b81d4107215748725f95912416f0239ef8622f1cc8e5",
+      "platform": "linux-aarch64",
+      "python": "3.13",
+      "runtime_python": "3.13.18 (main, Nov 11 2026, 00:20:35) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.13",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "33ce021bd974786505c0bcfb4e0c205697c7ba9b856dddd738b4c0d892d65828",
+      "tags": [
+        "cp314-cp314-manylinux2014_aarch64",
+        "cp314-cp314-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314-aarch64-linux-gnu.so",
+      "native_sha256": "90ed69510792d88cac804c1ee9b8b2dfdb1462ba1707e2fc1a3c41767242c704",
+      "platform": "linux-aarch64",
+      "python": "3.14",
+      "runtime_python": "3.14.10 (main, Nov 11 2026, 00:20:58) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.14",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315-manylinux_2_28_aarch64.whl",
+      "sha256": "9f91122466ef9c67efed97d962f92eddca7b657847c527eaf741e326472421b0",
+      "tags": [
+        "cp315-cp315-manylinux_2_28_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315-aarch64-linux-gnu.so",
+      "native_sha256": "1641f946226f5423ac304dee48367ef984ac143787086958061dca11d77329fc",
+      "platform": "linux-aarch64",
+      "python": "3.15",
+      "runtime_python": "3.15.2 (main, Nov 11 2026, 00:19:01) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1944,
+        "skipped": 37,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.15",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.28"
+        ],
+        "image": "quay.io/pypa/manylinux_2_28_aarch64@sha256:126d9eea9d6b1717f3e17b2b3ac51da04ef159a5f935dac36fe92d621dc8f246",
+        "compatibility": "manylinux_2_28",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "7dbda4c2c269a33c97bbdc4efdba0e6f564ec49818cdabb802959cba153adc15",
+      "tags": [
+        "cp313-cp313t-manylinux2014_aarch64",
+        "cp313-cp313t-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313t-aarch64-linux-gnu.so",
+      "native_sha256": "736dd9ced5b94e3308d1269270e2689beb18acce191dbd48b224294d9e088477",
+      "platform": "linux-aarch64",
+      "python": "3.13t",
+      "runtime_python": "3.13.18 experimental free-threading build (main, Nov 11 2026, 00:17:40) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "native-only",
+      "integration_tests": null,
+      "artifact": "orjson-linux-aarch64-cp3.13t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "8dcbc2166e3d9117591ac753bfe3219c50d7fbccabb9f5b93f716823af701fb8",
+      "tags": [
+        "cp314-cp314t-manylinux2014_aarch64",
+        "cp314-cp314t-manylinux_2_17_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314t-aarch64-linux-gnu.so",
+      "native_sha256": "8f1c16252a510a6ea90f148d4b06151320bd32af7e4e51f6813a78976e23ba67",
+      "platform": "linux-aarch64",
+      "python": "3.14t",
+      "runtime_python": "3.14.10 free-threading build (main, Nov 11 2026, 00:21:31) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.14t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.17"
+        ],
+        "image": "quay.io/pypa/manylinux2014_aarch64@sha256:382236bfd11d86894d9792a6fa5286190b8dd3d075a7032284e123c288711e4f",
+        "compatibility": "manylinux_2_17",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315t-manylinux_2_28_aarch64.whl",
+      "sha256": "aa3020b56a6f8350ed0439bb4e5079cb0ede6b637eb633a433f442f8c4ba9e3b",
+      "tags": [
+        "cp315-cp315t-manylinux_2_28_aarch64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315t-aarch64-linux-gnu.so",
+      "native_sha256": "116fe58be55b0c625bce7959e252600b274b634a13b037f4228e249f281d709e",
+      "platform": "linux-aarch64",
+      "python": "3.15t",
+      "runtime_python": "3.15.2 free-threading build (main, Nov 11 2026, 00:21:34) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1975,
+        "skipped": 6,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-linux-aarch64-cp3.15t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452",
+      "linux_baseline": {
+        "libc": [
+          "glibc",
+          "2.28"
+        ],
+        "image": "quay.io/pypa/manylinux_2_28_aarch64@sha256:126d9eea9d6b1717f3e17b2b3ac51da04ef159a5f935dac36fe92d621dc8f246",
+        "compatibility": "manylinux_2_28",
+        "threaded_roundtrips": 256
+      }
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp310-cp310-macosx_10_12_x86_64.whl",
+      "sha256": "378780cf9973bf33cf6c85867a1bbb4c22a3735c49d8aef190bf271678c23535",
+      "tags": [
+        "cp310-cp310-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-310-darwin.so",
+      "native_sha256": "2632271dc08b124ab24dcf95df27a531035c6e9fd062e8163ecb52ec6dd340d5",
+      "platform": "macos-x86_64",
+      "python": "3.10",
+      "runtime_python": "3.10.22 (main, Oct  9 2026, 15:10:21) [Clang 22.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "codec-only",
+      "integration_tests": {
+        "tests": 37,
+        "passed": 37,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.10",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp311-cp311-macosx_10_12_x86_64.whl",
+      "sha256": "025c28f6d990b4d822190b7763d577928710a881055afa06759924c9fb426528",
+      "tags": [
+        "cp311-cp311-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-311-darwin.so",
+      "native_sha256": "73a71d9abd2d8a6bac5c4f46ddc8a53a3e021a29ab26b05dc05863a1c2ace899",
+      "platform": "macos-x86_64",
+      "python": "3.11",
+      "runtime_python": "3.11.18 (main, Nov 11 2026, 00:09:05) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.11",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp312-cp312-macosx_10_12_x86_64.whl",
+      "sha256": "cd9a2a787405d6c0ab46363ff106988fcb6a036226b33b8224ed35af553ab74f",
+      "tags": [
+        "cp312-cp312-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-312-darwin.so",
+      "native_sha256": "d9cb2a1ccc11d76c0f32dbecfbd1831d841b04e136e68828801a9f90a820afbb",
+      "platform": "macos-x86_64",
+      "python": "3.12",
+      "runtime_python": "3.12.16 (main, Nov 11 2026, 00:09:26) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.12",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-macosx_10_12_x86_64.whl",
+      "sha256": "46c997704fd6adb8b73e559597f8d5d63b6c6c14fb629e94c1a65e6fbed3f7f7",
+      "tags": [
+        "cp313-cp313-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313-darwin.so",
+      "native_sha256": "48ef40a157e26bb11d132142787334a3ec16155184df18755b337dd499e6d960",
+      "platform": "macos-x86_64",
+      "python": "3.13",
+      "runtime_python": "3.13.18 (main, Nov 11 2026, 00:10:51) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.13",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314-macosx_10_12_x86_64.whl",
+      "sha256": "44334936cc8915d8a4538961acd7c305875e9ae5f8705f44535011ad62249bf4",
+      "tags": [
+        "cp314-cp314-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314-darwin.so",
+      "native_sha256": "b1b2e08fbb5fce19374cfc50472284c925ab6b4bab9a7684a42bdf6885e1d0f5",
+      "platform": "macos-x86_64",
+      "python": "3.14",
+      "runtime_python": "3.14.10 (main, Nov 11 2026, 00:14:26) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.14",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315-macosx_10_12_x86_64.whl",
+      "sha256": "e3f405aba9c9186f90835dc9fa66a9f2be90a93266f9bf46cce78b19fdaa7df5",
+      "tags": [
+        "cp315-cp315-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315-darwin.so",
+      "native_sha256": "1ff61b8b593f15a51267a86ba8449b97d1593075692c77919b30a28fb3dfb2c4",
+      "platform": "macos-x86_64",
+      "python": "3.15",
+      "runtime_python": "3.15.2 (main, Nov 11 2026, 00:14:48) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1944,
+        "skipped": 37,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.15",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313t-macosx_10_12_x86_64.whl",
+      "sha256": "605deea11a0587e41709a2034db080109c9a815716d14e08a5e4e9ba96c521ad",
+      "tags": [
+        "cp313-cp313t-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313t-darwin.so",
+      "native_sha256": "de447fcc616f5f6458942435175d28528e6fe19095181bcd443c102de7493010",
+      "platform": "macos-x86_64",
+      "python": "3.13t",
+      "runtime_python": "3.13.18 experimental free-threading build (main, Nov 11 2026, 00:10:45) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "native-only",
+      "integration_tests": null,
+      "artifact": "orjson-macos-x86_64-cp3.13t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314t-macosx_10_12_x86_64.whl",
+      "sha256": "e1b773d821f538ef96023bce3232d7e1bbd410db4dbdad2bb2748f57f26540bc",
+      "tags": [
+        "cp314-cp314t-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314t-darwin.so",
+      "native_sha256": "f5d12a39ca9baa2fe0853631be6ee393b15e39de7773b7d2eab4bdc120008d3e",
+      "platform": "macos-x86_64",
+      "python": "3.14t",
+      "runtime_python": "3.14.10 free-threading build (main, Nov 11 2026, 00:15:29) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.14t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315t-macosx_10_12_x86_64.whl",
+      "sha256": "60e80c218c7180659b987407249d20adc59decc4c00144a4918e525432e4400c",
+      "tags": [
+        "cp315-cp315t-macosx_10_12_x86_64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315t-darwin.so",
+      "native_sha256": "88585de2309c579ba59f33424c98557f5f7bbb64ce23243fa814ea1060afbd1d",
+      "platform": "macos-x86_64",
+      "python": "3.15t",
+      "runtime_python": "3.15.2 free-threading build (main, Nov 11 2026, 00:11:07) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1975,
+        "skipped": 6,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-x86_64-cp3.15t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp310-cp310-macosx_11_0_arm64.whl",
+      "sha256": "7e0dc4df47f4b97826595c6a9b2a0967fdc086a1eec8e4a01e659b730af89c7c",
+      "tags": [
+        "cp310-cp310-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-310-darwin.so",
+      "native_sha256": "27bfb8fdf6797002791b96df61ca1e551a621376d7009d033f019d2042bc27fa",
+      "platform": "macos-arm64",
+      "python": "3.10",
+      "runtime_python": "3.10.22 (main, Oct  9 2026, 15:10:41) [Clang 22.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "codec-only",
+      "integration_tests": {
+        "tests": 37,
+        "passed": 37,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.10",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp311-cp311-macosx_11_0_arm64.whl",
+      "sha256": "db35b7b701a0073f75768e78bca19cb7fcb400d20cce5c893ce872c3227148dd",
+      "tags": [
+        "cp311-cp311-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-311-darwin.so",
+      "native_sha256": "f186a95fd5e5cb221356836a09d350253db3b4f41c706f1e6631832a65fbd640",
+      "platform": "macos-arm64",
+      "python": "3.11",
+      "runtime_python": "3.11.18 (main, Nov 11 2026, 00:08:53) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.11",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp312-cp312-macosx_11_0_arm64.whl",
+      "sha256": "238019303a5560529e19d611343488c257eb3c1ccd109c90fd71f965630faef4",
+      "tags": [
+        "cp312-cp312-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-312-darwin.so",
+      "native_sha256": "1084f6baa62abaaf5caca529341645b841f1a85ff115f223280ff5b4c39c966c",
+      "platform": "macos-arm64",
+      "python": "3.12",
+      "runtime_python": "3.12.16 (main, Nov 11 2026, 00:09:12) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.12",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-macosx_11_0_arm64.whl",
+      "sha256": "2470bb88dbe904e0ce1b51c39ea9731700cdaf5c676ffd60056e554982296e8c",
+      "tags": [
+        "cp313-cp313-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313-darwin.so",
+      "native_sha256": "bb36109587ba849704ea72bb4a97603efdee1e84a48d13b6447d3a02f03c070e",
+      "platform": "macos-arm64",
+      "python": "3.13",
+      "runtime_python": "3.13.18 (main, Nov 11 2026, 00:12:53) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.13",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45438936680"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314-macosx_11_0_arm64.whl",
+      "sha256": "86464f005d9971dfabb98d741d6e38fe0b7f92b209f08c14276b1bc3777cbef6",
+      "tags": [
+        "cp314-cp314-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314-darwin.so",
+      "native_sha256": "70193de619a4b47025c87e8d36f6948209fc1b9b94acb7104de403cbf3b8f8b4",
+      "platform": "macos-arm64",
+      "python": "3.14",
+      "runtime_python": "3.14.10 (main, Nov 11 2026, 00:14:32) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.14",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45438936680"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315-macosx_11_0_arm64.whl",
+      "sha256": "4397e39874b7a482bcafced23326090cbe8ce8920eef9992e4f627a8543a9e8c",
+      "tags": [
+        "cp315-cp315-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315-darwin.so",
+      "native_sha256": "23224e3392c261c8d54d3e4a15fae76da683d970f45305bd5243a95b7bfd7700",
+      "platform": "macos-arm64",
+      "python": "3.15",
+      "runtime_python": "3.15.2 (main, Nov 11 2026, 00:12:23) [Clang 23.1.3 ]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1944,
+        "skipped": 37,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.15",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313t-macosx_11_0_arm64.whl",
+      "sha256": "5812ffb9b5e82d8d2577020edecfaf742cde86acf2e67033a4e7193311c06203",
+      "tags": [
+        "cp313-cp313t-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-313t-darwin.so",
+      "native_sha256": "eabf2fb76d3e07c1caaefd636f810b12fa11c289d7d1d0cac7950d1e61a2199f",
+      "platform": "macos-arm64",
+      "python": "3.13t",
+      "runtime_python": "3.13.18 experimental free-threading build (main, Nov 11 2026, 00:09:34) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "native-only",
+      "integration_tests": null,
+      "artifact": "orjson-macos-arm64-cp3.13t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314t-macosx_11_0_arm64.whl",
+      "sha256": "90f55cd839b7159124b7b4158cf1f20ad98dabf003ebd1f72cba373a66c38b65",
+      "tags": [
+        "cp314-cp314t-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-314t-darwin.so",
+      "native_sha256": "8de3d014a2aa27a77a8404efc0e21317c3f927b0999ebb51d88bd5055fec6b2c",
+      "platform": "macos-arm64",
+      "python": "3.14t",
+      "runtime_python": "3.14.10 free-threading build (main, Nov 11 2026, 00:10:54) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.14t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315t-macosx_11_0_arm64.whl",
+      "sha256": "44d4e26cdbf521fca5bde4e179cec2a6f259e175629102038d5240500958ae12",
+      "tags": [
+        "cp315-cp315t-macosx_11_0_arm64"
+      ],
+      "native_extension": "orjson/orjson.cpython-315t-darwin.so",
+      "native_sha256": "3bb3e15e82d922d93c592cfacf28b5eb62de6933b49b1b9d040a5b94a69dfbc6",
+      "platform": "macos-arm64",
+      "python": "3.15t",
+      "runtime_python": "3.15.2 free-threading build (main, Nov 11 2026, 00:11:29) [Clang 23.1.3 ]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1975,
+        "skipped": 6,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-macos-arm64-cp3.15t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp310-cp310-win_amd64.whl",
+      "sha256": "a37a8593e7432b6fd8bdb7dc2030cbf4e8e9b4164f6e1e1accb2baeccf60817c",
+      "tags": [
+        "cp310-cp310-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp310-win_amd64.pyd",
+      "native_sha256": "2cdbf630ef5876707fcd4bc5c1f111bef897f1260388ce0352caeff938ab5f86",
+      "platform": "windows-amd64",
+      "python": "3.10",
+      "runtime_python": "3.10.22 (main, Oct  9 2026, 15:18:58) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "codec-only",
+      "integration_tests": {
+        "tests": 37,
+        "passed": 37,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.10",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp311-cp311-win_amd64.whl",
+      "sha256": "9a37968169c6941577ed5f60233293cdb354cc651dcd5c66544b23662976cb78",
+      "tags": [
+        "cp311-cp311-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp311-win_amd64.pyd",
+      "native_sha256": "1398e625774419a4b13191441735e6f68afabe9f23f46eee86e54cd8011d56f4",
+      "platform": "windows-amd64",
+      "python": "3.11",
+      "runtime_python": "3.11.18 (main, Nov 11 2026, 00:17:57) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.11",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp312-cp312-win_amd64.whl",
+      "sha256": "1299e9bf5603bbe127f985e68129549d259448804ed8843263994f9332450e3c",
+      "tags": [
+        "cp312-cp312-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp312-win_amd64.pyd",
+      "native_sha256": "e6c168d051be5aa1977dae174d3879421cc69e0dd8a80e94dbfbf9aca9c390eb",
+      "platform": "windows-amd64",
+      "python": "3.12",
+      "runtime_python": "3.12.16 (main, Nov 11 2026, 00:20:04) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.12",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313-win_amd64.whl",
+      "sha256": "751d45f145531b24c607630de2038c02f679d5fb0348fb41dd3424c88459db0a",
+      "tags": [
+        "cp313-cp313-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp313-win_amd64.pyd",
+      "native_sha256": "30e1f499394bd17698add233e41eab71838c4e396b91ec5186aaed34bce3f09d",
+      "platform": "windows-amd64",
+      "python": "3.13",
+      "runtime_python": "3.13.18 (main, Nov 11 2026, 00:19:14) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.13",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314-win_amd64.whl",
+      "sha256": "a1a507d77750a62226c4fb5d4300425d3a2e7251dca9b0f72a8fdad5f1998b4b",
+      "tags": [
+        "cp314-cp314-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp314-win_amd64.pyd",
+      "native_sha256": "bd4eeea825eee02cba55629e03f5fc51e20236c11985bf9f4dde50446609f0d6",
+      "platform": "windows-amd64",
+      "python": "3.14",
+      "runtime_python": "3.14.10 (main, Nov 11 2026, 00:19:45) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1936,
+        "skipped": 45,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.14",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315-win_amd64.whl",
+      "sha256": "30d89ae5c18f38eb6c135223fd17142c94c9acffb0a7dc7e833c98afd27e27b3",
+      "tags": [
+        "cp315-cp315-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp315-win_amd64.pyd",
+      "native_sha256": "a17ce9adc7fa625f3966c4b41d312dd734d80dcc22eb3dd6fa462bfef62517c7",
+      "platform": "windows-amd64",
+      "python": "3.15",
+      "runtime_python": "3.15.2 (main, Nov 11 2026, 00:22:41) [MSC v.1951 64 bit (AMD64)]",
+      "free_threaded_abi": false,
+      "gil_before_import": true,
+      "gil_after_import": true,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1944,
+        "skipped": 37,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.15",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp313-cp313t-win_amd64.whl",
+      "sha256": "0274a524ce2e97b34ae574175076693e550be4d955dbd4d2de1de37683405521",
+      "tags": [
+        "cp313-cp313t-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp313t-win_amd64.pyd",
+      "native_sha256": "e41ccf6f9f2b139d3d5e0383853ecc2772cebef913d1a12f4d9529022705932d",
+      "platform": "windows-amd64",
+      "python": "3.13t",
+      "runtime_python": "3.13.18 experimental free-threading build (main, Nov 11 2026, 00:20:57) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1965,
+        "skipped": 16,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "native-only",
+      "integration_tests": null,
+      "artifact": "orjson-windows-amd64-cp3.13t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp314-cp314t-win_amd64.whl",
+      "sha256": "9bd639f17ab41fe0245baba9da03829b5d8e6d5036f98d9eac489181cb8d17cc",
+      "tags": [
+        "cp314-cp314t-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp314t-win_amd64.pyd",
+      "native_sha256": "6a8ae8b6e5e07f102efc09e59fce24b93afe8c14808e3ae3ef9d3ac63d413c38",
+      "platform": "windows-amd64",
+      "python": "3.14t",
+      "runtime_python": "3.14.10 free-threading build (main, Nov 11 2026, 00:21:08) [MSC v.1944 64 bit (AMD64)]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1967,
+        "skipped": 14,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.14t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    },
+    {
+      "filename": "orjson-3.13.0+pydantic.3-cp315-cp315t-win_amd64.whl",
+      "sha256": "9731a2bc328a468d75f26e97f29011b1c20b24f2b13819456c37b95dfb968671",
+      "tags": [
+        "cp315-cp315t-win_amd64"
+      ],
+      "native_extension": "orjson/orjson.cp315t-win_amd64.pyd",
+      "native_sha256": "585593b7ef4b061b530d674b8712e08881f76b7b85312868eedf80b5f7a011d6",
+      "platform": "windows-amd64",
+      "python": "3.15t",
+      "runtime_python": "3.15.2 free-threading build (main, Nov 11 2026, 00:32:14) [MSC v.1951 64 bit (AMD64)]",
+      "free_threaded_abi": true,
+      "gil_before_import": false,
+      "gil_after_import": false,
+      "native_tests": {
+        "tests": 1981,
+        "passed": 1975,
+        "skipped": 6,
+        "failures": 0,
+        "errors": 0
+      },
+      "integration_scope": "full-pydantic-ai-fastapi",
+      "integration_tests": {
+        "tests": 61,
+        "passed": 61,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "artifact": "orjson-windows-amd64-cp3.15t",
+      "workflow_run": "https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452"
+    }
+  ],
+  "raw_evidence": [
+    {
+      "file": "capacity/capacity-annotations.json",
+      "sha256": "fe498472c6d8c443380356351643d5b8c23b471b391e27e5451c9c09d4cce4a8",
+      "bytes": 3693
+    },
+    {
+      "file": "capacity/primary-final-run.json",
+      "sha256": "02c37b3ebca53dfd1e870a945ad26791d926958dee2a362765ee0747a76c49a4",
+      "bytes": 173317
+    },
+    {
+      "file": "capacity/wheel-attempt-1.json",
+      "sha256": "899a9e33b69e24a8816ff296742ebcf95dfc50216e256d9afee995c7eae800c8",
+      "bytes": 173317
+    },
+    {
+      "file": "fallback/macos-retry.yml",
+      "sha256": "c064edd6d9476ddeec88df62bbeac65aa8770b3c6a746f29e09c54aff326816a",
+      "bytes": 7415
+    },
+    {
+      "file": "fallback/run.json",
+      "sha256": "519df8eb52a9cfd01199500294abf5fa31e00651790810e3ae34cc625c969cfa",
+      "bytes": 7073
+    },
+    {
+      "file": "source-release/core-run.json",
+      "sha256": "264871fb6468e89b99e8869c75e99f14d6af66c13aecab98052d40158dfedf27",
+      "bytes": 42477
+    },
+    {
+      "file": "source-release/rebuilt-wheel.json",
+      "sha256": "dd1b5902badfa340af70242447ccf25e646711abfe1ffa8e9f4212a59730c08a",
+      "bytes": 360
+    },
+    {
+      "file": "source-release/sdist-contents.json",
+      "sha256": "9b6c0c69a5b45bafa9dbbdf2d917e2cb2395cf33c8588d2ee30f6541db432425",
+      "bytes": 41715
+    },
+    {
+      "file": "source-release/sdist-tests.xml",
+      "sha256": "0523e666bb55729be1c427c493cb5f698823c5229d801fc68a1f157997ff1dda",
+      "bytes": 253735
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.10/dependencies.txt",
+      "sha256": "8d2336ba5a069502f94887aefa895bbf5908b0a8f7ee38b9394bb11ee2ae795c",
+      "bytes": 611
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.10/integration-tests.xml",
+      "sha256": "d51d53e4b7d19ff92678fa49b49354a2c400131e3632666a43335549fc1109f3",
+      "bytes": 5183
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.10/linux-build.json",
+      "sha256": "7f9a5f688523db69c3bc55537b7e6750b32f9f03d55f20636f62e6b7ec69c2d8",
+      "bytes": 633
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.10/native-tests.xml",
+      "sha256": "1313eade2f1a377e7d64d4aacbe36b5e6a5dc28a3f2530ade3c314f3cb0766cf",
+      "bytes": 243831
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.10/runtime.json",
+      "sha256": "804d9e80d634c87899d0fb61721ab47e5eb6e410d8cce6f3e51bee12c5d6bd91",
+      "bytes": 507
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.11/dependencies.txt",
+      "sha256": "f1b3f8e1b27eadd9d00d75c98c433ac15f7c62c85a9f92c1f5731bb71687156c",
+      "bytes": 903
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.11/integration-tests.xml",
+      "sha256": "61e53d2fd7d53e524da327ff0cf953a1b32b945b17a6e6dcd8139753a7ee08d6",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.11/linux-build.json",
+      "sha256": "b40888bcb932d6ca7e6a69f828d7cccb5c6c5a6bb5b72e1e72cc15115b4dde01",
+      "bytes": 633
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.11/native-tests.xml",
+      "sha256": "973f563e76cec52430155545ccbeb9c1fec7dcf338ea43be949983da704c8ccb",
+      "bytes": 243767
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.11/runtime.json",
+      "sha256": "512775bbdf05e3ea1f59271ce2e3814d2dad0bc14b2bbc9c45745bf43c2b707c",
+      "bytes": 507
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.12/dependencies.txt",
+      "sha256": "e780bae06016853e89448192c3e795ef7e543a3467f7a75d7f7051552f7460aa",
+      "bytes": 903
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.12/integration-tests.xml",
+      "sha256": "05b4ba032faef63f75cb24ca9891e57e8371177a3665f56d6293f66d82ab5797",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.12/linux-build.json",
+      "sha256": "70f530e903113028ae1bc6a84e678ff083f4a15ae3213210caaaa056d23428a1",
+      "bytes": 633
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.12/native-tests.xml",
+      "sha256": "c0eb891db2a1503da2baa8b24d985b3981a0acdcb38fb0a06c72bc8c49ca5946",
+      "bytes": 243767
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.12/runtime.json",
+      "sha256": "0c3d734f11396a86e869dc162ea38dc02112499006eed20f8aba5f3634df8ec5",
+      "bytes": 507
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13/dependencies.txt",
+      "sha256": "61b2d07ce555cb310ee123ac1f0bac1ca0c43c91505b0617ea9c9d3db4c7d6a3",
+      "bytes": 903
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13/integration-tests.xml",
+      "sha256": "8111d9924da04dc320a3a02d0e53ca9bdbed47f6f401853a1a5b9a717229fa52",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13/linux-build.json",
+      "sha256": "87d4e79013bf7a6e525c4605642127d17b5633664ea02440da87cf04864f5cc1",
+      "bytes": 633
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13/native-tests.xml",
+      "sha256": "ff3b354c96051f6c95512f22cd764df32e27ff43341843fed04c612e0a3671c0",
+      "bytes": 243763
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13/runtime.json",
+      "sha256": "d9391b197c488286de6cc7e7fa718ef538dbfb0669481575c3e0f34cc1fd1884",
+      "bytes": 507
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13t/dependencies.txt",
+      "sha256": "3c00ee342b66cbdbc07aca04dd976f0859817c0fb328ea1488e077e8887a91a1",
+      "bytes": 465
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13t/linux-build.json",
+      "sha256": "67002db3a650964e1e4fee27efeb7b4f70e7fe7b1b16daed4fc45ee65e6b68ae",
+      "bytes": 670
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13t/native-tests.xml",
+      "sha256": "351482907a30783a1e21de6c44a09f5a2ece796c527e63bf26f7f7579a943bb4",
+      "bytes": 237038
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.13t/runtime.json",
+      "sha256": "64fd72c47ce03b4c8278d25bec5502aae317aa68cb196482ec8d134e7482f2ca",
+      "bytes": 536
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14/dependencies.txt",
+      "sha256": "98e28cdf774ad62b031716675d9482ecab71eb6d058a10772bfbf5b15a21db86",
+      "bytes": 903
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14/integration-tests.xml",
+      "sha256": "263f60e8fd19cfaf1fbfef29d90fca23e058e451bc66c0c1e2d81dd4ab55dc8e",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14/linux-build.json",
+      "sha256": "1ec29d505934a681870931fbc5abcf699fb2a5d460318b0367b2f0711abd20e6",
+      "bytes": 633
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14/native-tests.xml",
+      "sha256": "e1618c93335c58223569fab46492f7248f1d50fd3bbb9a0419debdcd0073757a",
+      "bytes": 243763
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14/runtime.json",
+      "sha256": "444868269dd6b92f46e660b0a7a9a41c31ef8031708801c3ef08a8362dfe9ae9",
+      "bytes": 507
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14t/dependencies.txt",
+      "sha256": "ab4652e41d6cdce0ecb03ec695f7b4b3c76e5834f7339450334a5d9673a4064f",
+      "bytes": 904
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14t/integration-tests.xml",
+      "sha256": "4196a2f9cf82ec5c0164156a6babdaed5dd70ebf59bea4c801e83840d38b8b4c",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14t/linux-build.json",
+      "sha256": "ccf6b6cb9ac9d240984e73239c9b5c299b806034682a2c365b135780a8447c00",
+      "bytes": 657
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14t/native-tests.xml",
+      "sha256": "1c6ae913f38e9a855742a1707de417690d610883eb53ab507e507e5d8cf50608",
+      "bytes": 236969
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.14t/runtime.json",
+      "sha256": "41bd5ada55480da3e54501e0384bc85ceb5bb2dc83a2113bd0a721fc3984adbc",
+      "bytes": 523
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15/dependencies.txt",
+      "sha256": "d6aa6fd34020a66bb972fce11f69c96a0164a5c4faa104263c6feafcf59f2292",
+      "bytes": 881
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15/integration-tests.xml",
+      "sha256": "f33504c3d75f3c81b9056d26fd581e086e611362af1b18e45b54651255fe83d9",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15/linux-build.json",
+      "sha256": "55e423e58b868316c56ad72ea5acef4da82aeec550173e3fb515865a5767c5ba",
+      "bytes": 611
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15/native-tests.xml",
+      "sha256": "8e31828e3fc02c5defb1635e04a39424afb5e4035c0f9a520ba830a215fffc6d",
+      "bytes": 242517
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15/runtime.json",
+      "sha256": "787f505c5b1ec5b711363d822962a213dfe60f79fe43da57514747571ab6b10f",
+      "bytes": 484
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15t/dependencies.txt",
+      "sha256": "51a30a86c2a32338e9185c5250c87b1dcba9a309c594af09c706543df748ef2c",
+      "bytes": 882
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15t/integration-tests.xml",
+      "sha256": "e70f917ec1c4b05f0015141d0a39a6eafb69697eb89515435a148bcd80c8ca30",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15t/linux-build.json",
+      "sha256": "20a7b14b05f5742bba8342e6e02fae1b75ae7d338017391152a5987b8063d101",
+      "bytes": 635
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15t/native-tests.xml",
+      "sha256": "bb9b7b3c995119a95fae61edea86090c795bb05d4b38336f8e99d229f52dceb8",
+      "bytes": 235722
+    },
+    {
+      "file": "wheel-release/orjson-linux-aarch64-cp3.15t/runtime.json",
+      "sha256": "5cfc4491d5e4bce3d15a3c6d5622875d9ea8735d3cac608516d62dd8152100aa",
+      "bytes": 500
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.10/dependencies.txt",
+      "sha256": "22c194161bba385f95ab5194dcc07f3d380fbbeefd1c9070e97a0745447b3017",
+      "bytes": 609
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.10/integration-tests.xml",
+      "sha256": "1f594bbec1e409061fdda4ed11ce96e2df412009342bacded1195225397cb6e0",
+      "bytes": 5183
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.10/linux-build.json",
+      "sha256": "b80028fbb68b6e69ab596962f8c3178527898e8b8f20e67d69a983dab451bad9",
+      "bytes": 629
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.10/native-tests.xml",
+      "sha256": "93b79d47ce2db54b8865556490fbe155be42a6fe862e75da678d769036ea25e8",
+      "bytes": 243831
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.10/runtime.json",
+      "sha256": "80f01b3e3c34c3badfdb73ef7ea26cc4975e31328fac1343e373f9b7d6b6490e",
+      "bytes": 505
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.11/dependencies.txt",
+      "sha256": "4293ac9b7d679028cf3a075a5ea40f6ed3bc6f4bcbbe5d49e947c8027538a061",
+      "bytes": 901
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.11/integration-tests.xml",
+      "sha256": "8ef7eb2af9810b8a816d14af6807646b3c630161c41d422ab7a59f7927f1a798",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.11/linux-build.json",
+      "sha256": "839dee70d7c586e292dbb2ec20d0b1e546a55c32d70d6ce55fcf69fe09420742",
+      "bytes": 629
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.11/native-tests.xml",
+      "sha256": "89c58ee77e99244fd8358e6159cd2fc6424d8bb964e2c755d6d6acbf30bea5fb",
+      "bytes": 243767
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.11/runtime.json",
+      "sha256": "ecfecff57a2b9cc67a2dff7219f157428b18ddfe8c197f66935e9e1fd4b8a965",
+      "bytes": 505
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.12/dependencies.txt",
+      "sha256": "2ee87afbea5cc521611001d0885db9078636fe40b14a91cbdc656502a57bc776",
+      "bytes": 901
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.12/integration-tests.xml",
+      "sha256": "4c9736426b0c4d9e7414d3f968f2c0d8867fb33d47ce1d9ff0594ac3bf15f048",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.12/linux-build.json",
+      "sha256": "c4767e0daf67687af38d7d6800524893da98548180d8a5d1ae9fc7b1501599b0",
+      "bytes": 629
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.12/native-tests.xml",
+      "sha256": "16534ea336e9cafa5965275fa70b494b514751f8a0c1a841ec5c76461853a132",
+      "bytes": 243767
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.12/runtime.json",
+      "sha256": "2ec6cf2247f3a863a0d7dba8f63de8236f006dcb54bbc501011f2489f7ae73b6",
+      "bytes": 505
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13/dependencies.txt",
+      "sha256": "ee273207589396c554528c22bf7555c80a1eee7d98cf33ec832aea70ada35966",
+      "bytes": 901
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13/integration-tests.xml",
+      "sha256": "56b089f3b93f942f51f201b41f8e1f32d1daeded9c2e68f569e7b09ddb0bc4a0",
+      "bytes": 8015
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13/linux-build.json",
+      "sha256": "d4c447acdd6d306e1ca3f470bec8f74fe5ce53afb0e078a7a2c060fc3857ff7e",
+      "bytes": 629
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13/native-tests.xml",
+      "sha256": "dd00cc08949fb60cc12c742d412edc379c1d240692e138bf07f3db03798601ca",
+      "bytes": 243765
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13/runtime.json",
+      "sha256": "a7cd2214cbace4b5304b7465760c21a8f2486461d8c63d10a3b365c03a1229c5",
+      "bytes": 505
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13t/dependencies.txt",
+      "sha256": "63031f33d10f95e939d7c4ace37bd3795ed2374941ab1417f3c1b1aa47da8db3",
+      "bytes": 463
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13t/linux-build.json",
+      "sha256": "7cc092a67f35aea0dbca67d4297f41b88a406761962bc4726bc956186b03ffe8",
+      "bytes": 666
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13t/native-tests.xml",
+      "sha256": "f974b74226e7006c4e4566d6ca3382d63cc045b202ea823dc9cde3ff34019ee2",
+      "bytes": 237038
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.13t/runtime.json",
+      "sha256": "f03ab5461dc4948e015d593ac242c1165056c62e14bd76d563c2eda3d146c362",
+      "bytes": 534
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14/dependencies.txt",
+      "sha256": "31d68e8ad1065297097349db3b6088b37e56ad5456f087d5553d9ffbd0fac1f7",
+      "bytes": 901
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14/integration-tests.xml",
+      "sha256": "b176bb745187737b6c2762afe534234cd7d5f1c124491a5d8d348eea073aa20c",
+      "bytes": 8014
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14/linux-build.json",
+      "sha256": "98727f642edacf0efaa0fedd687ec60d04d5edf35431e7120bb0bbf83203eb70",
+      "bytes": 629
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14/native-tests.xml",
+      "sha256": "11af6bf3af2bc5e847eeaf93b1a233d71c5d1796bafa6d79571e5669900654b7",
+      "bytes": 243764
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14/runtime.json",
+      "sha256": "ddb710a6bf10dbc68a4a2d7a3e4515a340e15ac282244d452d75036725f1fd47",
+      "bytes": 505
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14t/dependencies.txt",
+      "sha256": "c9803479d13fb800698c2b303ec47c659527c4b45ef5ac9384ed4bb95e53a6b1",
+      "bytes": 902
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14t/integration-tests.xml",
+      "sha256": "16f4c5e7765f77692472400f31b0304413c232a2a7ac2f00bfaab9531c8efc68",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14t/linux-build.json",
+      "sha256": "dd54cc75b966307736f05db3a56e1e30ee611f790e4179b92ade0fa6f1c1dfc6",
+      "bytes": 653
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14t/native-tests.xml",
+      "sha256": "71dbe2f1fe72f6afba450b6a42b995f2f8eb58a4bbdc71ad4d0fe37ea47520cc",
+      "bytes": 236969
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.14t/runtime.json",
+      "sha256": "daec7f8782b5a55ddb987ba1ac9b361e2afc6d23600f7b72f907911ff9555a46",
+      "bytes": 521
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15/dependencies.txt",
+      "sha256": "89827f2606a188876d31f5abc6c770529233b44850f4c059a2c766dacd523803",
+      "bytes": 880
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15/integration-tests.xml",
+      "sha256": "d40f2cde07059d0758a4fdb5b0fece1f70d14828b73487c1bf9538e1da2bb085",
+      "bytes": 8015
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15/linux-build.json",
+      "sha256": "bc309d3054f66351429a1b14baa1af0ee1e210f2efc7fb01d1a0598a217c8b61",
+      "bytes": 608
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15/native-tests.xml",
+      "sha256": "bc0104b3b247825de59498e6a8cc0da6421bfa6848b004f0e34eb748442a4d26",
+      "bytes": 242519
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15/runtime.json",
+      "sha256": "9e1ef2275c37f871ee0687e98e1192af3212f844d1152d54df687acb032990ee",
+      "bytes": 483
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15t/dependencies.txt",
+      "sha256": "d17c9b1ed83b9ea4b9942c52bfaa0c033bae16d49eba3d7eee1e2967c4fc5097",
+      "bytes": 881
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15t/integration-tests.xml",
+      "sha256": "7ae5d1bb3121d50dd8b35168dc4ca39ec44421f1d6634045fd249d60f16fd628",
+      "bytes": 8015
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15t/linux-build.json",
+      "sha256": "f1ac1e852002b87ddf560d8fff51fc1814d0aba9705a959bc10c895ce2a57145",
+      "bytes": 632
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15t/native-tests.xml",
+      "sha256": "accab5fc56cca22b364afa60bab3a85ba2feb22c88c85cbf5a01a8ce3df72e96",
+      "bytes": 235720
+    },
+    {
+      "file": "wheel-release/orjson-linux-x86_64-cp3.15t/runtime.json",
+      "sha256": "763a28254ee87668e042c2bc9b0c0c89c9b66bf4bf4f0cc92b21482125c24f7d",
+      "bytes": 499
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.10/dependencies.txt",
+      "sha256": "71925872e9677ccd0574a0ff729cf1f06f1526ab279cb4944a3e25e32a1099d2",
+      "bytes": 585
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.10/integration-tests.xml",
+      "sha256": "25d193fa03e012c7f147bb565b898338aa55b5cf709b572afc5683437fdd61f1",
+      "bytes": 5238
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.10/native-tests.xml",
+      "sha256": "1cf92d56feeb1995d36dcfc7bd1f057118673244e2824083fdb0616beb502c14",
+      "bytes": 243940
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.10/runtime.json",
+      "sha256": "8b008a41323edfd2e598f33c6e95ed5effe4fb42c9af2eb9bf8d33bea5627b0b",
+      "bytes": 480
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.11/dependencies.txt",
+      "sha256": "6d38cb1f453f2be8ff44a76698be06295b1ed85438e28609f7cd13d054ea873c",
+      "bytes": 877
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.11/integration-tests.xml",
+      "sha256": "31d492d3d9161c1b880481cf549e17cd1e45e5ffd730334d089a70a8def0df3c",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.11/native-tests.xml",
+      "sha256": "410a56fa784d837247899b7d506da00a51bb2f2504d9a81bb902440b8f55aef3",
+      "bytes": 243880
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.11/runtime.json",
+      "sha256": "c68c6a49f87b33dd21c3f63e4f55be50c7f801c99f63d66a33792d4c750eb2ee",
+      "bytes": 480
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.12/dependencies.txt",
+      "sha256": "f51c421dcebd20c965ea05f67ae711acf6ddb3ce7ddc9f956979a90f8ea660a3",
+      "bytes": 877
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.12/integration-tests.xml",
+      "sha256": "d6fed064557dcd95739dd90f36f068a60f891d8ac7aed035b40ea15a2d6f44ab",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.12/native-tests.xml",
+      "sha256": "131e8a82cd0f7dd2f58ee9e1d53ba9ff4431cc57cdedadd1e983b1fff88e881d",
+      "bytes": 243866
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.12/runtime.json",
+      "sha256": "8dabf7a6c8f31da61eb280514c3d52467d0295f6c607104780b008c6bc3082cb",
+      "bytes": 480
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13/dependencies.txt",
+      "sha256": "94fd7ae5375623b501f73b23256e7fc3fadd19828a25a6b2346c77478f61b2b9",
+      "bytes": 877
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13/integration-tests.xml",
+      "sha256": "830b0f2e99c27b0922f2b59952c92ceae79cf872e1b43e88fda94e58f769ee7d",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13/native-tests.xml",
+      "sha256": "e642ba6eae5ef95dcc62cd095545c6186c2ba2b86a0c9e4e58e9ee86c27bd8d7",
+      "bytes": 243870
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13/runtime.json",
+      "sha256": "196b248b36df861cc0fbb66dbadc415717c25cdcd66c280d6193eba3e0fc0660",
+      "bytes": 480
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13t/dependencies.txt",
+      "sha256": "643935fe05c52574c57648da17bfef1df8e43960d784bebc7c687bd13010b479",
+      "bytes": 439
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13t/native-tests.xml",
+      "sha256": "734dfe3ce6e8c1d149d463047d4d18924d8f576a3b776cedb38716b7fd72e688",
+      "bytes": 237114
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.13t/runtime.json",
+      "sha256": "90990fa40fac9343d73abb8ab2be91ddf63971e169b0d554c1b2c35973864420",
+      "bytes": 509
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14/dependencies.txt",
+      "sha256": "78fd4638a8a9183e9e441302a32b81761915d09bc17ab2d1b5b4d85f88f97c7f",
+      "bytes": 877
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14/integration-tests.xml",
+      "sha256": "75cb0d007ffad97f648bee24ef6c48bd108cb8213dabd8011940c0096c1ce455",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14/native-tests.xml",
+      "sha256": "3870320fb9a3db9db52122e5e4eff2bd8592362d016831b6bb1966913ea037e4",
+      "bytes": 243874
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14/runtime.json",
+      "sha256": "e481c17cd2c6de9e0c9b893d3b6ed96f3f2ea73088a9aa988c23e582d44645ea",
+      "bytes": 480
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14t/dependencies.txt",
+      "sha256": "36a5f3a166e7d3432e8b9a1571d135169fbc74782df1da0f6a2a9e5a2f9108f6",
+      "bytes": 878
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14t/integration-tests.xml",
+      "sha256": "f6546f52e7cdab20839ac0a9e02cac921df6d86f765d11aba9b7cedd75ba5253",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14t/native-tests.xml",
+      "sha256": "9c48c9a55b2f7197999cb4c800b6262859681e2e8e1b5973f85e1ed3c3c824e3",
+      "bytes": 237045
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.14t/runtime.json",
+      "sha256": "a9b1274ab6d9302a062d9c8abce59853e587e5883b11607992636ff1146f8057",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15/dependencies.txt",
+      "sha256": "ab2a2990d01f08e1e92617fbf2380f68ddef4fc4dd9d6147ea595ff931cfe75d",
+      "bytes": 877
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15/integration-tests.xml",
+      "sha256": "502efa639dce3e39f3219a69f9f54f4df8237cb58cc15ae5059f57b6c0868f83",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15/native-tests.xml",
+      "sha256": "60937cc61c02f3595e6a466c4fdbb4054d590d50ebdcd31eed03eca8c5c2ab78",
+      "bytes": 242616
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15/runtime.json",
+      "sha256": "bbe7c0d7523a165bd086f66a58fc4b8f17b1efd14e7015e6315b23cb5400101a",
+      "bytes": 479
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15t/dependencies.txt",
+      "sha256": "f39f7a8b2bcd62a10064c75ee066da5079d704739f7dd71e7a17da7e3840f128",
+      "bytes": 878
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15t/integration-tests.xml",
+      "sha256": "559cb1ec5e309b57a5a9888a9d740e6216dca77ead19db2be405558d96b23e4a",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15t/native-tests.xml",
+      "sha256": "3fd960fdb51a5b745645b7b6349ad12b84869dd3b00771a5946e1fe7c2a87e63",
+      "bytes": 235786
+    },
+    {
+      "file": "wheel-release/orjson-macos-arm64-cp3.15t/runtime.json",
+      "sha256": "d9f4f778bcd29d32d94c19f6019909c8ac7012d1b25ba043b4cc6ff04ac76e74",
+      "bytes": 495
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.10/dependencies.txt",
+      "sha256": "326a935ceb42c6cb5c1c09a1bc9f39c47ee1c9f80fee8b94c3059233560efe8c",
+      "bytes": 587
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.10/integration-tests.xml",
+      "sha256": "323dcb1d5008b2d3b9da5d2fc3c17210faca1fa23dc7ec1a854045121bee37ed",
+      "bytes": 5237
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.10/native-tests.xml",
+      "sha256": "847309d068c4ed0991be56b701700611a5bfef872e9b465c69d18e59c8c7c001",
+      "bytes": 243946
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.10/runtime.json",
+      "sha256": "f1bb605b5ad9f371c0db1e020f66f05b728f0f6235e4e6ac5ded65fc234087b8",
+      "bytes": 482
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.11/dependencies.txt",
+      "sha256": "413f146bc6c9c3b2c48bffe50b6ec86959ea2ba2742fdf04fd2e82d4168ab64e",
+      "bytes": 879
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.11/integration-tests.xml",
+      "sha256": "dd7eb1189ec5ad41151771a8ab6a40ec9d2c1d31ffb9016562787742cd883fcc",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.11/native-tests.xml",
+      "sha256": "728da5a9a4d5d6933760d2f23be55b4d055647f5f09e14e126715c1f0614ee09",
+      "bytes": 243882
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.11/runtime.json",
+      "sha256": "d9a0f6b3384e6e76fb7f9715c7ed8d306e183065b1d419d8e8183ed705038821",
+      "bytes": 482
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.12/dependencies.txt",
+      "sha256": "1f11182b11355b85e7f2abc41cff509489b5965d32f62c002b9dc19ad7de113b",
+      "bytes": 879
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.12/integration-tests.xml",
+      "sha256": "a676217afa40eb1ad2067e69408c43689d98610307a3396e8e8d83ac9cb04ee4",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.12/native-tests.xml",
+      "sha256": "5c9d8d362fdeb0e842151dd84033f15ce13c72ceea30c7e2c2711dc20fdc0ac9",
+      "bytes": 243876
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.12/runtime.json",
+      "sha256": "744673ec30933bc4df3116e0b7d8a79f32a37e15cf927f9b36f08caa3fe92fd9",
+      "bytes": 482
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13/dependencies.txt",
+      "sha256": "4741620889b1154a649b1296d6b67534ef0d14bd799bbfbe3d8a2d905d6741bd",
+      "bytes": 879
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13/integration-tests.xml",
+      "sha256": "df90f63fe9ae13f5bc0dc4938d4b8c9284640f8726c3e7dd9020cdd209f312b6",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13/native-tests.xml",
+      "sha256": "a0817ee348ac2128cac64055e265a427a323a29016377f7c7546c69e0439e4ea",
+      "bytes": 243874
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13/runtime.json",
+      "sha256": "38453947e0dfc890cdd1d862e716c54251ba25c6a796a00ed29c4faeb80015ba",
+      "bytes": 482
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13t/dependencies.txt",
+      "sha256": "632e2a631f1ca54cec65786078ae145c435878eeb0cae8d2e40c771f09394c1e",
+      "bytes": 441
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13t/native-tests.xml",
+      "sha256": "0bdb240321a9ba4a4083822ab1decff92db85f12c9bf55121f7b83a548a327e8",
+      "bytes": 237122
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.13t/runtime.json",
+      "sha256": "e997be855ac0ce28c16ccb1c763b752ccf9e61eb9ece2107e6d155cde45c7972",
+      "bytes": 511
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14/dependencies.txt",
+      "sha256": "0d4773b42c4083508387f6eb8003282b343b8bb3d928ec28550b47f1659e9e99",
+      "bytes": 879
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14/integration-tests.xml",
+      "sha256": "59570214980b4da5efb40ee38e4e6a17458aaba255e17c4b96471d5a479f010e",
+      "bytes": 8068
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14/native-tests.xml",
+      "sha256": "b2a9d67f6fc9df1fe502e824a023f11c4cce254cc38b9b3fdf067096d2209c24",
+      "bytes": 243882
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14/runtime.json",
+      "sha256": "fefe91bc9739bf53d394a2119f657003edbc50367b5677c5666c65a7862b3c71",
+      "bytes": 482
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14t/dependencies.txt",
+      "sha256": "d7dbe7a86f67a61cc6e893507e1cf26c1d40cea53c35906f46bf687f3f99b5db",
+      "bytes": 880
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14t/integration-tests.xml",
+      "sha256": "cd39c669601260979899d595a0720479f8a407c1acd4c5ee1df1cd5f568f54ca",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14t/native-tests.xml",
+      "sha256": "145b48ff997e32269639c96be0a7e6df0ba396751a38cc1d3346ed694051629b",
+      "bytes": 237051
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.14t/runtime.json",
+      "sha256": "d35a3b3d020c956fd3dc79385a8d35d2ab0037c7a10ae8ed2e75b352bf537816",
+      "bytes": 498
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15/dependencies.txt",
+      "sha256": "4df2aed5539f0090fedf4418424190e2770cf165c921cc63698a8052acb5040a",
+      "bytes": 879
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15/integration-tests.xml",
+      "sha256": "2cf87d09e451313a60da67a4de430e07ad8acc3f9ae6d414f22f233030f12893",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15/native-tests.xml",
+      "sha256": "6a6a3975cc5e35caa5cd9c55bb89de0d29aa712832fc32f573182a5c88429cc0",
+      "bytes": 242624
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15/runtime.json",
+      "sha256": "5d7729a00aa627529281f3db8647a40bf062a35021b8b3a60130c868cc9b0709",
+      "bytes": 481
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15t/dependencies.txt",
+      "sha256": "714ba1a0c253389de08ced4a91fbf1369f30e15c5c0f89c7484a3bc9ff7891be",
+      "bytes": 880
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15t/integration-tests.xml",
+      "sha256": "0451201a01070b5142020d66e50b6e84b47573ab94d6c1a9a16d967a7a040ea2",
+      "bytes": 8067
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15t/native-tests.xml",
+      "sha256": "4c0b2ac3364671d3677abe3ee0a26a3b181cae4730e1514ceebed2de76e9f405",
+      "bytes": 235782
+    },
+    {
+      "file": "wheel-release/orjson-macos-x86_64-cp3.15t/runtime.json",
+      "sha256": "a97946cd032902531885ce5847f685c1db79c84a889d28ab86ca2646a67d2ba5",
+      "bytes": 497
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.10/dependencies.txt",
+      "sha256": "f6731cd556d0822a7a1cfd1dc829c5eafa31b97647dbc43889971d9f4c6e5417",
+      "bytes": 580
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.10/integration-tests.xml",
+      "sha256": "7120b1c9c58414d37248f7bc726e8fe5d6ef9e2d092a1b25b08d56f074799be7",
+      "bytes": 5183
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.10/native-tests.xml",
+      "sha256": "a60443b092aaac832ac35fecc8a753827970e1fa531f90492239271d6cbefdda",
+      "bytes": 243259
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.10/runtime.json",
+      "sha256": "0c207e57bdc3144b10d1bedf9c26ffe4b2b8d2d539a8a32e24a3e82425ae7189",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.11/dependencies.txt",
+      "sha256": "92a4f55393e8dca875171e039851c063b5c23786c369af6118e9704710af4e41",
+      "bytes": 872
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.11/integration-tests.xml",
+      "sha256": "6e89ca4ac81a2d1f8b3371b367769e43530838820ba85212d2821d7f5ebac586",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.11/native-tests.xml",
+      "sha256": "ae050cffd147ca347c8a75595c1a59bdf5627b7d8f45320f3823e562e0b8a02e",
+      "bytes": 243182
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.11/runtime.json",
+      "sha256": "2109cee9c30f18c697ad9383fdf664145ba3fec22c0e4f9affa691468f879f13",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.12/dependencies.txt",
+      "sha256": "d4b74cfc6484511a573f69895988825564f611071da736fc7c69a66bee4a1c82",
+      "bytes": 872
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.12/integration-tests.xml",
+      "sha256": "392dd38bbac4a23d5d47205da5fa9dffde48b115a0db00029e06db3c265d4772",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.12/native-tests.xml",
+      "sha256": "caf50fa024ecd9a4d52216fbed8057b9a9416eb7df86513aa338de7573257787",
+      "bytes": 243182
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.12/runtime.json",
+      "sha256": "65b476fe005fd1c3d86dd04c09353035d33e10f13e0c4765268e6cafe4355138",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13/dependencies.txt",
+      "sha256": "26ea2e660842b15316022c56372afd615cc58aa591495dc1268ee0f02f891ad9",
+      "bytes": 872
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13/integration-tests.xml",
+      "sha256": "ef724169d504f2d36edff83f21b9357812c1d511818860af43d1263ee771b553",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13/native-tests.xml",
+      "sha256": "8d11b99438812e1671840a588755acca319217728684525bf83c4e7fa9c13d3c",
+      "bytes": 243178
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13/runtime.json",
+      "sha256": "29cc8a4e9d7c95e72faec240af03a00f1d7e41e9ef7c08d30f8a91f3c85763f3",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13t/dependencies.txt",
+      "sha256": "d96a5f7c3929e19c88edec37832809b3d8c21f55a670c33228623712d643368c",
+      "bytes": 420
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13t/native-tests.xml",
+      "sha256": "427cc925d78294570bdb19710a235eb67dd21cf605ec2118f8b551032237b1fc",
+      "bytes": 237193
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.13t/runtime.json",
+      "sha256": "1fa13f0df8a0940036cf4b589b8447f24b14a3f13fc51806c45807c9068b199f",
+      "bytes": 525
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14/dependencies.txt",
+      "sha256": "cecabbd30d39e99f224d3eead92e5e01b626418c3b969e7c6ea578a875161e06",
+      "bytes": 872
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14/integration-tests.xml",
+      "sha256": "8c146969611d773bc22c5d3738c144fd6b31b39caaa6f25c30809adaf77fdee1",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14/native-tests.xml",
+      "sha256": "0442bc68b9e74524aca9be5475f8965070149731ddfa572dcf2a2b133873cc9a",
+      "bytes": 243178
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14/runtime.json",
+      "sha256": "48da84ddae241b808fcdb5dbd67f2adb564c6322ecd40c81a8b0161a9b973669",
+      "bytes": 496
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14t/dependencies.txt",
+      "sha256": "b6cca0def1da995bd3fcaff6da35fb619dafd41496a668eaff2d4d93f3fe6b95",
+      "bytes": 873
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14t/integration-tests.xml",
+      "sha256": "de634e9634c3329b2a52af762ec519bc0a6109fd4fd23328e161c09ea8835b25",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14t/native-tests.xml",
+      "sha256": "418bfe5ee90b60a2844279f04f1570c895575529bc67b011cdd48840cdcf5280",
+      "bytes": 236787
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.14t/runtime.json",
+      "sha256": "b030aa0bfebdbc33ef6d4ba74a687c8fbe068125fedf0aa5fa2ae41692548973",
+      "bytes": 512
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15/dependencies.txt",
+      "sha256": "bcbcb0cc5e6679330f24a30aea7dee4f1bf94b863652a021114a1dbd8ab59600",
+      "bytes": 872
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15/integration-tests.xml",
+      "sha256": "d7fcf124793b510a3d8e4cdd341c47d8d4c6ccd0098cb4b7768b8790bc5e7cf6",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15/native-tests.xml",
+      "sha256": "33a2b2d58790eb57de442437ed3936afa793eed37ba3185d66bd16106f071af7",
+      "bytes": 242040
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15/runtime.json",
+      "sha256": "a7c8c58417af9ecb12b6581c79179e55983756a2c8f3fde41207cc51ac30872a",
+      "bytes": 495
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15t/dependencies.txt",
+      "sha256": "3fb8fe5471c5e3eb203a95583bbff94fcf2fa9195e75dd9c1af002d2d5eb78d6",
+      "bytes": 873
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15t/integration-tests.xml",
+      "sha256": "3f54d9fa5cc027f363bcbb7fe17a3493c37fdb2a75c7fce52e7eaf768b8b95f5",
+      "bytes": 8013
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15t/native-tests.xml",
+      "sha256": "fec10e887db5d6f6b4eb028f322e0ebf057a3892f6d1e7f70a36929899bf40d6",
+      "bytes": 235640
+    },
+    {
+      "file": "wheel-release/orjson-windows-amd64-cp3.15t/runtime.json",
+      "sha256": "0270340bdc88b3ac0ee0a86385b40c6068c331545c6c7ce89e2582acf98df37c",
+      "bytes": 511
+    },
+    {
+      "file": "wheel-release/wheel-run.json",
+      "sha256": "899a9e33b69e24a8816ff296742ebcf95dfc50216e256d9afee995c7eae800c8",
+      "bytes": 173317
+    }
+  ]
+}

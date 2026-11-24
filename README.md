@@ -6,7 +6,9 @@ as a standalone personal repository, with optional Pydantic v2 and Pydantic AI
 integration. The existing native `orjson` API is preserved. This alpha implements native
 encoding and decoding optimizations, reusable typed codecs, and resumable
 Pydantic AI persistence. Version `.3` adds a free-threaded CPython port with
-the GIL disabled; platform qualification is in progress. Performance depends on
+the GIL disabled; all 45 declared wheel variants have passed build and runtime
+qualification. [Download the tested alpha wheels and source archive](https://github.com/TheCulliganMan/pydantic-orjson/releases/tag/v3.13.0-pydantic.3).
+Performance depends on
 the workload, architecture and build flags. See the validation report for
 measured results and limitations.
 
@@ -129,10 +131,11 @@ validation mode and custom serialization behavior.
 The replacement-wheel workflow targets CPython 3.10–3.15 plus free-threaded
 3.13t, 3.14t and 3.15t on Linux x86-64/ARM64, macOS Intel/ARM64 and Windows
 x86-64: 45 version/platform combinations. Its `regular`, `free-threaded` and
-`all` selectors allow separate runs. A configured job is not a passing build;
-see [validation](VALIDATION.md) for completed results and the
-[wheel workflow](.github/workflows/wheels.yml) for downloadable artifacts from
-successful jobs. Linux builds target `manylinux_2_17` through Python 3.14 and
+`all` selectors allow separate runs. All 45 variants passed: 43 in the main run
+and two on an alternate macOS runner after GitHub capacity cancellations,
+building the exact same source commit. See [validation](VALIDATION.md) and the
+[per-wheel evidence](compatibility/results/wheels-v3.json) for hashes, ABI/GIL
+receipts and test results. Linux builds target `manylinux_2_17` through Python 3.14 and
 `manylinux_2_28` for Python 3.15, using pinned official manylinux images and a
 verified static UV binary. Maturin audits the wheel, and an installed-wheel
 thread/GIL smoke test runs inside the same minimum-glibc container before

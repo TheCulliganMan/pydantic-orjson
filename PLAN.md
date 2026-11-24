@@ -1,6 +1,7 @@
 # Pydantic orjson implementation plan
 
-Status: free-threaded implementation and qualification, November 24, 2026.
+Status: implemented alpha with all 45 declared wheel variants qualified,
+November 24, 2026. See the [release evidence](compatibility/results/wheels-v3.json).
 Version `.2` introduced the native and integration changes; `.3` adds the
 free-threaded CPython port and replacement-wheel matrix. This document separates
 implemented work from the remaining qualification needed for

@@ -1,0 +1,145 @@
+{
+  "baseline": {
+    "distribution_version": "3.13.0",
+    "index": "https://pypi.org/simple",
+    "published_sha256": "4f66eac85b072092e9941c3111882afd7527bf926cbc717038fa3654b582002b",
+    "wheel": "orjson-3.13.0-cp310-cp310-macosx_10_15_x86_64.macosx_11_0_arm64.macosx_10_15_universal2.whl"
+  },
+  "build": {
+    "arguments": [
+      "uv",
+      "build",
+      "--wheel",
+      "--no-sources",
+      "--python",
+      ".artifacts/legacy-env/bin/python",
+      "-C",
+      "maturin.build-args=--locked --strip",
+      "--out-dir",
+      ".artifacts/legacy-wheel"
+    ],
+    "backend": "maturin==1.16.0",
+    "c_compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+    "cargo_target_dir": ".artifacts/legacy-target",
+    "frontend": "uv 0.13.9 (6b2d39dcc 2026-11-17 aarch64-apple-darwin)",
+    "rust": [
+      "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "binary: rustc",
+      "commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+      "commit-date: 2026-09-28",
+      "host: aarch64-apple-darwin",
+      "release: 1.99.0",
+      "LLVM version: 23.1.1"
+    ]
+  },
+  "candidate": {
+    "distribution_version": "3.13.0+pydantic.3",
+    "wheel": "orjson-3.13.0+pydantic.3-cp310-cp310-macosx_11_0_arm64.whl",
+    "wheel_sha256": "14927bed7a9135fdcb0696726135f5bc85763ef5a3e578a9c4e4a1cef3917a85"
+  },
+  "matched_observations": {
+    "invalid_request_422": {
+      "body_hex": "7b2264657461696c223a5b7b226c6f63223a5b22626f6479222c22636f756e74225d2c226d7367223a22656e7375726520746869732076616c75652069732067726561746572207468616e2030222c2274797065223a2276616c75655f6572726f722e6e756d6265722e6e6f745f6774222c22637478223a7b226c696d69745f76616c7565223a307d7d5d7d",
+      "content_length": 140,
+      "content_type": "application/json",
+      "status": 422
+    },
+    "malformed_request_422": {
+      "body_hex": "7b2264657461696c223a5b7b226c6f63223a5b22626f6479222c395d2c226d7367223a22457870656374696e672076616c75653a206c696e65203120636f6c756d6e203130202863686172203929222c2274797065223a2276616c75655f6572726f722e6a736f6e6465636f6465222c22637478223a7b226d7367223a22457870656374696e672076616c7565222c22646f63223a227b5c22636f756e745c223a222c22706f73223a392c226c696e656e6f223a312c22636f6c6e6f223a31307d7d5d7d",
+      "content_length": 196,
+      "content_type": "application/json",
+      "status": 422
+    },
+    "model_still_requires_explicit_serialization": {
+      "message": "Type is not JSON serializable: PublicUser",
+      "module": "builtins",
+      "name": "TypeError"
+    },
+    "native_decode_error": {
+      "colno": 6,
+      "doc": "{\n\"a\": ]}",
+      "lineno": 2,
+      "message": "unexpected character, expected a JSON value: line 2 column 6 (char 7)",
+      "module": "orjson",
+      "name": "JSONDecodeError",
+      "pos": 7
+    },
+    "native_encode_error": {
+      "message": "Type is not JSON serializable: object",
+      "module": "builtins",
+      "name": "TypeError"
+    },
+    "native_identity": {
+      "Fragment": true,
+      "JSONDecodeError": true,
+      "JSONEncodeError": true,
+      "dumps": true,
+      "loads": true
+    },
+    "native_signatures": {
+      "dumps": "(obj, /, default=None, option=None)",
+      "loads": "(obj, /)"
+    },
+    "numpy_non_string_key_response": {
+      "body_hex": "7b2231223a5b322c335d7d",
+      "content_length": 11,
+      "content_type": "application/json",
+      "status": 200
+    },
+    "optional_helpers_imported": false,
+    "orjson_response_options": [
+      20
+    ],
+    "response_model_alias_filter_exclude_none": {
+      "body_hex": "7b226964223a372c226e616d65223a22416461227d",
+      "content_length": 21,
+      "content_type": "application/json",
+      "status": 200
+    },
+    "valid_request": {
+      "body_hex": "7b22636f756e74223a337d",
+      "content_length": 11,
+      "content_type": "application/json",
+      "status": 200
+    }
+  },
+  "probe": {
+    "invocation": "uv run --no-project --python ENV/bin/python python -I compatibility/legacy_fastapi.py",
+    "path": "compatibility/legacy_fastapi.py",
+    "sha256": "fc85629e7a3d2ac49a9122f4ce8c1d083700d2ad6891b61ee506111c78284214"
+  },
+  "recorded_at": "2026-11-24T16:21:02.988167+00:00",
+  "result": "passed",
+  "runtime": {
+    "architecture": "arm64",
+    "platform": "darwin",
+    "python": "3.10.22",
+    "python_compiler": "Clang 22.1.3 "
+  },
+  "schema_version": 1,
+  "scope": "Local macOS ARM64 Python 3.10 legacy FastAPI/Pydantic 1 installed-wheel comparison; not cross-platform legacy framework certification.",
+  "shared_dependencies": {
+    "anyio": "4.16.0",
+    "certifi": "2026.11.20",
+    "exceptiongroup": "1.3.2",
+    "fastapi": "0.99.1",
+    "h11": "0.14.0",
+    "httpcore": "0.17.3",
+    "httpx": "0.24.1",
+    "idna": "3.20",
+    "numpy": "2.2.6",
+    "pydantic": "1.10.27",
+    "sniffio": "1.3.1",
+    "starlette": "0.27.0",
+    "typing_extensions": "4.16.0"
+  },
+  "source_commit": "ec6b33645756bd2e81f80259134f43dcb14e2c9c",
+  "verification": {
+    "identical_dependencies_except_orjson": true,
+    "matching_observation_records": 12,
+    "mismatches": [],
+    "temporary_environments_and_builds_removed": true,
+    "uv_pip_check_baseline": "passed",
+    "uv_pip_check_candidate": "passed"
+  }
+}

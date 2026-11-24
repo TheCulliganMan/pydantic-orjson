@@ -45,6 +45,14 @@ not proof for every possible input; run the complete upstream test suite as well
 
 ## FastAPI integration boundary
 
+In addition to current-framework CI, a [legacy installed-wheel comparison](results/legacy-fastapi.json)
+checks FastAPI 0.99.1 with Pydantic 1.10.27 on Python 3.10.22 / macOS ARM64.
+All 12 observation records match upstream, including five HTTP responses,
+headers, native signatures/errors and absence of optional helper imports.
+The standalone [probe](legacy_fastapi.py) runs in separate UV environments with
+the same dependencies and different installed orjson wheels. It is outside the
+regular pytest collection because that environment uses Pydantic 2.
+
 FastAPI's current [`ORJSONResponse` implementation](https://github.com/fastapi/fastapi/blob/master/fastapi/responses.py)
 imports `orjson` and passes `OPT_NON_STR_KEYS | OPT_SERIALIZE_NUMPY` to `dumps`.
 That existing path uses the installed replacement automatically. Current
@@ -102,13 +110,15 @@ The [manual wheel workflow](../.github/workflows/wheels.yml) has `regular`,
 x86-64/ARM64, macOS Intel/ARM64 and Windows x86-64. Six regular Python versions
 (3.10–3.15) plus three free-threaded versions produce 45 configured combinations.
 Each job builds, installs and tests its exact wheel before uploading it with
-its hash and runtime evidence. Linux wheels target `manylinux_2_39`, requiring
-glibc 2.39 or newer. Configured cells are not certified passing builds; completed
-results belong in [validation](../VALIDATION.md).
+its hash and runtime evidence. Linux wheels target `manylinux_2_17` through
+Python 3.14 and `manylinux_2_28` for Python 3.15, with matching baseline-container
+runtime checks. All 45 declared variants passed; see the
+[per-wheel report](results/wheels-v3.json). Build details and scope are recorded
+in [validation](../VALIDATION.md).
 
 | Runtime | UV dependency groups | Qualification scope |
 | --- | --- | --- |
-| Regular CPython 3.10–3.15 | `native`, `integration` | Native and applicable typed/framework tests; AI/FastAPI require 3.11+ |
+| Regular CPython 3.10–3.15 | `native`, `integration` | Native and applicable typed/framework tests; current AI/FastAPI test stack requires 3.11+ |
 | Experimental CPython 3.13t | `native313t` only | Native API, property and concurrency tests; no current Pydantic/AI integration qualification |
 | CPython 3.14t–3.15t | `native`, `integration` | Native plus current Pydantic/AI/FastAPI integration targets; completed cells are recorded in validation |
 

@@ -32,18 +32,62 @@ the native API only. Current optional no-GIL integration targets are 3.14t and
 
 ## Native port qualification
 
+The final source commit is `ec6b33645756bd2e81f80259134f43dcb14e2c9c`.
+All [12 compatibility and source-rebuild jobs](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432070230)
+passed, including the regular and no-GIL Python matrices. The source archive
+was rebuilt through UV and its extracted tests passed **1,997 tests; 45 skipped**
+against the installed wheel on Linux.
+
+A separate [legacy FastAPI comparison](compatibility/results/legacy-fastapi.json)
+passed **12 exact observation records with zero mismatches** against the official
+orjson 3.13.0 wheel: FastAPI 0.99.1, Pydantic 1.10.27, Starlette 0.27.0 and
+Python 3.10.22 on macOS ARM64. It covers five HTTP responses, aliases/filtering,
+NumPy/non-string keys, request errors, native signatures/errors and dependency-free
+core import. This is local legacy-stack evidence, not a cross-platform legacy
+framework certification. The reusable probe is `compatibility/legacy_fastapi.py`.
+
 The `.3` implementation adds actual GIL-disabled wheels for CPython 3.13t,
 3.14t and 3.15t. Import must leave the GIL disabled; tests assert that state.
 Regular CPython 3.10–3.15 remains supported. The wheel workflow covers five
 platforms (Linux x86-64/ARM64, macOS x86-64/ARM64, Windows x86-64): 30 regular
-and 15 free-threaded builds. The configured matrix is not itself a pass claim;
-completed cross-platform results will be recorded below.
+and 15 free-threaded builds. **All 45 variants passed.** The
+[main wheel run](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45432069452)
+produced 43 passing artifacts; GitHub could not assign runners to regular
+Python 3.13/3.14 on Apple Silicon. Both passed in a
+[targeted macOS fallback run](https://github.com/TheCulliganMan/pydantic-orjson/actions/runs/45438936680)
+that checked out the same `ec6b336` source. The primary run's capacity failure
+is preserved as a failure, not relabeled successful.
+
+The [per-wheel qualification report](compatibility/results/wheels-v3.json)
+records every wheel/native hash, Python ABI, runtime GIL state, dependency
+snapshot and native/integration result. All 15 free-threaded wheels retain
+the disabled GIL on import. Linux wheels additionally passed installed-wheel
+threaded smoke checks inside their actual glibc 2.17/2.28 build containers.
+Archive metadata, every wheel RECORD digest, native CPU architecture, typing,
+optional helpers and licenses were independently checked before assembly.
+
+The [public alpha release](https://github.com/TheCulliganMan/pydantic-orjson/releases/tag/v3.13.0-pydantic.3)
+contains 45 wheels, one source archive, the report, `SHA256SUMS` and a compressed
+raw evidence bundle. The bundle includes both workflow receipts and the capacity
+annotations. No local substitute wheels were needed. Broad speed/production
+compatibility gates remain separate from this completed build/runtime matrix.
+All 49 uploaded release assets were checked against local sizes and SHA-256
+digests, and the public prerelease tag resolves to the exact qualified source.
+
+Cleanup retained only the final `dist/release` payloads and the working `.venv`.
+Temporary environments, Cargo output, caches, obsolete local wheels and the
+task-installed sanitizer toolchain were removed. Seventy-four superseded CI
+wheel bundles were deleted; final release assets and committed benchmark/test
+evidence remain. The one-use macOS fallback workflow was removed after its
+successful run; its immutable workflow source and receipt are in the evidence
+bundle. Historical sections below describe earlier artifacts at their recorded
+commits, not wheel archives still retained locally.
 
 Local release-wheel checks on macOS ARM64:
 
 | Interpreter | Result |
 | --- | --- |
-| CPython 3.13.12, regular GIL, debug allocator | **1,997 passed; 43 skipped; 4 expected warnings** |
+| CPython 3.13.12, installed qualified CI release wheel, regular GIL/debug allocator | **1,997 passed; 45 skipped; 4 expected warnings** |
 | CPython 3.13.18t, final native-only suite, `PYTHON_GIL=0`, debug allocator | **1,967 passed; 14 skipped** |
 | CPython 3.14.3t, `PYTHON_GIL=0`, debug allocator | **2,026 passed; 14 skipped; 4 expected warnings** |
 | Rust + C parser AddressSanitizer, CPython 3.14.3t | **2,014 passed; 14 skipped; 4 expected warnings; no ASan errors** |
