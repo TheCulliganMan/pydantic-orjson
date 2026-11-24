@@ -2,7 +2,7 @@
 # Copyright ijl (2023-2026)
 
 name: unusual
-on: push
+on: workflow_dispatch
 env:
   FORCE_COLOR: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"

@@ -10,3 +10,7 @@
 /target
 /vendor
 __pycache__
+/.artifacts
+/dist
+/.ruff_cache
+/*.egg-info

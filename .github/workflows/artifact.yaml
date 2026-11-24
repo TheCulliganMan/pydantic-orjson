@@ -2,7 +2,7 @@
 # Copyright ijl (2023-2026)
 
 name: artifact
-on: push
+on: workflow_dispatch
 env:
   FORCE_COLOR: "1"
   ORJSON_BUILD_FREETHREADED: "1"

@@ -1,3 +1,90 @@
+# Pydantic orjson
+
+An independent orjson fork with optional Pydantic v2 and Pydantic AI integration.
+The existing native `orjson` API is preserved. This is a built, tested alpha
+baseline and a performance development plan; it does **not** yet contain a
+faster native encoder or decoder.
+
+- [Implementation plan and release gates](PLAN.md)
+- [Local build and test evidence](VALIDATION.md)
+- [Drop-in compatibility contract](compatibility/README.md)
+- [Typed/AI API examples](integration_pydantic/README.md)
+- [Benchmark methodology and measurements](benchmarks/README.md)
+- [Upstream provenance](UPSTREAM.md) and [fork changelog](FORK_CHANGELOG.md)
+
+## Build and use
+
+Requires Rust 1.95+, a C compiler, and uv. The reproducible development script
+uses CPython 3.13 and pinned test dependencies:
+
+```sh
+git clone https://github.com/TheCulliganMan/pydantic-orjson.git
+cd pydantic-orjson
+bash scripts/build.sh
+.venv/bin/python -c 'import orjson; print(orjson.loads(orjson.dumps({"ready": True})))'
+```
+
+The script builds a release wheel in `dist/`, installs it into `.venv`, runs the
+upstream and integration tests, and removes rough build artifacts on success.
+If interrupted or a check fails, run `.venv/bin/python scripts/clean.py` after
+inspection. The script preserves the installed environment and final wheel.
+
+The project is named `pydantic-orjson`, but the **distribution and import are
+both `orjson`**. Install this wheel in place of upstream, or pin a reviewed
+commit using a direct requirement (replace the placeholder with its full SHA):
+
+```text
+orjson[pydantic] @ git+https://github.com/TheCulliganMan/pydantic-orjson.git@<commit-sha>
+```
+
+Use the `ai` extra for Pydantic AI (Python 3.11+). Core imports need neither
+Pydantic nor AI. Do not install a second distribution that also owns the
+`orjson` package directory. Run `pip check` and the consuming application's
+suite after replacement. Pin the direct source or wheel in your lockfile;
+a subsequent unconstrained PyPI upgrade can reinstall upstream. To roll back,
+remove the direct requirement and reinstall the upstream version your app used.
+
+Existing calls stay the same, including FastAPI's `ORJSONResponse`:
+
+```python
+import orjson
+
+payload = orjson.dumps({"ready": True})  # bytes, same native function
+assert orjson.loads(payload) == {"ready": True}
+```
+
+Typed integration is explicit and uses Pydantic's existing Rust engine:
+
+```python
+from pydantic import BaseModel
+from orjson.pydantic import Codec
+
+class Item(BaseModel):
+    id: int
+    name: str
+
+items = Codec(list[Item])  # construct once, reuse
+parsed = items.loads(b'[{"id":1,"name":"example"}]')
+assert items.dumps(parsed) == b'[{"id":1,"name":"example"}]'
+```
+
+`Codec` accepts an existing `TypeAdapter`, preserves validators and serializers,
+and forwards Pydantic keyword options. `orjson.pydantic_ai.dump_messages` and
+`load_messages` persist histories with Pydantic AI's official message adapter.
+Native `dumps` still rejects unsupported models unless a caller supplies its
+usual `default` callback. Current FastAPI response-model paths can serialize
+through Pydantic directly; replacing orjson does not intercept those paths.
+
+Universal downstream compatibility and higher encode/decode speeds are release
+targets. The local validation report states the exact tested scope. There is no
+PyPI publication or official affiliation with upstream projects.
+
+---
+
+The original upstream README follows, including its upstream-specific install
+instructions and performance claims. Those claims describe upstream orjson,
+not an improvement produced by this fork.
+
 # orjson
 
 orjson is a fast, correct JSON library for Python. It

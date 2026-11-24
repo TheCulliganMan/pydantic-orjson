@@ -1,11 +1,11 @@
 [project]
 name = "orjson"
-version = "3.13.0"
-repository = "https://github.com/ijl/orjson"
-description = "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy"
+version = "3.13.0+pydantic.1"
+repository = "https://github.com/TheCulliganMan/pydantic-orjson"
+description = "orjson-compatible native JSON with optional Pydantic and Pydantic AI adapters"
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "License :: OSI Approved :: MIT License",
@@ -29,9 +29,14 @@ readme = "README.md"
 license = "MPL-2.0 AND (Apache-2.0 OR MIT)"
 
 [project.urls]
-source = "https://github.com/ijl/orjson"
-documentation = "https://github.com/ijl/orjson"
-changelog = "https://github.com/ijl/orjson/blob/master/CHANGELOG.md"
+source = "https://github.com/TheCulliganMan/pydantic-orjson"
+documentation = "https://github.com/TheCulliganMan/pydantic-orjson/blob/main/PLAN.md"
+changelog = "https://github.com/TheCulliganMan/pydantic-orjson/blob/main/FORK_CHANGELOG.md"
+upstream = "https://github.com/ijl/orjson"
+
+[project.optional-dependencies]
+pydantic = ["pydantic>=2.14.4,<3"]
+ai = ["pydantic>=2.14.4,<3", "pydantic-ai-slim>=2.73,<3"]
 
 [build-system]
 build-backend = "maturin"
@@ -40,6 +45,14 @@ requires = ["maturin>=1,<2"]
 [tool.maturin]
 python-source = "pysrc"
 include = [
+    { format = "sdist", path = "PLAN.md" },
+    { format = "sdist", path = "FORK_CHANGELOG.md" },
+    { format = "sdist", path = "UPSTREAM.md" },
+    { format = "sdist", path = "integration_pydantic/**/*" },
+    { format = "sdist", path = "compatibility/**/*" },
+    { format = "sdist", path = "benchmarks/**/*" },
+    { format = "sdist", path = "scripts/**/*" },
+    { format = "sdist", path = "requirements-fork.txt" },
     { format = "sdist", path = ".cargo/*" },
     { format = "sdist", path = "build.rs" },
     { format = "sdist", path = "Cargo.lock" },
