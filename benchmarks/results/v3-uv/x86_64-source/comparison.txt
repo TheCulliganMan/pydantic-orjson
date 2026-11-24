@@ -1,0 +1,67 @@
+Selected cases and recorded environment/fixture metadata match.
+Median ratio = baseline / candidate; >1 favors the candidate.
+Medians are descriptive; pyperf's statistical comparison follows.
+
+| Case | Baseline median µs | Candidate median µs | Median ratio |
+| --- | ---: | ---: | ---: |
+| dumps.event | 0.116 | 0.113 | 1.027x |
+| loads.event | 0.280 | 0.234 | 1.197x |
+| dumps.records | 7.724 | 7.476 | 1.033x |
+| loads.records | 26.911 | 27.385 | 0.983x |
+| dumps.ascii_text | 0.294 | 0.295 | 0.994x |
+| loads.ascii_text | 1.357 | 1.365 | 0.994x |
+| dumps.unicode_text | 0.307 | 0.363 | 0.845x |
+| loads.unicode_text | 3.332 | 3.368 | 0.989x |
+| dumps.escaped_text | 1.039 | 1.037 | 1.002x |
+| loads.escaped_text | 1.835 | 1.812 | 1.013x |
+| dumps.dense_escapes | 5.577 | 5.622 | 0.992x |
+| loads.dense_escapes | 2.419 | 2.418 | 1.000x |
+| dumps.numbers | 5.787 | 6.147 | 0.941x |
+| loads.numbers | 29.096 | 29.657 | 0.981x |
+| dumps.floats | 46.132 | 46.114 | 1.000x |
+| loads.floats | 50.730 | 50.187 | 1.011x |
+| dumps.datetimes | 2.341 | 2.408 | 0.972x |
+| loads.datetimes | 0.871 | 0.870 | 1.001x |
+| dumps.records_fastapi | 15.249 | 14.322 | 1.065x |
+| dumps.records_sorted | 10.151 | 10.166 | 0.998x |
+| dumps.records_pretty | 10.220 | 10.087 | 1.013x |
+| loads.bytes_64 | 0.141 | 0.107 | 1.314x |
+| loads.bytes_256 | 0.185 | 0.154 | 1.199x |
+| loads.bytes_321 | 0.215 | 0.185 | 1.162x |
+| loads.bytes_322 | 0.212 | 0.212 | 1.003x |
+| loads.bytes_512 | 0.252 | 0.249 | 1.014x |
+| typed.adapter.dumps_small | 0.666 | 0.677 | 0.984x |
+| typed.adapter.loads_small | 0.680 | 0.678 | 1.003x |
+| typed.codec.dumps_small | 0.773 | 0.774 | 0.998x |
+| typed.codec.loads_small | 0.860 | 0.809 | 1.063x |
+| typed.codec.dumps_quiet_small | 0.901 | 0.888 | 1.015x |
+| typed.adapter.dumps_quiet_small | 0.686 | 0.675 | 1.016x |
+| typed.adapter.dumps_batch | 31.185 | 30.941 | 1.008x |
+| typed.adapter.loads_batch | 57.213 | 57.555 | 0.994x |
+| typed.codec.dumps_batch | 31.991 | 31.688 | 1.010x |
+| typed.codec.loads_batch | 57.663 | 58.290 | 0.989x |
+| typed.codec.dumps_quiet_batch | 31.535 | 31.852 | 0.990x |
+| typed.adapter.dumps_quiet_batch | 31.346 | 31.470 | 0.996x |
+
+The comparison does not certify stability, representative workload coverage, or a performance release gate.
+
+| Benchmark                     | baseline | candidate             |
+|-------------------------------|:--------:|:---------------------:|
+| loads.event                   | 280 ns   | 235 ns: 1.19x faster  |
+| dumps.ascii_text              | 294 ns   | 298 ns: 1.01x slower  |
+| dumps.unicode_text            | 305 ns   | 435 ns: 1.43x slower  |
+| loads.escaped_text            | 1.85 us  | 1.81 us: 1.02x faster |
+| dumps.numbers                 | 5.78 us  | 6.14 us: 1.06x slower |
+| loads.numbers                 | 29.1 us  | 29.4 us: 1.01x slower |
+| dumps.datetimes               | 2.37 us  | 2.41 us: 1.02x slower |
+| dumps.records_fastapi         | 16.0 us  | 14.3 us: 1.12x faster |
+| loads.bytes_64                | 150 ns   | 108 ns: 1.38x faster  |
+| loads.bytes_256               | 185 ns   | 156 ns: 1.18x faster  |
+| loads.bytes_321               | 215 ns   | 186 ns: 1.16x faster  |
+| typed.codec.dumps_small       | 771 ns   | 830 ns: 1.08x slower  |
+| typed.codec.loads_small       | 849 ns   | 816 ns: 1.04x faster  |
+| typed.codec.dumps_quiet_small | 903 ns   | 892 ns: 1.01x faster  |
+| typed.codec.loads_batch       | 57.6 us  | 58.2 us: 1.01x slower |
+| Geometric mean                | (ref)    | 1.01x faster          |
+
+Benchmark hidden because not significant (23): dumps.event, dumps.records, loads.records, loads.ascii_text, loads.unicode_text, dumps.escaped_text, dumps.dense_escapes, loads.dense_escapes, dumps.floats, loads.floats, loads.datetimes, dumps.records_sorted, dumps.records_pretty, loads.bytes_322, loads.bytes_512, typed.adapter.dumps_small, typed.adapter.loads_small, typed.adapter.dumps_quiet_small, typed.adapter.dumps_batch, typed.adapter.loads_batch, typed.codec.dumps_batch, typed.codec.dumps_quiet_batch, typed.adapter.dumps_quiet_batch

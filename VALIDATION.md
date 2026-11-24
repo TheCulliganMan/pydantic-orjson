@@ -91,6 +91,12 @@ inputs; it is not a universal parallel-speedup claim.
 The [pre-UV `.3` performance evidence](benchmarks/results/v3/README.md) retains
 the complete measurements from source commit `655e430`, with all four jobs
 passing comparability checks. Some cases regress; see the full two-order tables.
+The [UV `.3` performance report](benchmarks/results/v3-uv/README.md) records
+four passing jobs at `5db2adfe38696aeb658e3f68900227fa80b3948e`, with all raw
+samples and zero differential mismatches. These are regular CPython Linux
+source builds; they are not measurements of the portable manylinux release
+wheels or no-GIL throughput. The report retains every regression and unstable
+numeric case and does not claim the broad performance release gates have passed.
 
 ---
 

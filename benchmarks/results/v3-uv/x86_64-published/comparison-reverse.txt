@@ -1,0 +1,60 @@
+Selected cases and recorded environment/fixture metadata match.
+Median ratio = baseline / candidate; >1 favors the candidate.
+Medians are descriptive; pyperf's statistical comparison follows.
+
+| Case | Baseline median µs | Candidate median µs | Median ratio |
+| --- | ---: | ---: | ---: |
+| dumps.event | 0.159 | 0.146 | 1.089x |
+| loads.event | 0.408 | 0.348 | 1.172x |
+| dumps.records | 10.595 | 10.637 | 0.996x |
+| loads.records | 34.368 | 35.436 | 0.970x |
+| dumps.ascii_text | 0.512 | 0.484 | 1.059x |
+| loads.ascii_text | 1.638 | 1.643 | 0.997x |
+| dumps.unicode_text | 0.506 | 0.492 | 1.027x |
+| loads.unicode_text | 4.340 | 4.325 | 1.003x |
+| dumps.escaped_text | 1.242 | 1.417 | 0.877x |
+| loads.escaped_text | 2.188 | 2.247 | 0.974x |
+| dumps.dense_escapes | 6.046 | 6.041 | 1.001x |
+| loads.dense_escapes | 3.194 | 3.325 | 0.961x |
+| dumps.numbers | 7.978 | 7.958 | 1.002x |
+| loads.numbers | 38.986 | 39.647 | 0.983x |
+| dumps.floats | 52.798 | 53.460 | 0.988x |
+| loads.floats | 60.351 | 65.799 | 0.917x |
+| dumps.datetimes | 3.122 | 3.066 | 1.018x |
+| loads.datetimes | 1.164 | 1.126 | 1.034x |
+| dumps.records_fastapi | 21.103 | 19.359 | 1.090x |
+| dumps.records_sorted | 14.127 | 14.651 | 0.964x |
+| dumps.records_pretty | 14.760 | 14.765 | 1.000x |
+| loads.bytes_64 | 0.184 | 0.135 | 1.363x |
+| loads.bytes_256 | 0.246 | 0.199 | 1.239x |
+| loads.bytes_321 | 0.277 | 0.232 | 1.192x |
+| loads.bytes_322 | 0.272 | 0.277 | 0.982x |
+| loads.bytes_512 | 0.326 | 0.325 | 1.003x |
+
+The comparison does not certify stability, representative workload coverage, or a performance release gate.
+
+| Benchmark             | baseline | candidate             |
+|-----------------------|:--------:|:---------------------:|
+| dumps.event           | 159 ns   | 146 ns: 1.09x faster  |
+| loads.event           | 408 ns   | 348 ns: 1.17x faster  |
+| loads.records         | 34.5 us  | 35.5 us: 1.03x slower |
+| dumps.ascii_text      | 514 ns   | 484 ns: 1.06x faster  |
+| loads.ascii_text      | 1.64 us  | 1.65 us: 1.00x slower |
+| dumps.unicode_text    | 507 ns   | 492 ns: 1.03x faster  |
+| dumps.escaped_text    | 1.24 us  | 1.42 us: 1.15x slower |
+| loads.escaped_text    | 2.19 us  | 2.26 us: 1.03x slower |
+| loads.dense_escapes   | 3.24 us  | 3.34 us: 1.03x slower |
+| loads.numbers         | 39.3 us  | 39.7 us: 1.01x slower |
+| dumps.floats          | 52.8 us  | 53.5 us: 1.01x slower |
+| loads.floats          | 60.5 us  | 65.8 us: 1.09x slower |
+| dumps.datetimes       | 3.13 us  | 3.07 us: 1.02x faster |
+| loads.datetimes       | 1.16 us  | 1.13 us: 1.03x faster |
+| dumps.records_fastapi | 21.1 us  | 19.4 us: 1.09x faster |
+| dumps.records_sorted  | 14.2 us  | 14.5 us: 1.03x slower |
+| loads.bytes_64        | 184 ns   | 135 ns: 1.36x faster  |
+| loads.bytes_256       | 246 ns   | 201 ns: 1.22x faster  |
+| loads.bytes_321       | 277 ns   | 235 ns: 1.18x faster  |
+| loads.bytes_322       | 272 ns   | 277 ns: 1.02x slower  |
+| Geometric mean        | (ref)    | 1.03x faster          |
+
+Benchmark hidden because not significant (6): dumps.records, loads.unicode_text, dumps.dense_escapes, dumps.numbers, dumps.records_pretty, loads.bytes_512

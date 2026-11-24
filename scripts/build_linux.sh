@@ -75,10 +75,10 @@ printf '%s  %s\n' "$uv_sha256" /tmp/orjson-uv.tar.gz | sha256sum --check --stric
 tar -xzf /tmp/orjson-uv.tar.gz --directory /tmp/orjson-tools --strip-components=1
 curl --fail --show-error --silent --location --retry 3 \
     "https://static.rust-lang.org/rustup/archive/1.29.3/${architecture}-unknown-linux-gnu/rustup-init" \
-    --output /tmp/orjson-rustup-init
-printf '%s  %s\n' "$rustup_sha256" /tmp/orjson-rustup-init | sha256sum --check --strict
-chmod +x /tmp/orjson-rustup-init
-/tmp/orjson-rustup-init -y --no-modify-path --profile minimal --default-toolchain 1.99.0
+    --output /tmp/orjson-tools/rustup-init
+printf '%s  %s\n' "$rustup_sha256" /tmp/orjson-tools/rustup-init | sha256sum --check --strict
+chmod +x /tmp/orjson-tools/rustup-init
+/tmp/orjson-tools/rustup-init -y --no-modify-path --profile minimal --default-toolchain 1.99.0
 uv --version
 rustc --version
 uv python install "${UV_PYTHON%+gil}"

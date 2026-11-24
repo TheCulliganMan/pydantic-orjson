@@ -28,8 +28,8 @@ jobs:
         platform:
           - {label: linux-x86_64, runner: ubuntu-24.04, architecture: x64}
           - {label: linux-aarch64, runner: ubuntu-24.04-arm, architecture: arm64}
-          - {label: macos-x86_64, runner: macos-15-intel, architecture: x64}
-          - {label: macos-arm64, runner: macos-15, architecture: arm64}
+          - {label: macos-x86_64, runner: macos-26-intel, architecture: x64}
+          - {label: macos-arm64, runner: macos-26, architecture: arm64}
           - {label: windows-amd64, runner: windows-2025, architecture: x64}
     env:
       UV_MANAGED_PYTHON: '1'

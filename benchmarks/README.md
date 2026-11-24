@@ -21,6 +21,12 @@ results and limitations rather than inferring gains from these design changes.
   comparisons before the UV migration. This is evidence for that exact source
   and build, not the final UV artifact or no-GIL throughput. All four jobs
   completed; timing instability and regressions prevent a universal speed claim.
+- [Version `.3` with UV, commit `5db2adfe`](results/v3-uv/README.md): all four
+  regular CPython 3.13.18 comparisons completed using UV 0.13.9 and the project
+  lock. The archive preserves all 26 native cases in both orders, 12 typed
+  controls, raw samples and checksums. Targeted gains coexist with regressions
+  and unresolved numeric-case variation. These local Ubuntu builds are separate
+  from the portable manylinux release wheels and no-GIL throughput measurements.
 - [Local 3.14t threaded diagnostic](results/threaded-314t.json): a separate
   Apple M5 no-GIL measurement, interpreted below. It is not an upstream-wheel
   comparison and does not qualify every free-threaded platform.

@@ -1,0 +1,9 @@
+{
+  "requested": "orjson==3.13.0",
+  "index": "https://pypi.org/simple",
+  "only_binary": true,
+  "installed_version": "3.13.0",
+  "wheel_metadata": "Wheel-Version: 1.0\nGenerator: maturin (1.15.0)\nRoot-Is-Purelib: false\nTag: cp313-cp313-manylinux_2_17_x86_64\nTag: cp313-cp313-manylinux2014_x86_64\n",
+  "installer": "uv",
+  "native_sha256": "6e99b08269e8b155d8131f0ec290db8f5d491638e8fc05f08cc138aaa6a8baa4"
+}
