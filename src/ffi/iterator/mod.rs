@@ -4,6 +4,8 @@
 mod pydict;
 mod pylist;
 mod pytuple;
+#[cfg(Py_GIL_DISABLED)]
+mod snapshot;
 
 pub(crate) use pydict::PyDictIterator;
 pub(crate) use pylist::PyListIterator;

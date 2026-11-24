@@ -1,7 +1,7 @@
 # Performance evidence
 
 Version `.2` adds native string encoding, small-document parsing and dictionary
-snapshot changes. Their performance must be measured against both a matched
+snapshot changes; `.3` adds the free-threaded port. Their performance must be measured against both a matched
 upstream source build and the published upstream wheel. The published wheel
 can use different compiler/SIMD settings; it is the relevant baseline for users
 replacing a downloaded wheel. A matched source build isolates our code changes.
@@ -62,6 +62,25 @@ usernames, hostnames and checkout paths from metadata before public publication.
 See the official [runner options](https://pyperf.readthedocs.io/en/latest/runner.html)
 and [comparison commands](https://pyperf.readthedocs.io/en/latest/cli.html#pyperf-compare-to)
 for process counts, calibration, metadata and significance reporting.
+
+## Free-threaded performance qualification
+
+Measure the regular and free-threaded ABIs separately. The `.3` container
+snapshots and mutable-input copies have costs that the historical `.2` regular
+CPython results do not measure. Record the wheel ABI, Python build,
+`sysconfig.get_config_var("Py_GIL_DISABLED")` and `sys._is_gil_enabled()` before
+and after loading every dependency. A `t` wheel with an enabled GIL is not a
+no-GIL measurement.
+
+The current pyperf suite measures single-thread latency. Concurrency regression
+tests establish correctness within their tested scope; they do not establish
+parallel speedup. For scaling measurements, use the same immutable or
+worker-owned inputs at 1, 2, 4 and 8 threads, collect total throughput and latency
+distributions, and include the synchronization cost for workloads that share
+mutable application state. Keep NumPy arrays read-only or coordinate writers;
+unsynchronized mutation changes the work and is not a valid benchmark input.
+The 45-cell wheel workflow is a build/runtime compatibility matrix, not a
+45-platform performance certification.
 
 ## Historical lightweight diagnostic
 

@@ -13,6 +13,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--python", type=Path, required=True)
     parser.add_argument("--runtime", type=Path, required=True)
+    parser.add_argument(
+        "--free-threaded", action="store_true", help="Require no-GIL execution"
+    )
     args = parser.parse_args()
     if sys.platform not in ("darwin", "linux"):
         parser.error("The sanitizer launcher supports macOS and Linux")
@@ -28,6 +31,11 @@ def main() -> None:
             "PYTHONMALLOC": "malloc",
         }
     )
+    if args.free_threaded:
+        env["PYTHON_GIL"] = "0"
+        # CPython's no-GIL object allocator requires mimalloc. Keep its debug
+        # checks; ASan still instruments Rust/C access and native stack storage.
+        env["PYTHONMALLOC"] = "debug"
     # dyld removes its injection variable after loading. Restore it for isolated
     # test subprocesses so they can load the same instrumented extension.
     bootstrap = """

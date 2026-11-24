@@ -25,12 +25,13 @@ use crate::opt::{
 use core::ptr::NonNull;
 
 use crate::ffi::{
-    BorrowedPyRef, Py_DECREF, Py_INCREF, Py_REFCNT, PyBoolRef, PyDateRef, PyDateTimeRef,
-    PyDictIterator, PyDictRef, PyErr_Clear, PyFloatRef, PyFragmentRef, PyIntRef, PyListIterator,
-    PyListRef, PyObject, PyObject_GetAttr, PyObject_Type, PyObject_Vectorcall, PyStrRef,
-    PyStrSubclassRef, PyTimeRef, PyTupleIterator, PyTupleRef, PyTypeRef, PyUuidRef,
-    PyVectorcall_NARGS,
+    BorrowedPyRef, Py_DECREF, Py_INCREF, PyBoolRef, PyDateRef, PyDateTimeRef, PyDictIterator,
+    PyDictRef, PyErr_Clear, PyFloatRef, PyFragmentRef, PyIntRef, PyListIterator, PyListRef,
+    PyObject, PyObject_GetAttr, PyObject_Vectorcall, PyStrRef, PyStrSubclassRef, PyTimeRef,
+    PyTupleIterator, PyTupleRef, PyTypeRef, PyUuidRef, PyVectorcall_NARGS,
 };
+#[cfg(not(Py_GIL_DISABLED))]
+use crate::ffi::{Py_REFCNT, PyObject_Type};
 
 const PER_ITEM_RESERVE: usize = 128;
 
@@ -56,6 +57,13 @@ impl OwnedSnapshotValue {
         unsafe { Py_INCREF(ptr) };
         Self(ptr)
     }
+
+    #[cfg(Py_GIL_DISABLED)]
+    #[inline(always)]
+    fn from_owned(ptr: *mut PyObject) -> Self {
+        debug_assert!(!ptr.is_null());
+        Self(ptr)
+    }
 }
 
 impl SnapshotValue for OwnedSnapshotValue {
@@ -76,8 +84,22 @@ impl Drop for OwnedSnapshotValue {
 pub(crate) fn format_default_unserializable(ptr: *mut PyObject) -> PyStrRef {
     unsafe {
         let mut msg = String::from("Type is not JSON serializable: ");
-        let name = core::ffi::CStr::from_ptr((*PyObject_Type(ptr)).tp_name).to_string_lossy();
-        msg.push_str(name.as_ref());
+        #[cfg(not(Py_GIL_DISABLED))]
+        {
+            let name = core::ffi::CStr::from_ptr((*PyObject_Type(ptr)).tp_name).to_string_lossy();
+            msg.push_str(name.as_ref());
+        }
+        #[cfg(Py_GIL_DISABLED)]
+        {
+            // Retain the type, then copy tp_name without calling Python or
+            // detaching this thread. CPython 3.14+ stops the world to replace
+            // type names. On experimental 3.13t, callers must synchronize
+            // concurrent type mutation; its setter does not honor a critical
+            // section. PyType_GetName would lose extension-module prefixes.
+            let ob_type = PyTypeRef::from_pyobject(ptr);
+            let name = core::ffi::CStr::from_ptr((*ob_type.as_ptr()).tp_name).to_string_lossy();
+            msg.push_str(name.as_ref());
+        }
 
         PyStrRef::from_str(&msg)
     }
@@ -175,11 +197,18 @@ where
             cold_path!();
             return Err(SerializeError::RecursionLimit);
         }
-        if ob.len() == 0 {
+        #[cfg(Py_GIL_DISABLED)]
+        let mut array_iter = PyListIterator::from_list(ob).fuse();
+        #[cfg(Py_GIL_DISABLED)]
+        let len = array_iter.len();
+        #[cfg(not(Py_GIL_DISABLED))]
+        let len = ob.len();
+        if len == 0 {
             self.writer.reserve_minimum();
             self.writer.put_slice(b"[]");
             Ok(())
         } else {
+            #[cfg(not(Py_GIL_DISABLED))]
             let mut array_iter = PyListIterator::from_list(ob).fuse();
             self.serialize_array_inner(&mut array_iter)
         }
@@ -213,27 +242,37 @@ where
             cold_path!();
             return Err(SerializeError::RecursionLimit);
         }
+        #[cfg(not(Py_GIL_DISABLED))]
         if dict.len() == 0 {
             self.writer.reserve_minimum();
             self.writer.put_slice(b"{}");
-            Ok(())
-        } else {
-            self.recursion += 1;
-            let ret = match self.dict_opt {
-                DictOption::Generic => self.serialize_dict_generic(dict),
-                DictOption::NonStr => self.serialize_dict_nonstr(dict),
-                DictOption::Sorted => self.serialize_dict_sorted(dict),
-            };
-            self.recursion -= 1;
-            ret
+            return Ok(());
         }
+        self.recursion += 1;
+        let ret = match self.dict_opt {
+            DictOption::Generic => self.serialize_dict_generic(dict),
+            DictOption::NonStr => self.serialize_dict_nonstr(dict),
+            DictOption::Sorted => self.serialize_dict_sorted(dict),
+        };
+        self.recursion -= 1;
+        ret
     }
 
     #[inline(never)]
     fn serialize_dict_generic(&mut self, dict: PyDictRef) -> Result<(), SerializeError> {
+        #[cfg(not(Py_GIL_DISABLED))]
         F::map_open(&mut self.writer);
 
         let map_iter = PyDictIterator::from_dict(dict).fuse();
+        #[cfg(Py_GIL_DISABLED)]
+        {
+            if map_iter.len() == 0 {
+                self.writer.reserve_minimum();
+                self.writer.put_slice(b"{}");
+                return Ok(());
+            }
+            F::map_open(&mut self.writer);
+        }
         F::reserve_map(&mut self.writer, map_iter.len(), PER_ITEM_RESERVE);
         let mut repeating = false;
 
@@ -264,6 +303,12 @@ where
         &mut self,
         items: &Vec<(S, V)>,
     ) -> Result<(), SerializeError> {
+        #[cfg(Py_GIL_DISABLED)]
+        if items.is_empty() {
+            self.writer.reserve_minimum();
+            self.writer.put_slice(b"{}");
+            return Ok(());
+        }
         F::map_open(&mut self.writer);
         F::reserve_map(&mut self.writer, items.len(), PER_ITEM_RESERVE);
         let mut repeating = false;
@@ -329,6 +374,7 @@ where
         Ok(())
     }
 
+    #[cfg(not(Py_GIL_DISABLED))]
     #[inline(never)]
     fn serialize_dict_sorted(&mut self, dict: PyDictRef) -> Result<(), SerializeError> {
         let map_iter = PyDictIterator::from_dict(dict).fuse();
@@ -358,6 +404,22 @@ where
         Ok(())
     }
 
+    #[cfg(Py_GIL_DISABLED)]
+    #[inline(never)]
+    fn serialize_dict_sorted(&mut self, dict: PyDictRef) -> Result<(), SerializeError> {
+        let map_iter = PyDictIterator::from_dict(dict).fuse();
+        let mut items = Vec::with_capacity(map_iter.len());
+        for (key, value) in map_iter {
+            let key = PyStrRef::from_ptr(key.as_ptr()).map_err(|_| SerializeError::KeyMustBeStr)?;
+            let key = key.as_str().ok_or(SerializeError::InvalidStr)?;
+            // The iterator owns the source keys only until this loop ends.
+            // Own UTF-8 and values across sorting and arbitrary callbacks.
+            items.push((String::from(key), OwnedSnapshotValue::new(value.as_ptr())));
+        }
+        items.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+        self.serialize_str_value_items(&items)
+    }
+
     #[inline(never)]
     fn serialize_dataclass(&mut self, ptr: *mut PyObject) -> Result<(), SerializeError> {
         self.recursion += 1;
@@ -367,6 +429,11 @@ where
         }
         self.writer.reserve_minimum();
         let dict = unsafe { PyObject_GetAttr(ptr, DICT_STR) };
+        #[cfg(Py_GIL_DISABLED)]
+        let ob_type_owner = PyTypeRef::from_pyobject(ptr);
+        #[cfg(Py_GIL_DISABLED)]
+        let ob_type = ob_type_owner.as_ptr();
+        #[cfg(not(Py_GIL_DISABLED))]
         let ob_type = unsafe { PyObject_Type(ptr) };
         if dict.is_null() {
             cold_path!();
@@ -384,6 +451,14 @@ where
             self.recursion -= 1;
             res
         } else {
+            #[cfg(Py_GIL_DISABLED)]
+            if unsafe { pyo3_ffi::PyDict_Check(dict) } == 0 {
+                unsafe { Py_DECREF(dict) };
+                self.recursion -= 1;
+                return Err(SerializeError::UnsupportedType(
+                    format_default_unserializable(ptr),
+                ));
+            }
             let res =
                 self.serialize_dataclass_inner_fast(unsafe { PyDictRef::from_ptr_unchecked(dict) });
             unsafe {
@@ -396,7 +471,13 @@ where
 
     #[inline(never)]
     fn serialize_dataclass_inner_fast(&mut self, dict: PyDictRef) -> Result<(), SerializeError> {
-        if dict.len() == 0 {
+        #[cfg(Py_GIL_DISABLED)]
+        let map_iter = PyDictIterator::from_dict(dict).fuse();
+        #[cfg(Py_GIL_DISABLED)]
+        let len = map_iter.len();
+        #[cfg(not(Py_GIL_DISABLED))]
+        let len = dict.len();
+        if len == 0 {
             cold_path!();
             self.writer.put_slice(b"{}");
             return Ok(());
@@ -406,6 +487,7 @@ where
 
         let mut repeating = false;
 
+        #[cfg(not(Py_GIL_DISABLED))]
         let map_iter = PyDictIterator::from_dict(dict).fuse();
         F::reserve_map(&mut self.writer, map_iter.len(), PER_ITEM_RESERVE);
         for (key, value) in map_iter {
@@ -423,7 +505,7 @@ where
                 }
                 Some(uni) => {
                     // can't have dataclass member name of empty str
-                    if *uni.as_bytes().first().unwrap() == b'_' {
+                    if uni.as_bytes().first() == Some(&b'_') {
                         continue;
                     }
 
@@ -443,6 +525,7 @@ where
         Ok(())
     }
 
+    #[cfg(not(Py_GIL_DISABLED))]
     #[cold]
     #[inline(never)]
     fn serialize_dataclass_inner_fallback(
@@ -498,6 +581,75 @@ where
             self.serialize_pair(key_as_str, value)?;
         }
 
+        F::map_close(&mut self.writer);
+        Ok(())
+    }
+
+    #[cfg(Py_GIL_DISABLED)]
+    #[cold]
+    #[inline(never)]
+    fn serialize_dataclass_inner_fallback(
+        &mut self,
+        ptr: *mut PyObject,
+    ) -> Result<(), SerializeError> {
+        let fields = unsafe { PyObject_GetAttr(ptr, DATACLASS_FIELDS_STR) };
+        if fields.is_null() {
+            return Err(SerializeError::UnsupportedType(
+                format_default_unserializable(ptr),
+            ));
+        }
+        let fields_owner = OwnedSnapshotValue::from_owned(fields);
+        if unsafe { pyo3_ffi::PyDict_Check(fields_owner.as_ptr()) } == 0 {
+            return Err(SerializeError::UnsupportedType(
+                format_default_unserializable(ptr),
+            ));
+        }
+        let fields = unsafe { PyDictRef::from_ptr_unchecked(fields_owner.as_ptr()) };
+        let map_iter = PyDictIterator::from_dict(fields).fuse();
+        if map_iter.len() == 0 {
+            self.writer.put_slice(b"{}");
+            return Ok(());
+        }
+        F::reserve_map(&mut self.writer, map_iter.len(), PER_ITEM_RESERVE);
+        F::map_open(&mut self.writer);
+
+        let mut repeating = false;
+        for (attr, field) in map_iter {
+            let field_type = unsafe { PyObject_GetAttr(field.as_ptr(), FIELD_TYPE_STR) };
+            if field_type.is_null() {
+                return Err(SerializeError::UnsupportedType(
+                    format_default_unserializable(ptr),
+                ));
+            }
+            let field_type = OwnedSnapshotValue::from_owned(field_type);
+            if unsafe {
+                !core::ptr::eq(
+                    field_type.as_ptr().cast::<crate::ffi::PyTypeObject>(),
+                    FIELD_TYPE,
+                )
+            } {
+                continue;
+            }
+            let key =
+                PyStrRef::from_ptr(attr.as_ptr()).map_err(|_| SerializeError::KeyMustBeStr)?;
+            let key = key.as_str().ok_or(SerializeError::InvalidStr)?;
+            if key.as_bytes().first() == Some(&b'_') {
+                continue;
+            }
+            let value = unsafe { PyObject_GetAttr(ptr, attr.as_ptr()) };
+            if value.is_null() {
+                return Err(SerializeError::UnsupportedType(
+                    format_default_unserializable(ptr),
+                ));
+            }
+            let value = OwnedSnapshotValue::from_owned(value);
+            if repeating {
+                F::item_separator(&mut self.writer);
+            } else {
+                repeating = true;
+            }
+            self.serialize_pair(key, value.as_ptr())?;
+        }
         F::map_close(&mut self.writer);
         Ok(())
     }
@@ -674,8 +826,21 @@ where
     #[inline(never)]
     fn serialize_enum(&mut self, ptr: *mut PyObject) -> Result<(), SerializeError> {
         let value = unsafe { PyObject_GetAttr(ptr, VALUE_STR) };
-        debug_assert!(unsafe { Py_REFCNT(value) >= 2 });
-        self.serialize(value)
+        #[cfg(Py_GIL_DISABLED)]
+        {
+            if value.is_null() {
+                return Err(SerializeError::UnsupportedType(
+                    format_default_unserializable(ptr),
+                ));
+            }
+            let value = OwnedSnapshotValue::from_owned(value);
+            self.serialize(value.as_ptr())
+        }
+        #[cfg(not(Py_GIL_DISABLED))]
+        {
+            debug_assert!(unsafe { Py_REFCNT(value) >= 2 });
+            self.serialize(value)
+        }
     }
 
     #[inline(always)]

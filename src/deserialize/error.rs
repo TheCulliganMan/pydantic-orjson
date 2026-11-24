@@ -5,7 +5,7 @@ use std::borrow::Cow;
 
 pub(crate) struct DeserializeError<'a> {
     pub message: Cow<'a, str>,
-    pub data: Option<&'a str>,
+    pub data: Option<Cow<'a, str>>,
     pub pos: i64,
 }
 
@@ -23,7 +23,11 @@ impl<'a> DeserializeError<'a> {
     pub fn from_yyjson(message: Cow<'a, str>, pos: i64, data: &'a str) -> Self {
         DeserializeError {
             message: message,
-            data: Some(data),
+            #[cfg(not(Py_GIL_DISABLED))]
+            data: Some(Cow::Borrowed(data)),
+            // A mutable-input snapshot is released when the parser returns.
+            #[cfg(Py_GIL_DISABLED)]
+            data: Some(Cow::Owned(data.to_owned())),
             pos: pos,
         }
     }
@@ -32,7 +36,7 @@ impl<'a> DeserializeError<'a> {
     #[cold]
     #[cfg_attr(feature = "optimize", optimize(size))]
     pub fn pos(&self) -> i64 {
-        match self.data {
+        match self.data.as_deref() {
             Some(as_str) => {
                 #[allow(clippy::cast_sign_loss)]
                 let pos = self.pos as usize;

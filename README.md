@@ -3,8 +3,10 @@
 An independent orjson fork with optional Pydantic v2 and Pydantic AI integration.
 The existing native `orjson` API is preserved. This alpha implements native
 encoding and decoding optimizations, reusable typed codecs, and resumable
-Pydantic AI persistence. Performance depends on the workload, architecture and
-build flags; see the validation report for measured results and limitations.
+Pydantic AI persistence. Version `.3` adds a free-threaded CPython port with
+the GIL disabled; platform qualification is in progress. Performance depends on
+the workload, architecture and build flags. See the validation report for
+measured results and limitations.
 
 - [Implementation plan and release gates](PLAN.md)
 - [Local build and test evidence](VALIDATION.md)
@@ -84,6 +86,31 @@ encoding unsorted non-string dictionary keys. Existing options and errors remain
 part of the compatibility contract. Reusable codecs preserve Pydantic's JSON
 validation mode and custom serialization behavior.
 
+## Free-threaded Python and prebuilt wheels
+
+The replacement-wheel workflow targets CPython 3.10–3.15 plus free-threaded
+3.13t, 3.14t and 3.15t on Linux x86-64/ARM64, macOS Intel/ARM64 and Windows
+x86-64: 45 version/platform combinations. Its `regular`, `free-threaded` and
+`all` selectors allow separate runs. A configured job is not a passing build;
+see [validation](VALIDATION.md) for completed results and the
+[wheel workflow](.github/workflows/wheels.yml) for downloadable artifacts from
+successful jobs. Linux artifacts target `manylinux_2_39` (glibc 2.39+).
+
+Free-threaded jobs check both the wheel ABI and actual runtime state: importing
+orjson must leave the GIL disabled, and the concurrency tests run with
+`PYTHON_GIL=0`. The port uses owned shallow snapshots of mutable Python
+containers and copies mutable JSON input before parsing. These protect object
+lifetimes; they do not make a changing nested object graph one atomic snapshot.
+Callers should synchronize application updates when a consistent document is
+required. Python 3.13t support is experimental and requires caller locking for
+concurrent class/type metadata changes. See the [free-threaded build and concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency).
+
+Keep shared NumPy arrays read-only during encoding, or use the same lock for
+serialization and every writer/resizer. Concurrent writes through memoryview
+aliases and external native writers to exported input buffers also need caller
+synchronization with decoding; pinning buffer storage does not lock every alias.
+NumPy describes array constraints in its [thread-safety guidance](https://numpy.org/doc/stable/reference/thread_safety.html).
+
 Universal downstream compatibility and broad performance acceptance remain
 release targets. The validation report states the exact tested scope. There is no
 PyPI publication or official affiliation with upstream projects.
@@ -92,7 +119,9 @@ PyPI publication or official affiliation with upstream projects.
 
 The original upstream README follows, including its upstream-specific install
 instructions and performance claims. Those claims describe upstream orjson,
-not an improvement produced by this fork.
+not an improvement produced by this fork. Its statements about the GIL and
+future free-threading support also describe upstream; the fork's free-threaded
+contract and qualification status appear above.
 
 # orjson
 

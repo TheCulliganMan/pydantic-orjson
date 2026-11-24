@@ -59,13 +59,16 @@ where
     #[cfg_attr(feature = "optimize", optimize(size))]
     pub fn new(formatter: F, ptr: *mut PyObject, opts: Opt) -> Result<Self, PyArrayError> {
         let capsule = unsafe { PyObject_GetAttr(ptr, ARRAY_STRUCT_STR) };
-        debug_assert!(!capsule.is_null());
+        if capsule.is_null() {
+            return Err(PyArrayError::Malformed);
+        }
         let array = unsafe {
-            (*capsule.cast::<PyCapsule>())
-                .pointer
-                .cast::<PyArrayInterface>()
+            pyo3_ffi::PyCapsule_GetPointer(capsule, core::ptr::null()).cast::<PyArrayInterface>()
         };
-        debug_assert!(!array.is_null());
+        if array.is_null() {
+            unsafe { Py_DECREF(capsule) };
+            return Err(PyArrayError::Malformed);
+        }
         if unsafe { (*array).two != 2 } {
             unsafe {
                 Py_DECREF(capsule);
@@ -265,7 +268,7 @@ impl<F> Drop for NumpyArray<F> {
     fn drop(&mut self) {
         if self.depth == 0 {
             unsafe {
-                Py_DECREF(self.array.cast::<PyObject>());
+                // The interface is capsule-owned C memory, not a Python object.
                 Py_DECREF(self.capsule.cast::<PyObject>());
             };
         }

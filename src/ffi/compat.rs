@@ -19,7 +19,12 @@ impl PyTypeRef {
     pub(crate) fn from_pyobject(ptr: *mut pyo3_ffi::PyObject) -> Self {
         unsafe {
             debug_assert!(!ptr.is_null());
+            #[cfg(not(Py_GIL_DISABLED))]
             let type_ptr = (*ptr).ob_type;
+            // Keep a heap type alive across calls that can detach this thread.
+            // Another thread may assign a new compatible __class__ meanwhile.
+            #[cfg(Py_GIL_DISABLED)]
+            let type_ptr = pyo3_ffi::PyObject_Type(ptr).cast::<pyo3_ffi::PyTypeObject>();
             debug_assert!(!type_ptr.is_null());
             Self {
                 ptr: core::ptr::NonNull::new_unchecked(type_ptr),
@@ -30,6 +35,13 @@ impl PyTypeRef {
     #[inline]
     pub(crate) const fn as_ptr(&self) -> *mut pyo3_ffi::PyTypeObject {
         self.ptr.as_ptr()
+    }
+}
+
+#[cfg(Py_GIL_DISABLED)]
+impl Drop for PyTypeRef {
+    fn drop(&mut self) {
+        unsafe { pyo3_ffi::Py_DECREF(self.ptr.as_ptr().cast::<pyo3_ffi::PyObject>()) };
     }
 }
 
@@ -255,25 +267,27 @@ pub(crate) unsafe fn PyUnstable_Unicode_GET_CACHED_HASH(
     op: *mut pyo3_ffi::PyObject,
 ) -> pyo3_ffi::Py_hash_t {
     unsafe {
-        let hash =
-            core::sync::atomic::AtomicIsize::new((*op.cast::<pyo3_ffi::PyASCIIObject>()).hash)
-                .load(core::sync::atomic::Ordering::Relaxed);
+        // Strings are immutable, but their cached hash is initialized lazily.
+        // Let CPython synchronize reads and writes of that shared cache.
+        let hash = pyo3_ffi::PyObject_Hash(op);
         debug_assert!(hash != -1);
         hash
     }
 }
 
-#[cfg(CPython)]
+#[cfg(all(CPython, not(Py_GIL_DISABLED)))]
 #[inline(always)]
 #[allow(non_snake_case)]
 pub(crate) unsafe fn PyObject_Type(o: *mut pyo3_ffi::PyObject) -> *mut pyo3_ffi::PyTypeObject {
     unsafe { (*o).ob_type }
 }
 
-#[cfg(not(CPython))]
+#[cfg(any(not(CPython), Py_GIL_DISABLED))]
 #[inline(always)]
 #[allow(non_snake_case)]
 pub(crate) unsafe fn PyObject_Type(o: *mut pyo3_ffi::PyObject) -> *mut pyo3_ffi::PyTypeObject {
+    // This is a borrowed type, matching Py_TYPE. PyTypeRef separately retains
+    // an owned reference when a type must survive calls that can detach.
     unsafe { pyo3_ffi::Py_TYPE(o) }
 }
 

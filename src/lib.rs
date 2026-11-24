@@ -192,17 +192,12 @@ pub(crate) unsafe extern "C" fn PyInit_orjson() -> *mut PyModuleDef {
                 slot: crate::ffi::Py_mod_multiple_interpreters,
                 value: crate::ffi::Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED,
             },
-            #[cfg(all(Py_3_13, not(Py_3_14)))]
+            #[cfg(all(not(Py_GIL_DISABLED), Py_3_13))]
             PyModuleDef_Slot {
                 slot: crate::ffi::Py_mod_gil,
                 value: crate::ffi::Py_MOD_GIL_USED,
             },
-            #[cfg(all(not(Py_GIL_DISABLED), Py_3_14))]
-            PyModuleDef_Slot {
-                slot: crate::ffi::Py_mod_gil,
-                value: crate::ffi::Py_MOD_GIL_USED,
-            },
-            #[cfg(all(Py_GIL_DISABLED, Py_3_14))]
+            #[cfg(Py_GIL_DISABLED)]
             PyModuleDef_Slot {
                 slot: crate::ffi::Py_mod_gil,
                 value: crate::ffi::Py_MOD_GIL_NOT_USED,

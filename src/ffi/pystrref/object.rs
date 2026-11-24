@@ -39,16 +39,13 @@ pub fn set_str_create_fn() {
     }
 }
 
-#[cfg(all(feature = "inline_str", Py_3_14, Py_GIL_DISABLED))]
-const STATE_KIND_SHIFT: usize = 8;
-
-#[cfg(all(feature = "inline_str", not(all(Py_3_14, Py_GIL_DISABLED))))]
+#[cfg(all(feature = "inline_str", not(Py_GIL_DISABLED)))]
 const STATE_KIND_SHIFT: usize = 2;
 
-#[cfg(feature = "inline_str")]
+#[cfg(all(feature = "inline_str", not(Py_GIL_DISABLED)))]
 const STATE_KIND_MASK: u32 = 7 << STATE_KIND_SHIFT;
 
-#[cfg(feature = "inline_str")]
+#[cfg(all(feature = "inline_str", not(Py_GIL_DISABLED)))]
 const STATE_COMPACT_ASCII: u32 =
     1 << STATE_KIND_SHIFT | 1 << (STATE_KIND_SHIFT + 3) | 1 << (STATE_KIND_SHIFT + 4);
 
@@ -166,7 +163,7 @@ impl PyStrRef {
         unsafe { crate::ffi::PyUnstable_Unicode_GET_CACHED_HASH(self.as_ptr()) }
     }
 
-    #[cfg(feature = "inline_str")]
+    #[cfg(all(feature = "inline_str", not(Py_GIL_DISABLED)))]
     fn set_hash(&mut self) {
         unsafe {
             let ptr = self.as_ptr().cast::<PyASCIIObject>();
@@ -187,7 +184,7 @@ impl PyStrRef {
         }
     }
 
-    #[cfg(not(feature = "inline_str"))]
+    #[cfg(all(not(feature = "inline_str"), not(Py_GIL_DISABLED)))]
     fn set_hash(&mut self) {
         unsafe {
             let data_ptr = PyUnicode_DATA(self.as_ptr());
@@ -199,8 +196,16 @@ impl PyStrRef {
         }
     }
 
+    #[cfg(Py_GIL_DISABLED)]
+    fn set_hash(&mut self) {
+        // An empty string may be a shared singleton; even immutable strings
+        // require synchronized access to their lazily initialized hash cache.
+        let hash = unsafe { pyo3_ffi::PyObject_Hash(self.as_ptr()) };
+        debug_assert!(hash != -1);
+    }
+
     #[inline(always)]
-    #[cfg(feature = "inline_str")]
+    #[cfg(all(feature = "inline_str", not(Py_GIL_DISABLED)))]
     pub fn as_str(&self) -> Option<&'static str> {
         unsafe {
             let op = self.as_ptr();
@@ -223,8 +228,9 @@ impl PyStrRef {
     }
 
     #[inline(always)]
-    #[cfg(not(feature = "inline_str"))]
+    #[cfg(any(not(feature = "inline_str"), Py_GIL_DISABLED))]
     pub fn as_str(&self) -> Option<&'static str> {
+        // CPython synchronizes initialization of the shared UTF-8 cache.
         to_str_via_ffi(self.as_ptr())
     }
 }

@@ -6,18 +6,21 @@ use crate::ffi::{PyBytes_FromStringAndSize, PyObject};
 use crate::util::usize_to_isize;
 use core::ptr::NonNull;
 
-#[cfg(CPython)]
+#[cfg(all(CPython, not(Py_GIL_DISABLED)))]
 const BUFFER_LENGTH: usize = 4096 - core::mem::size_of::<crate::ffi::PyBytesObject>();
 
-#[cfg(not(CPython))]
+#[cfg(any(not(CPython), Py_GIL_DISABLED))]
 const BUFFER_LENGTH: usize = 4096;
 
 const OVERALLOCATION: usize = 64;
 
+// Free-threaded builds use a private raw buffer and create the Python bytes
+// object only when serialization completes. No shared Python object header or
+// biased reference count is modified while growing or finalizing the buffer.
 pub(crate) struct BytesWriter {
-    #[cfg(CPython)]
+    #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
     bytes: *mut crate::ffi::PyBytesObject,
-    #[cfg(not(CPython))]
+    #[cfg(any(not(CPython), Py_GIL_DISABLED))]
     bytes: *mut u8,
     cap: usize,
     len: usize,
@@ -31,24 +34,24 @@ impl BytesWriter {
             cap: BUFFER_LENGTH,
             len: 0,
             indent: 0,
-            #[cfg(CPython)]
+            #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
             bytes: unsafe {
                 PyBytes_FromStringAndSize(core::ptr::null_mut(), usize_to_isize(BUFFER_LENGTH))
                     .cast::<crate::ffi::PyBytesObject>()
             },
-            #[cfg(not(CPython))]
+            #[cfg(any(not(CPython), Py_GIL_DISABLED))]
             bytes: unsafe { crate::ffi::PyMem_Malloc(BUFFER_LENGTH).cast::<u8>() },
         }
     }
 
-    #[cfg(CPython)]
+    #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
     pub fn abort(&mut self) {
         unsafe {
             crate::ffi::Py_DECREF(self.bytes.cast::<PyObject>());
         }
     }
 
-    #[cfg(not(CPython))]
+    #[cfg(any(not(CPython), Py_GIL_DISABLED))]
     pub fn abort(&mut self) {
         unsafe {
             crate::ffi::PyMem_Free(self.bytes.cast::<core::ffi::c_void>());
@@ -61,12 +64,12 @@ impl BytesWriter {
                 core::ptr::write(self.buffer_ptr(), b'\n');
                 self.len += 1;
             }
-            #[cfg(CPython)]
+            #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
             core::ptr::write(self.buffer_ptr(), 0);
         }
     }
 
-    #[cfg(CPython)]
+    #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
     #[inline]
     pub fn finish(&mut self, append: bool) -> NonNull<PyObject> {
         unsafe {
@@ -80,7 +83,7 @@ impl BytesWriter {
         }
     }
 
-    #[cfg(not(CPython))]
+    #[cfg(any(not(CPython), Py_GIL_DISABLED))]
     #[inline]
     pub fn finish(&mut self, append: bool) -> NonNull<PyObject> {
         unsafe {
@@ -95,20 +98,20 @@ impl BytesWriter {
         }
     }
 
-    #[cfg(CPython)]
+    #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
     #[inline]
     const fn buffer_ptr(&self) -> *mut u8 {
         unsafe { (&raw mut (*self.bytes).ob_sval).cast::<u8>().add(self.len) }
     }
 
-    #[cfg(not(CPython))]
+    #[cfg(any(not(CPython), Py_GIL_DISABLED))]
     #[inline]
     const fn buffer_ptr(&self) -> *mut u8 {
         debug_assert!(!self.bytes.is_null());
         unsafe { self.bytes.add(self.len) }
     }
 
-    #[cfg(CPython)]
+    #[cfg(all(CPython, not(Py_GIL_DISABLED)))]
     #[inline]
     pub fn resize(&mut self, len: usize) {
         self.cap = len;
@@ -120,7 +123,7 @@ impl BytesWriter {
         }
     }
 
-    #[cfg(not(CPython))]
+    #[cfg(any(not(CPython), Py_GIL_DISABLED))]
     #[inline]
     pub fn resize(&mut self, len: usize) {
         self.cap = len;

@@ -1,3 +1,47 @@
+# Free-threaded implementation — 3.13.0+pydantic.3
+
+The `.3` implementation adds actual GIL-disabled wheels for CPython 3.13t,
+3.14t and 3.15t. Import must leave the GIL disabled; tests assert that state.
+Regular CPython 3.10–3.15 remains supported. The wheel workflow covers five
+platforms (Linux x86-64/ARM64, macOS x86-64/ARM64, Windows x86-64): 30 regular
+and 15 free-threaded builds. The configured matrix is not itself a pass claim;
+completed cross-platform results will be recorded below.
+
+Local release-wheel checks on macOS ARM64:
+
+| Interpreter | Result |
+| --- | --- |
+| CPython 3.13.12, regular GIL, debug allocator | **1,997 passed; 43 skipped; 4 expected warnings** |
+| CPython 3.14.3t, `PYTHON_GIL=0`, debug allocator | **2,026 passed; 14 skipped; 4 expected warnings** |
+| Differential, regular candidate vs published/source baselines | **2,425 cases + 7 API contracts; zero mismatches** |
+| Differential, 3.14t candidate vs published 3.13.12 baseline | **2,425 cases + 7 API contracts; zero mismatches**; this corpus comparison crosses Python versions |
+
+See [regular published](compatibility/results/v3-published.json),
+[regular source](compatibility/results/v3-source.json), and
+[free-threaded](compatibility/results/v3-freethreaded.json) reports. Normal
+builds skip the 31 no-GIL-only checks. Free-threaded builds skip the two
+allocation-threshold GC reentry tests because that mechanism does not trigger
+in-call collection there; a separate concurrent collection test passes.
+The remaining 12 skips match the resource/version/known-upstream exclusions
+recorded for `.2` below. Skips are not passes.
+
+The port uses owned list/dictionary snapshots under CPython critical sections,
+ends locks before Python callbacks, retains dataclass/type/attribute references,
+uses CPython-owned Fragment headers and synchronized string access, and copies
+mutable JSON buffers while retaining their storage. Error documents own the
+copied input after parsing fails. Decoded keys and NumPy capsule ownership are
+corrected. Concurrent callbacks, parent mutation, fragments, shared Unicode,
+output growth/errors and GC are exercised with real Python threads.
+
+Concurrency limits are explicit in [compatibility](compatibility/README.md):
+container snapshots are shallow; concurrent class/type mutation on experimental
+3.13t requires caller synchronization; concurrent writes through memoryview
+aliases, native buffer writers and NumPy array mutation also require caller
+synchronization. No-GIL execution does not imply an atomic snapshot of an entire
+mutable object graph or guaranteed linear speedup.
+
+---
+
 # Implementation validation — 3.13.0+pydantic.2
 
 Validated locally on November 24, 2026, with CPython 3.13.12, Apple M5 /

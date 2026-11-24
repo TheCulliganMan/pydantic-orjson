@@ -77,3 +77,79 @@ adapter entry points so these observable behaviors remain active. AI tests use
 the official message and conversation schemas, including binary/retry messages,
 deferred tools, actual offline agent resume and final validation after streaming.
 They require no live model calls or API credentials.
+
+
+## Free-threaded builds and concurrency
+
+Version `.3` targets free-threaded CPython 3.13t, 3.14t and 3.15t with the GIL
+remaining disabled. The `t` identifies the interpreter ABI; runtime assertions
+also check that importing orjson does not enable the GIL. This is distinct from
+installing a `t` wheel that falls back to GIL-enabled execution. CPython documents
+both the build flag and the runtime check in its
+[free-threading guide](https://docs.python.org/3/howto/free-threading-python.html).
+
+The [manual wheel workflow](../.github/workflows/wheels.yml) has `regular`,
+`free-threaded` and `all` selectors. Its five platform targets are Linux
+x86-64/ARM64, macOS Intel/ARM64 and Windows x86-64. Six regular Python versions
+(3.10–3.15) plus three free-threaded versions produce 45 configured combinations.
+Each job builds, installs and tests its exact wheel before uploading it with
+its hash and runtime evidence. Linux wheels target `manylinux_2_39`, requiring
+glibc 2.39 or newer. Configured cells are not certified passing builds; completed
+results belong in [validation](../VALIDATION.md).
+
+For a local POSIX build, first run the regular development build to create
+`.venv` and install its build tools. Then select a free-threaded interpreter:
+
+```sh
+uv venv --python 3.14t --allow-existing .venv-freethreaded
+uv pip install --python .venv-freethreaded/bin/python -r requirements-fork.txt
+CARGO_TARGET_DIR=.artifacts/freethreaded-target .venv/bin/maturin build --release --strip --locked --out dist/freethreaded -i .venv-freethreaded/bin/python
+uv pip install --python .venv-freethreaded/bin/python --reinstall dist/freethreaded/orjson-3.13.0+pydantic.3-*.whl
+.venv-freethreaded/bin/python -I -c 'import sys, sysconfig; assert sysconfig.get_config_var("Py_GIL_DISABLED"); assert not sys._is_gil_enabled(); import orjson; assert not sys._is_gil_enabled()'
+PYTHON_GIL=0 PYTHONMALLOC=debug .venv-freethreaded/bin/python -m pytest -q test compatibility integration_pydantic
+uv pip check --python .venv-freethreaded/bin/python
+```
+
+Use `3.13t` or `3.15t` in a separate qualification run. Wheel filenames must
+carry the corresponding ABI (`cp313t`, `cp314t` or `cp315t`); a regular `cp314`
+wheel cannot substitute for `cp314t`. After retaining results and the final
+wheel, `.venv/bin/python scripts/clean.py` removes `.venv-freethreaded`, its
+intermediate Cargo target under `.artifacts`, and test caches. It preserves
+`dist/`, the regular `.venv`, source and committed evidence.
+
+The concurrency contract includes these limits:
+
+- Dict/list encoding acquires owned shallow snapshots inside CPython critical
+  sections, then releases the container lock before invoking Python callbacks.
+  Objects remain alive while serialized. Nested containers are visited and
+  snapshotted separately, so concurrent application updates can produce a
+  document containing values from different moments. Lock application state
+  when a consistent whole-document snapshot is required.
+- Mutable JSON inputs are copied before parsing, and decode errors retain their
+  document data. A buffer export pins storage; it does not lock every alias.
+  Direct bytearray updates use the bytearray's critical section, but writes
+  through memoryview aliases can bypass that lock. Callers must synchronize
+  concurrent memoryview-alias writes and all external native buffer writers
+  with `loads`, including the initial copy. An immutable input or a caller-made
+  snapshot taken under the writer's lock avoids this shared-buffer boundary.
+- Python 3.13t support is experimental. Callers must synchronize concurrent
+  class/type renaming and metadata mutation with serialization and decoding.
+  In particular, `type_set_name` in [CPython 3.13](https://github.com/python/cpython/blob/3.13/Objects/typeobject.c)
+  replaces the stored name without the stop-the-world protection added to
+  [CPython 3.14](https://github.com/python/cpython/blob/3.14/Objects/typeobject.c).
+  The fork preserves exact type names in errors instead of replacing them with
+  generic messages. Container snapshots do not make arbitrary mutable Python
+  objects or concurrent class changes safe.
+- Keep shared NumPy arrays read-only while serializing, or hold a lock used by
+  every writer/resizer as well as the serializer. The fork does not add a mutex
+  around NumPy storage. NumPy recommends read-only sharing or caller locking in
+  its [thread-safety guidance](https://numpy.org/doc/stable/reference/thread_safety.html).
+
+`compatibility/test_freethreading.py` checks default no-GIL import, parallel
+native calls, callbacks, shared dict/list mutation, mutable-input copying and
+error-document ownership. `test/test_freethreaded_objects.py` adds cross-thread
+Fragment lifetimes, shared Unicode caches, decoded hashes and output-buffer
+allocation/error paths. Runtime state is asserted during concurrency checks;
+passing with an enabled GIL does not satisfy these tests. These bounded tests
+support the recorded scope, not arbitrary native exporters or all possible
+concurrent application behavior.

@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "distribution": "3.13.0+pydantic.1",
+    "orjson": "3.13.0",
+    "python": "3.13.12"
+  },
+  "candidate": {
+    "distribution": "3.13.0+pydantic.3",
+    "orjson": "3.13.0",
+    "python": "3.13.12"
+  },
+  "cases": 2425,
+  "api_contracts": 7,
+  "mismatches": []
+}

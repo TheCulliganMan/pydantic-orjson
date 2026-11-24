@@ -34,8 +34,11 @@ fn reverse_pydict_incref(key: *mut pyo3_ffi::PyObject, value: *mut pyo3_ffi::PyO
 
 #[cfg(Py_GIL_DISABLED)]
 #[inline]
-fn reverse_pydict_incref(_: *mut pyo3_ffi::PyObject, value: *mut pyo3_ffi::PyObject) {
-    unsafe { crate::ffi::Py_DECREF(value) }
+fn reverse_pydict_incref(key: *mut pyo3_ffi::PyObject, value: *mut pyo3_ffi::PyObject) {
+    unsafe {
+        crate::ffi::Py_DECREF(key);
+        crate::ffi::Py_DECREF(value);
+    }
 }
 
 #[cfg(not(Py_3_12))]
@@ -133,7 +136,7 @@ impl PyDictRef {
                 key.hash(),
             );
         }
-        #[cfg(Py_3_13)]
+        #[cfg(all(Py_3_13, not(Py_GIL_DISABLED)))]
         unsafe {
             let _ = crate::ffi::_PyDict_SetItem_KnownHash_LockHeld(
                 self.as_ptr().cast::<crate::ffi::PyDictObject>(),
@@ -141,6 +144,11 @@ impl PyDictRef {
                 value,
                 key.hash(),
             );
+        }
+        #[cfg(Py_GIL_DISABLED)]
+        unsafe {
+            // Use CPython's synchronized public entry point on no-GIL builds.
+            let _ = pyo3_ffi::PyDict_SetItem(self.as_ptr(), key.as_ptr(), value);
         }
         reverse_pydict_incref(key.as_ptr(), value);
     }

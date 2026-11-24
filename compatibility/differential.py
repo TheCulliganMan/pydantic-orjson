@@ -6,8 +6,10 @@ by the controller; each interpreter imports its own installed orjson wheel.
 """
 
 import argparse
+import collections
 import dataclasses
 import datetime
+import decimal
 import enum
 import importlib.metadata
 import inspect
@@ -47,6 +49,21 @@ def outcome(call):
 
 
 def edge_cases(encode, decode):
+    # tp_name carries an extension-module prefix that __name__ omits.
+    for label, value in (
+        ("timedelta", datetime.timedelta(days=1)),
+        ("decimal", decimal.Decimal("1.25")),
+        ("deque", collections.deque([1, 2])),
+    ):
+        encode(f"extension-error/{label}", value)
+        encode(f"extension-error-nested/{label}", {"value": [value]})
+    try:
+        import numpy  # noqa: PLC0415 -- optional in each isolated interpreter
+    except ImportError:
+        pass
+    else:
+        encode("extension-error/numpy-complex128", numpy.complex128(1 + 2j))
+
     # Exercise vector lanes/tails and the small-parser arena boundary against
     # the installed reference, including exact error positions and UTF-8 sizes.
     for length in (0, 1, 7, 8, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 128):

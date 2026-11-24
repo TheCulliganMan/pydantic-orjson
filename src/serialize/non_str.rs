@@ -117,6 +117,14 @@ pub(crate) fn pyobject_to_string(
             ObType::Uuid => non_str_uuid(PyUuidRef::from_ptr_unchecked(key)),
             ObType::Enum => {
                 let value = unsafe { crate::ffi::PyObject_GetAttr(key, VALUE_STR) };
+                #[cfg(Py_GIL_DISABLED)]
+                if value.is_null() {
+                    // Concurrent replacement of enum metadata may make the
+                    // attribute unavailable. Never recurse through NULL.
+                    crate::ffi::PyErr_Clear();
+                    return Err(SerializeError::DictKeyInvalidType);
+                }
+                #[cfg(not(Py_GIL_DISABLED))]
                 debug_assert!(unsafe { crate::ffi::Py_REFCNT(value) >= 2 });
                 let ret = pyobject_to_string(value, opts);
                 unsafe {

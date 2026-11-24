@@ -10,36 +10,15 @@ use crate::typeref::FRAGMENT_TYPE;
 use core::ffi::{c_char, c_void};
 use core::ptr::null_mut;
 
-#[cfg(Py_GIL_DISABLED)]
-use core::sync::atomic::{AtomicIsize, AtomicU32};
-
-#[cfg(Py_GIL_DISABLED)]
-macro_rules! pymutex_new {
-    () => {
-        unsafe { core::mem::zeroed() }
-    };
-}
-
 #[repr(C)]
 pub(crate) struct Fragment {
     #[cfg(Py_GIL_DISABLED)]
-    pub ob_tid: usize,
-    #[cfg(all(Py_GIL_DISABLED, Py_3_14))]
-    pub ob_flags: u16,
-    #[cfg(all(Py_GIL_DISABLED, not(Py_3_14)))]
-    pub _padding: u16,
-    #[cfg(Py_GIL_DISABLED)]
-    pub ob_mutex: pyo3_ffi::PyMutex,
-    #[cfg(Py_GIL_DISABLED)]
-    pub ob_gc_bits: u8,
-    #[cfg(Py_GIL_DISABLED)]
-    pub ob_ref_local: AtomicU32,
-    #[cfg(Py_GIL_DISABLED)]
-    pub ob_ref_shared: AtomicIsize,
+    pub ob_base: PyObject,
     #[cfg(not(Py_GIL_DISABLED))]
     pub ob_refcnt: pyo3_ffi::Py_ssize_t,
     #[cfg(PyPy)]
     pub ob_pypy_link: pyo3_ffi::Py_ssize_t,
+    #[cfg(not(Py_GIL_DISABLED))]
     pub ob_type: *mut pyo3_ffi::PyTypeObject,
     pub contents: *mut pyo3_ffi::PyObject,
 }
@@ -72,31 +51,32 @@ pub(crate) unsafe extern "C" fn orjson_fragment_tp_new(
             null_mut()
         } else {
             let contents = argsob.get(0);
-            Py_INCREF(contents);
-            Py_INCREF(FRAGMENT_TYPE.cast::<PyObject>());
-            let obj = Box::new(Fragment {
-                #[cfg(Py_GIL_DISABLED)]
-                ob_tid: 0,
-                #[cfg(all(Py_GIL_DISABLED, Py_3_14))]
-                ob_flags: 0,
-                #[cfg(all(Py_GIL_DISABLED, not(Py_3_14)))]
-                _padding: 0,
-                #[cfg(Py_GIL_DISABLED)]
-                ob_mutex: pymutex_new!(),
-                #[cfg(Py_GIL_DISABLED)]
-                ob_gc_bits: 0,
-                #[cfg(Py_GIL_DISABLED)]
-                ob_ref_local: AtomicU32::new(0),
-                #[cfg(Py_GIL_DISABLED)]
-                ob_ref_shared: AtomicIsize::new(0),
-                #[cfg(not(Py_GIL_DISABLED))]
-                ob_refcnt: 1,
-                #[cfg(PyPy)]
-                ob_pypy_link: 0,
-                ob_type: FRAGMENT_TYPE,
-                contents: contents,
-            });
-            Box::into_raw(obj).cast::<PyObject>()
+            #[cfg(Py_GIL_DISABLED)]
+            {
+                // Python objects must use the object allocator in a free-threaded
+                // build. GenericAlloc also initializes the owning thread and
+                // biased reference counts, and retains the heap type.
+                let obj = pyo3_ffi::PyType_GenericAlloc(FRAGMENT_TYPE, 0);
+                if obj.is_null() {
+                    return null_mut();
+                }
+                Py_INCREF(contents);
+                (*obj.cast::<Fragment>()).contents = contents;
+                obj
+            }
+            #[cfg(not(Py_GIL_DISABLED))]
+            {
+                Py_INCREF(contents);
+                Py_INCREF(FRAGMENT_TYPE.cast::<PyObject>());
+                let obj = Box::new(Fragment {
+                    ob_refcnt: 1,
+                    #[cfg(PyPy)]
+                    ob_pypy_link: 0,
+                    ob_type: FRAGMENT_TYPE,
+                    contents: contents,
+                });
+                Box::into_raw(obj).cast::<PyObject>()
+            }
         }
     }
 }
@@ -106,9 +86,13 @@ pub(crate) unsafe extern "C" fn orjson_fragment_tp_new(
 #[cfg_attr(feature = "optimize", optimize(size))]
 pub(crate) unsafe extern "C" fn orjson_fragment_dealloc(object: *mut PyObject) {
     unsafe {
+        let object_type = PyObject_Type(object);
         Py_DECREF((*object.cast::<Fragment>()).contents);
-        Py_DECREF(PyObject_Type(object).cast::<PyObject>());
+        #[cfg(Py_GIL_DISABLED)]
+        pyo3_ffi::PyObject_Free(object.cast::<core::ffi::c_void>());
+        #[cfg(not(Py_GIL_DISABLED))]
         crate::ffi::PyMem_Free(object.cast::<core::ffi::c_void>());
+        Py_DECREF(object_type.cast::<PyObject>());
     }
 }
 

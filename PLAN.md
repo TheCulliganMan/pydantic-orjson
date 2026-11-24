@@ -1,12 +1,53 @@
 # Pydantic orjson implementation plan
 
-Status: native and integration implementation, November 24, 2026. Version `.2`
-implements the first encoding, decoding and integration changes below. This
-document separates implemented work from the remaining qualification needed for
+Status: free-threaded implementation and qualification, November 24, 2026.
+Version `.2` introduced the native and integration changes; `.3` adds the
+free-threaded CPython port and replacement-wheel matrix. This document separates
+implemented work from the remaining qualification needed for
 a production compatibility and speed claim. See [validation](VALIDATION.md) for
 actual build, test and measurement results.
 
-## Implemented in this iteration
+## Free-threaded implementation and qualification
+
+The target is actual no-GIL execution on CPython 3.13t, 3.14t and 3.15t, alongside
+regular CPython 3.10–3.15. A `t` wheel that enables the GIL on import does not
+meet that target. Runtime checks verify the interpreter configuration and
+`sys._is_gil_enabled()` before and after import; concurrency tests explicitly
+use `PYTHON_GIL=0`.
+
+The port uses owned shallow snapshots of dict/list entries acquired within
+CPython critical sections, then serializes outside the lock so user callbacks
+can run. Mutable bytearray/memoryview JSON input is copied with the exporter
+held alive, and decode-error documents retain their contents. Affected object
+headers, allocation, string-cache and capsule access use CPython's C API paths.
+Nested containers are snapshotted when visited; there is no claim that the
+whole graph reflects one instant. Callers own application-level consistency.
+
+Memoryview aliases and external native writers need independent coordination.
+The buffer export pins storage, but writes through a memoryview alias can bypass
+the exporter object's critical section. Callers must synchronize these writes
+with decoding, including the initial copy. Shared NumPy arrays must remain
+read-only during encoding or use a lock shared by every writer
+and serializer, including resize operations. Python container critical sections
+do not lock NumPy's storage or an arbitrary native exporter. See
+[NumPy thread safety](https://numpy.org/doc/stable/reference/thread_safety.html).
+
+Python 3.13t is experimental: callers must synchronize class/type renaming
+and metadata mutation with codec calls. Its type-name setter lacks the
+stop-the-world protection added in 3.14; exact type names in serialization
+errors remain part of compatibility. See the [concurrency contract](compatibility/README.md#free-threaded-builds-and-concurrency)
+for source references and the limits of container snapshots.
+
+The manual wheel workflow contains 45 combinations across Linux x86-64/ARM64,
+macOS Intel/ARM64 and Windows x86-64, with separate regular/free-threaded/all
+selectors. Each successful job retains a wheel, digest, dependency snapshot and
+runtime/test evidence. Linux builds target glibc 2.39+. The release gate is
+completed build, install, native/property/integration and concurrency checks in
+every declared cell; configuration alone is not completion. Record actual
+outcomes in `VALIDATION.md` and retain failures until corrected or explicitly
+removed from the supported matrix.
+
+## Native and integration implementation from `.2`
 
 - Stable ARM64 builds scan unescaped string prefixes in bounded 64-byte NEON
   blocks, then 16-byte blocks; escaped blocks and tails retain scalar handling.
@@ -44,7 +85,7 @@ The GitHub project is named `pydantic-orjson`; its replacement wheel is named
 package would not satisfy dependencies on `orjson` and would create overlapping
 file ownership. Install exactly one provider using an explicit wheel/direct
 source requirement. Retain upstream's engine version in `orjson.__version__`;
-identify this build with distribution version `3.13.0+pydantic.2`, source SHA,
+identify this build with distribution version `3.13.0+pydantic.3`, source SHA,
 and artifact digest. Local versions must be pinned in lockfiles; an ordinary
 upgrade from PyPI can replace this build. Publishing on GitHub does not grant
 ownership of the upstream PyPI name. Public PyPI publication is not part of
@@ -93,14 +134,16 @@ required before treating a streamed output as complete.
 | Pydantic v2 | Aliases, defaults/exclusions, serializers, validators, strict JSON semantics, context and errors | Reusable Codec with callback, warning, rebuild and plugin checks; broaden version/schema qualification before stable release |
 | Pydantic AI | Official message schema, discriminator tags, tools, timestamps and validation | Offline agent persistence/resume, streaming completion, binary/retry messages and full conversation state tested; qualify provider-specific applications |
 | Other frameworks | Same module/distribution identity, signatures, options, error contract | Add real Litestar, Django integrations, HTTPX serializers and task/cache clients selected from downstream usage |
-| Packaging | Single file owner, same dependency identity, reproducible wheels | Local wheel and expanded cross-platform CI; see validation for completed jobs and remaining platform coverage |
+| Packaging | Single file owner, same dependency identity, reproducible wheels | 45-cell replacement-wheel workflow; see validation for completed jobs and remaining platform coverage |
+| Free-threaded CPython | No automatic GIL enabling; safe concurrent object ownership and input lifetimes | 3.13t/3.14t/3.15t concurrency and shared-mutation tests; each platform must pass before qualification |
 
 “Anywhere orjson is used” is the release goal, not a claim established by a
 few framework tests. Maintain a published supported-version matrix and allow
 downstream fixtures to become permanent regression tests. Pydantic v1 remains
 an existing-orjson consumer; the new typed API targets v2. Current optional
 AI/FastAPI test dependencies require Python 3.11+, while the native library
-continues to target upstream's Python 3.10+ range.
+continues to target upstream's Python 3.10+ range. Free-threaded variants begin
+with Python 3.13; there are no 3.10t–3.12t builds.
 
 ## Performance research, in order
 
@@ -187,7 +230,8 @@ shared CI still does not substitute for dedicated production qualification.
   per-file licenses, including MPL source distribution obligations.
 - Retain only the installed working environment, final wheel and compact
   evidence reports locally. `scripts/clean.py` removes known rough outputs;
-  source code and committed benchmark evidence are retained.
+  source code and committed benchmark evidence are retained. This also removes
+  the temporary `.venv-freethreaded` environment after qualification.
 
 ## Primary references
 

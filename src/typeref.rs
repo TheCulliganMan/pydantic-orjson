@@ -216,6 +216,10 @@ unsafe fn look_up_numpy_type(
 ) -> *mut PyTypeObject {
     unsafe {
         let ptr = PyMapping_GetItemString(numpy_module_dict, np_type.as_ptr());
+        // The free-threaded process-wide cache owns this reference. A concurrent
+        // replacement of a NumPy module attribute must not invalidate the
+        // cached pointer after the module's reference has been released.
+        #[cfg(not(Py_GIL_DISABLED))]
         Py_XDECREF(ptr);
         ptr.cast::<PyTypeObject>()
     }

@@ -4,6 +4,7 @@
 import json
 import subprocess
 import sys
+import sysconfig
 
 import pytest
 
@@ -91,6 +92,10 @@ def test_invalid_utf8_is_rejected_before_parsing(size):
         assert caught.value.msg == "str is not valid UTF-8: surrogates not allowed"
 
 
+@pytest.mark.skipif(
+    bool(sysconfig.get_config_var("Py_GIL_DISABLED")),
+    reason="free-threaded GC does not trigger this in-call allocation-threshold callback",
+)
 @pytest.mark.parametrize("array_length", [100, 110], ids=["stack", "heap"])
 def test_gc_callback_can_reenter_decoder_without_corrupting_outer_document(
     array_length,

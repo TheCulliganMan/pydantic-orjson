@@ -10,9 +10,9 @@ from typing import Any
 
 IS_FREETHREADING = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
-SUPPORTS_MEMORYVIEW = not IS_FREETHREADING
+SUPPORTS_MEMORYVIEW = True
 
-SUPPORTS_BYTEARRAY = not IS_FREETHREADING
+SUPPORTS_BYTEARRAY = True
 
 SUPPORTS_GETREFCOUNT = sys.implementation == "cpython"
 

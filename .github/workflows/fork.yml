@@ -74,3 +74,27 @@ jobs:
         run: |
           python -m pip install 'pydantic==2.14.4'
           python -m pytest -q integration_pydantic/test_codec.py integration_pydantic/test_semantics.py
+
+  free-threaded:
+    name: Linux / Python ${{ matrix.python }} / no GIL
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13t', '3.14t', '3.15t']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - run: rustup toolchain install 1.99.0 --profile minimal
+      - run: rustup default 1.99.0
+      - run: python -m pip install -r requirements-fork.txt
+      - run: maturin build --release --strip --locked --out dist
+      - run: python -m pip install dist/*.whl
+      - name: Require default import to keep the GIL disabled
+        run: python -I -c "import sys; assert not sys._is_gil_enabled(); import orjson; assert not sys._is_gil_enabled()"
+      - run: python -X faulthandler -m pytest -q test compatibility integration_pydantic
+        env:
+          PYTHON_GIL: '0'
+          PYTHONMALLOC: debug

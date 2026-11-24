@@ -16,7 +16,7 @@ pub(crate) fn raise_loads_exception(err: DeserializeError) -> *mut PyObject {
         let err_pos = PyIntRef::from_i64(err.pos());
         let err_msg = PyStrRef::from_str(&err.message);
         let doc = match err.data {
-            Some(as_str) => PyStrRef::from_str(as_str),
+            Some(as_str) => PyStrRef::from_str(&as_str),
             None => PyStrRef::empty(),
         };
         let mut args = PyTupleRef::with_capacity(3);

@@ -9,22 +9,34 @@
 Git history and upstream tests are preserved. The initial `.1` integration
 baseline retained the Rust engine unchanged. The `.2` implementation adds
 bounded ARM64 string encoding, a small-document parser arena, non-string-key
-snapshot improvements, and explicitly unaligned token writes. The top-level
-Python API remains unchanged. The original README follows the fork introduction
+snapshot improvements, and explicitly unaligned token writes. The `.3` port
+adds free-threaded CPython object ownership, mutable-container snapshots,
+mutable-input copies and public C API access for affected object layouts.
+The top-level Python API remains unchanged. The original README follows the fork introduction
 in README.md. Upstream license files and per-file notices
 are retained; this is an independent project, not an official Pydantic,
 Pydantic AI, FastAPI, or orjson release.
 
 The native engine reports `orjson.__version__ == '3.13.0'`. The replacement
 distribution reports `importlib.metadata.version('orjson') ==
-'3.13.0+pydantic.2'`. The local suffix identifies this experimental integration
+'3.13.0+pydantic.3'`. The local suffix identifies this experimental integration
 build without changing the upstream version API. Preserve this distinction
 in bug reports and lockfiles. The Cargo version remains the upstream API
-version; it does not identify the fork patch set. Use the distribution version and source SHA for that purpose.
+version; it does not identify the fork patch set. Use the distribution version
+and source SHA for that purpose.
 
 Existing upstream workflows remain available via manual dispatch. A smaller
 fork CI workflow runs on push and pull requests. No registry publication or
-release-upload workflow is enabled automatically.
+release-upload workflow is enabled automatically. The manual replacement-wheel
+workflow targets regular CPython 3.10–3.15 and free-threaded 3.13t–3.15t across
+five platform/architecture pairs. It uploads each wheel only after that job's
+runtime and test checks pass. This configuration is not evidence that all
+45 combinations have completed successfully; consult `VALIDATION.md`.
+
+The free-threaded port is a fork change beyond the inherited opt-in build path.
+Its runtime contract requires `sys._is_gil_enabled()` to remain false after
+import, including on Python 3.13t. The wheel's `t` ABI tag alone is insufficient
+to establish that contract.
 
 Windows source builds must set `PYO3_USE_RAW_DYLIB=0`, matching upstream's
 Windows workflow. orjson calls private CPython symbols that require the full

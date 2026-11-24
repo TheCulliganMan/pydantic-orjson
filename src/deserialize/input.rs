@@ -9,11 +9,8 @@ use std::borrow::Cow;
 
 const INVALID_STR: &str = "str is not valid UTF-8: surrogates not allowed";
 
-#[cfg(all(CPython, not(Py_GIL_DISABLED)))]
+#[cfg(CPython)]
 const INPUT_TYPE_MESSAGE: &str = "Input must be bytes, bytearray, memoryview, or str";
-
-#[cfg(all(CPython, Py_GIL_DISABLED))]
-const INPUT_TYPE_MESSAGE: &str = "Input must be bytes or str";
 
 #[cfg(not(CPython))]
 const INPUT_TYPE_MESSAGE: &str = "Input must be bytes, bytearray, or str";
@@ -21,6 +18,8 @@ const INPUT_TYPE_MESSAGE: &str = "Input must be bytes, bytearray, or str";
 #[cfg_attr(not(Py_GIL_DISABLED), repr(transparent))]
 pub struct Utf8Buffer {
     buffer: &'static str,
+    #[cfg(Py_GIL_DISABLED)]
+    owner: Option<core::ptr::NonNull<crate::ffi::PyObject>>,
 }
 
 impl Utf8Buffer {
@@ -58,6 +57,15 @@ impl Utf8Buffer {
         ptr: *mut crate::ffi::PyObject,
     ) -> Result<Self, DeserializeError<'static>> {
         debug_assert!(!ptr.is_null());
+        #[cfg(Py_GIL_DISABLED)]
+        unsafe {
+            let kind = crate::ffi::PyObject_Type(ptr);
+            if kind == &raw mut pyo3_ffi::PyByteArray_Type
+                || kind == &raw mut pyo3_ffi::PyMemoryView_Type
+            {
+                return Self::from_mutable_buffer(ptr);
+            }
+        }
         match Utf8Buffer::buffer_from_ptr(ptr) {
             Ok(Some(as_str)) => {
                 if as_str.is_empty() {
@@ -66,7 +74,11 @@ impl Utf8Buffer {
                         "Input is a zero-length, empty document",
                     )))
                 } else {
-                    Ok(Self { buffer: as_str })
+                    Ok(Self {
+                        buffer: as_str,
+                        #[cfg(Py_GIL_DISABLED)]
+                        owner: None,
+                    })
                 }
             }
             Ok(None) => {
@@ -87,5 +99,70 @@ impl Utf8Buffer {
 
     pub fn len(&self) -> usize {
         self.buffer.len()
+    }
+}
+
+// Mutable input needs an immutable snapshot before parsing without the GIL.
+// A live buffer export pins storage; the exporter lock protects Python-side
+// bytearray updates while CPython copies. External native writers must obey
+// their exporter's synchronization contract, as with other buffer consumers.
+#[cfg(Py_GIL_DISABLED)]
+impl Utf8Buffer {
+    unsafe fn from_mutable_buffer(
+        ptr: *mut crate::ffi::PyObject,
+    ) -> Result<Self, DeserializeError<'static>> {
+        unsafe {
+            let mut view = core::mem::MaybeUninit::<pyo3_ffi::Py_buffer>::uninit();
+            if pyo3_ffi::PyObject_GetBuffer(ptr, view.as_mut_ptr(), pyo3_ffi::PyBUF_C_CONTIGUOUS)
+                != 0
+            {
+                pyo3_ffi::PyErr_Clear();
+                return Err(DeserializeError::invalid(Cow::Borrowed(INPUT_TYPE_MESSAGE)));
+            }
+            let mut view = view.assume_init();
+            let exporter = if crate::ffi::PyObject_Type(ptr) == &raw mut pyo3_ffi::PyMemoryView_Type
+            {
+                pyo3_ffi::PyObject_GetAttrString(ptr, c"obj".as_ptr())
+            } else {
+                pyo3_ffi::Py_INCREF(ptr);
+                ptr
+            };
+            if exporter.is_null() {
+                pyo3_ffi::PyBuffer_Release(&raw mut view);
+                pyo3_ffi::PyErr_Clear();
+                return Err(DeserializeError::invalid(Cow::Borrowed(INPUT_TYPE_MESSAGE)));
+            }
+            let mut section = core::mem::MaybeUninit::<pyo3_ffi::PyCriticalSection>::uninit();
+            pyo3_ffi::PyCriticalSection_Begin(section.as_mut_ptr(), exporter);
+            let copied = pyo3_ffi::PyBytes_FromStringAndSize(view.buf.cast(), view.len);
+            pyo3_ffi::PyCriticalSection_End(section.as_mut_ptr());
+            pyo3_ffi::Py_DECREF(exporter);
+            pyo3_ffi::PyBuffer_Release(&raw mut view);
+            if copied.is_null() {
+                pyo3_ffi::PyErr_Clear();
+                return Err(DeserializeError::invalid(Cow::Borrowed(
+                    "Not enough memory to allocate buffer",
+                )));
+            }
+            match Self::from_pyobject(copied) {
+                Ok(mut buffer) => {
+                    buffer.owner = core::ptr::NonNull::new(copied);
+                    Ok(buffer)
+                }
+                Err(error) => {
+                    pyo3_ffi::Py_DECREF(copied);
+                    Err(error)
+                }
+            }
+        }
+    }
+}
+
+#[cfg(Py_GIL_DISABLED)]
+impl Drop for Utf8Buffer {
+    fn drop(&mut self) {
+        if let Some(owner) = self.owner {
+            unsafe { pyo3_ffi::Py_DECREF(owner.as_ptr()) };
+        }
     }
 }

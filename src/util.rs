@@ -37,10 +37,25 @@ macro_rules! str_from_slice {
     };
 }
 
-#[cfg(all(CPython, Py_3_13))]
+#[cfg(all(CPython, Py_3_13, not(Py_GIL_DISABLED)))]
 macro_rules! pydict_contains {
     ($obj1:expr, $obj2:expr) => {
         unsafe { crate::ffi::PyDict_Contains(crate::ffi::PyType_GetDict($obj1), $obj2) == 1 }
+    };
+}
+
+#[cfg(Py_GIL_DISABLED)]
+macro_rules! pydict_contains {
+    ($obj1:expr, $obj2:expr) => {
+        unsafe {
+            // PyType_GetDict returns an owned dictionary reference, and
+            // PyDict_Contains locks internally. Preserve own-namespace lookup;
+            // PyObject_HasAttr would also search bases and invoke descriptors.
+            let dict = crate::ffi::PyType_GetDict($obj1);
+            let contains = crate::ffi::PyDict_Contains(dict, $obj2) == 1;
+            crate::ffi::Py_DECREF(dict);
+            contains
+        }
     };
 }
 
