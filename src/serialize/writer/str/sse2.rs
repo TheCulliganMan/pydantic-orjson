@@ -33,6 +33,39 @@ pub(crate) unsafe fn format_escaped_str_impl_sse2_128(
             let last_stride_src = src.add(value_len).sub(STRIDE);
             let mut nb: usize = value_len;
 
+            macro_rules! escape_bits {
+                ($chunk:expr) => {
+                    _mm_or_si128(
+                        _mm_or_si128(_mm_cmpeq_epi8($chunk, blash), _mm_cmpeq_epi8($chunk, quote)),
+                        _mm_cmpeq_epi8(_mm_subs_epu8($chunk, x20), v0),
+                    )
+                };
+            }
+
+            // Check four bounded vectors with one reduction and branch for
+            // an unescaped prefix. After the first escape, retain the existing
+            // per-vector mask path so dense input is not repeatedly rescanned.
+            while nb >= STRIDE * 4 {
+                let first = _mm_loadu_si128(src.cast::<__m128i>());
+                let second = _mm_loadu_si128(src.add(STRIDE).cast::<__m128i>());
+                let third = _mm_loadu_si128(src.add(STRIDE * 2).cast::<__m128i>());
+                let fourth = _mm_loadu_si128(src.add(STRIDE * 3).cast::<__m128i>());
+                let escaped = _mm_or_si128(
+                    _mm_or_si128(escape_bits!(first), escape_bits!(second)),
+                    _mm_or_si128(escape_bits!(third), escape_bits!(fourth)),
+                );
+                if _mm_movemask_epi8(escaped) != 0 {
+                    break;
+                }
+                _mm_storeu_si128(dst.cast::<__m128i>(), first);
+                _mm_storeu_si128(dst.add(STRIDE).cast::<__m128i>(), second);
+                _mm_storeu_si128(dst.add(STRIDE * 2).cast::<__m128i>(), third);
+                _mm_storeu_si128(dst.add(STRIDE * 3).cast::<__m128i>(), fourth);
+                src = src.add(STRIDE * 4);
+                dst = dst.add(STRIDE * 4);
+                nb -= STRIDE * 4;
+            }
+
             while nb >= STRIDE {
                 let str_vec = _mm_loadu_si128(src.cast::<__m128i>());
 

@@ -153,6 +153,8 @@ def main() -> int:  # noqa: PLR0912, PLR0915
                         str(suite),
                         "--engine",
                         engine,
+                        "--inherit-environ",
+                        "PYTHONHASHSEED",
                         "--matrix-profile",
                         args.profile,
                         "--case",

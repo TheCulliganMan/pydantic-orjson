@@ -973,6 +973,10 @@ where
 
     #[inline(always)]
     pub fn serialize(&mut self, ptr: *mut PyObject) -> Result<(), SerializeError> {
+        // A preceding fragment or nested value may consume the parent's
+        // speculative reservation. Fixed-size writers need their own guard:
+        // datetime's final integer scratch extends up to 52 bytes from entry.
+        self.writer.reserve(64);
         match pyobject_to_obtype_likely(PyTypeRef::from_pyobject(ptr)) {
             Some(ObType::Str) => {
                 self.serialize_str(unsafe { PyStrRef::from_ptr_unchecked(ptr) })?

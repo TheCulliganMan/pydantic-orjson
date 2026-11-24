@@ -8,7 +8,9 @@ import pytest
 import orjson
 
 
-@pytest.mark.parametrize("length", [15, 16, 17, 31, 32, 33, 63, 64, 65, 255, 256, 257])
+@pytest.mark.parametrize(
+    "length", [15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 128, 129, 255, 256, 257]
+)
 def test_every_escape_position(length):
     for escape in ('"', "\\", "\n", "\t", "\x00", "\x1f"):
         for position in range(length):
@@ -18,7 +20,7 @@ def test_every_escape_position(length):
             assert orjson.loads(expected) == value
 
 
-@pytest.mark.parametrize("length", [16, 17, 32, 33, 64, 65, 1024, 8192])
+@pytest.mark.parametrize("length", [16, 17, 32, 33, 64, 65, 127, 128, 129, 1024, 8192])
 def test_dense_and_mixed_escape_blocks(length):
     generator = random.Random(4107 + length)
     alphabet = 'ab日本🙂é"\\\n\t\x00\x1f'

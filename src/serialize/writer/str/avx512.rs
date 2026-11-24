@@ -26,6 +26,37 @@ pub(crate) unsafe fn format_escaped_str_impl_512vl(
         core::ptr::write(dst, b'"');
         dst = dst.add(1);
 
+        macro_rules! escape_mask {
+            ($chunk:expr) => {
+                _mm256_cmpeq_epu8_mask($chunk, blash)
+                    | _mm256_cmpeq_epu8_mask($chunk, quote)
+                    | _mm256_cmplt_epu8_mask($chunk, x20)
+            };
+        }
+
+        // Consume a clean prefix four vectors at a time. A nonzero combined
+        // mask leaves the input untouched for the existing escape-mask loop.
+        while nb >= STRIDE * 4 {
+            let first = _mm256_loadu_epi8(src.cast::<i8>());
+            let second = _mm256_loadu_epi8(src.add(STRIDE).cast::<i8>());
+            let third = _mm256_loadu_epi8(src.add(STRIDE * 2).cast::<i8>());
+            let fourth = _mm256_loadu_epi8(src.add(STRIDE * 3).cast::<i8>());
+            let mask = escape_mask!(first)
+                | escape_mask!(second)
+                | escape_mask!(third)
+                | escape_mask!(fourth);
+            if mask != 0 {
+                break;
+            }
+            _mm256_storeu_epi8(dst.cast::<i8>(), first);
+            _mm256_storeu_epi8(dst.add(STRIDE).cast::<i8>(), second);
+            _mm256_storeu_epi8(dst.add(STRIDE * 2).cast::<i8>(), third);
+            _mm256_storeu_epi8(dst.add(STRIDE * 3).cast::<i8>(), fourth);
+            src = src.add(STRIDE * 4);
+            dst = dst.add(STRIDE * 4);
+            nb -= STRIDE * 4;
+        }
+
         while nb >= STRIDE {
             let str_vec = _mm256_loadu_epi8(src.cast::<i8>());
 

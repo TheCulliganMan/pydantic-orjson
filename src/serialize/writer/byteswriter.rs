@@ -301,6 +301,9 @@ impl WriteFormatter for CompactFormatter {
 
     #[inline]
     fn array_close(writer: &mut BytesWriter) {
+        // Nested containers can unwind after an unbounded value has consumed
+        // the ancestor's reservation. Guard each closing delimiter locally.
+        writer.reserve(OVERALLOCATION);
         debug_assert!(writer.remaining_mut() > 8);
         writer.put_u8(b']');
     }
@@ -319,6 +322,7 @@ impl WriteFormatter for CompactFormatter {
 
     #[inline]
     fn map_close(writer: &mut BytesWriter) {
+        writer.reserve(OVERALLOCATION);
         debug_assert!(writer.remaining_mut() > 8);
         writer.put_u8(b'}');
     }

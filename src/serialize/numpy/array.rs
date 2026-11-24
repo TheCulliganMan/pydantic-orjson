@@ -288,7 +288,9 @@ impl<'a> NumpyF64Array<'a> {
     #[cold]
     #[inline(never)]
     pub fn write<F: WriteFormatter>(&self, buf: &mut BytesWriter) {
-        F::reserve_array(buf, self.data.len(), core::mem::size_of::<f64>());
+        // Decimal float64 output can occupy 24 bytes before its separator;
+        // the formatter requires 40 writable bytes, not the input's 8 bytes.
+        F::reserve_array(buf, self.data.len(), 40);
         F::array_open(buf);
         let mut repeating = false;
         for &each in self.data.iter().fuse() {
